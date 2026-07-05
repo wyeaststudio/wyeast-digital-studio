@@ -13,7 +13,7 @@ export default function HomePage() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-background p-6 text-foreground">
       <div className="w-full max-w-2xl space-y-6 text-center">
         <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-          Agency Boilerplate Active
+          Agency Template Active
         </h1>
         <p className="text-xl text-muted-foreground">
           Next.js + Tailwind CSS + Shadcn UI + Sanity.io
