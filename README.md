@@ -20,6 +20,17 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Launch Readiness Checklist
+
+Before shipping a client project from this template, review the following:
+
+- Update the site metadata in the environment variables and in the shared config for title, description, keywords, and social links.
+- Review the robots rules to ensure the intended search and AI crawlers are allowed while suspicious or unknown agents remain blocked.
+- Confirm the sitemap and social share images are appropriate for the launch brand.
+- Verify accessibility basics such as semantic headings, keyboard focus visibility, and skip links.
+- Ensure HTTPS, CSP, and security headers are enabled in the production environment.
+- Review analytics, consent, and any forms or APIs before public launch.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
