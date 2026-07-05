@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = createMetadata({
   title: {
-    default: 'Launch-ready starter',
-    template: '%s | Agency Template',
+    default: "Wy'east Digital Studio",
+    template: "%s | Wy'east Digital Studio",
   },
 });
 

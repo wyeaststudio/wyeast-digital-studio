@@ -9,9 +9,9 @@ import {
 } from '@/components/ui/card';
 
 const checklist = [
-  'Accessible semantics and keyboard-friendly navigation',
-  'Configurable metadata for search, GEO, and AEO',
-  'Structured sitemap and robots defaults ready to expand',
+  'Thoughtful brand-led web experiences',
+  'Flexible content management with Sanity',
+  'Built for accessibility, discoverability, and growth',
 ];
 
 export default function HomePage() {
@@ -23,23 +23,23 @@ export default function HomePage() {
       <div className="w-full max-w-3xl space-y-6 text-center">
         <div className="space-y-3">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-            Launch-ready template
+            Wy&apos;east Digital Studio
           </p>
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-            Accessibility and discoverability are built in.
+            We craft websites that feel clear, modern, and built to grow.
           </h1>
           <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
-            This starter now includes configurable metadata, social cards, and
-            SEO defaults so new projects can be tuned before launch.
+            From strategy to launch, we design and build digital experiences
+            that help brands show up with confidence.
           </p>
         </div>
 
         <Card className="border-border bg-card text-left">
           <CardHeader>
-            <CardTitle>What is ready for your next project</CardTitle>
+            <CardTitle>What this studio is shaping</CardTitle>
             <CardDescription>
-              The template is prepared for accessible content structure and
-              search-friendly launch settings.
+              A polished foundation for storytelling, content publishing, and
+              launch-ready growth.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">

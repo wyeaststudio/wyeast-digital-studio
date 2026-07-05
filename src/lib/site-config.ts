@@ -1,14 +1,15 @@
 import type { Metadata } from 'next';
 
 const defaultUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://example.com';
-const defaultName = process.env.NEXT_PUBLIC_SITE_NAME ?? 'Agency Template';
+const defaultName =
+  process.env.NEXT_PUBLIC_SITE_NAME ?? "Wy'east Digital Studio";
 const defaultTitle = process.env.NEXT_PUBLIC_SITE_TITLE ?? defaultName;
 const defaultDescription =
   process.env.NEXT_PUBLIC_SITE_DESCRIPTION ??
-  'A launch-ready Next.js and Sanity starter with accessible structure, SEO defaults, and configurable metadata for GEO and AEO.';
+  "Wy'east Digital Studio builds polished web experiences and content systems for modern brands.";
 const defaultKeywords =
   process.env.NEXT_PUBLIC_SITE_KEYWORDS ??
-  'agency website, next.js, sanity, seo, accessibility, geo, aeo';
+  "wy'east digital studio, web design, next.js, sanity, content strategy";
 
 export const siteConfig = {
   name: defaultName,
