@@ -12,6 +12,10 @@ const majorCrawlers = [
   'DuckDuckBot',
   'Baiduspider',
   'YandexBot',
+  'Applebot',
+  'msnbot',
+  'BingPreview',
+  'bingbot',
   'GPTBot',
   'ChatGPT-User',
   'ClaudeBot',
@@ -19,6 +23,17 @@ const majorCrawlers = [
   'Anthropic-AI',
   'OAI-SearchBot',
   'PerplexityBot',
+  'Bytespider',
+  'CCBot',
+  'SemrushBot',
+  'AhrefsBot',
+  'MJ12bot',
+  'PetalBot',
+  'Qwantbot',
+  'Sogou web spider',
+  'ExaBot',
+  'cohere-ai',
+  'cohere-training-data-crawler',
 ];
 
 export default function robots(): MetadataRoute.Robots {
