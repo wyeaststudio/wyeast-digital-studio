@@ -16,7 +16,8 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'npm run build && npm run start',
+    // `npm run check` builds once beforehand and sets E2E_SKIP_BUILD to avoid a second build.
+    command: process.env.E2E_SKIP_BUILD ? 'npm run start' : 'npm run build && npm run start',
     url: baseURL,
     reuseExistingServer: !isCI,
     timeout: 180000,

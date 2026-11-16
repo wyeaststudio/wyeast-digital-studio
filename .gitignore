@@ -53,3 +53,6 @@ playwright-report/
 
 # sanity
 /sanity/extract.json
+
+# lighthouse ci
+/.lighthouseci/

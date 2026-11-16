@@ -57,14 +57,15 @@ export default function HomePage() {
               ))}
             </ul>
             <div className="flex flex-wrap gap-4">
-              <Link
+              {/* Plain <a>: next/link would prefetch the multi-MB Studio bundle. */}
+              <a
                 href="/studio"
                 target="_blank"
                 rel="noreferrer"
                 className={buttonVariants({ variant: 'default' })}
               >
                 Open Sanity Studio
-              </Link>
+              </a>
 
               <Link
                 href="/sitemap.xml"

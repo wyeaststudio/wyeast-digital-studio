@@ -62,17 +62,20 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase E — Quality pipeline
 
-- [ ] **T11 — Lighthouse CI and the `check` script** _(lightweight model)_
+- [x] **T11 — Lighthouse CI and the `check` script** _(lightweight model)_
   Install `@lhci/cli` (dev). Add `lighthouserc.json` (start server, `/`, desktop and mobile, 3 runs, minScore 1 for all four categories, results to `.lighthouseci/` which is git-ignored). Add the `test:lh` and `check` scripts. Fix any audit below 100.
   _Covers:_ FOUND-R19, R20 · _Verify:_ `npm run check` passes
+  - Task log: there are two configs, `lighthouserc.json` (mobile) and `lighthouserc.desktop.json`, each serving on port 3200. The first run scored Performance 83 and Best Practices 96. Fixes: (1) the Visual Editing bundle (~1.2 MB) is now dynamically imported only in draft mode; (2) the home page's Studio link is a plain `<a>`, because `next/link` prefetched the 4 MB Studio bundle; (3) the ThemeToggle hydration mismatch (React #418) is fixed with a `useSyncExternalStore` hydration guard, plus a new e2e test that fails on console errors. TBT went from 690 ms to 10 ms. The result is 100/100/100/100 on mobile and desktop. `check` builds once and sets `E2E_SKIP_BUILD=1` so Playwright doesn't rebuild. `PORT=3100 npm run check` passes: 49 unit tests, 64 e2e tests, and Lighthouse on both configs.
 
-- [ ] **T12 — UX screenshot script** _(lightweight model)_
+- [x] **T12 — UX screenshot script** _(lightweight model)_
   Write `scripts/ux-screens.mjs <feature> <route...>`. It uses Playwright to capture full-page PNGs at 375, 768, 1280, and 1920 px in light and dark mode into `specs/<feature>/review/screenshots/`.
   _Covers:_ FOUND-R21 · _Verify:_ `npm run ux:screens -- 001-foundation /` produces 8 PNGs
+  - Task log: written by the lightweight model. It produced 8 PNGs for `/`, and the error paths (missing args, unknown feature, unreachable server) exit 1.
 
 - [ ] **T13 — GitHub Actions** _(lightweight model)_
   Add `.github/workflows/check.yml` (on: pull_request and push to main; Node from `.nvmrc`; `npm ci`; `npx playwright install --with-deps`; `npm run check`; Sanity variables from repo secrets; upload Playwright and LHCI reports on failure). Document the required repo secrets in the README.
   _Covers:_ FOUND-R22 · _Verify:_ open a PR and the check runs. The owner enables "require status check" in branch protection.
+  - Task log: the workflow was written by the lightweight model and reviewed. The repo secrets are documented in the README. **Still open:** verifying it on a real PR. That needs the repo secrets added first, so T13 stays unchecked until the first PR run passes.
 
 ## UX review
 

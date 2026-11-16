@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { draftMode } from 'next/headers';
-import { VisualEditing } from 'next-sanity/visual-editing';
 import { Suspense } from 'react';
 import { StructuredData } from '@/components/seo/structured-data';
 import { ThemeProvider } from '@/components/theme/theme-provider';
@@ -17,7 +16,10 @@ export const metadata: Metadata = createMetadata({
 
 async function DraftModeTools() {
   const { isEnabled } = await draftMode();
-  return isEnabled ? <VisualEditing /> : null;
+  if (!isEnabled) return null;
+  // Dynamic import keeps the Visual Editing bundle (~1.2 MB) out of public pages.
+  const { VisualEditing } = await import('next-sanity/visual-editing');
+  return <VisualEditing />;
 }
 
 export default function RootLayout({

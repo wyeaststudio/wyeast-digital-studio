@@ -33,6 +33,12 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 Cache tags follow `<_type>` and `<_type>:<slug>` (see `src/sanity/fetch.ts`).
 
+## Quality checks
+
+- `npm run check` runs lint, typecheck, unit tests (Vitest), build, end-to-end and accessibility tests (Playwright + axe), and Lighthouse CI (score 100 required in every category, mobile and desktop). If port 3000 is busy, use `PORT=3100 npm run check`.
+- `npm run ux:screens -- <feature> <routes...>` captures UX review screenshots (375, 768, 1280, and 1920 px, light and dark) from a running server into `specs/<feature>/review/screenshots/`.
+- **GitHub Actions** (`.github/workflows/check.yml`) runs `npm run check` on every PR and on pushes to `main`. Add these repository secrets (Settings → Secrets and variables → Actions): `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`. Then enable branch protection on `main` with the **check** status required.
+
 ## Launch Readiness Checklist
 
 Before shipping a client project from this template, review the following:
