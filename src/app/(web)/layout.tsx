@@ -1,4 +1,7 @@
 import type { Metadata } from 'next';
+import { draftMode } from 'next/headers';
+import { VisualEditing } from 'next-sanity/visual-editing';
+import { Suspense } from 'react';
 import { StructuredData } from '@/components/seo/structured-data';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { montserratAlternates, playfairDisplay } from '@/app/fonts';
@@ -11,6 +14,11 @@ export const metadata: Metadata = createMetadata({
     template: "%s | Wy'east Digital Studio",
   },
 });
+
+async function DraftModeTools() {
+  const { isEnabled } = await draftMode();
+  return isEnabled ? <VisualEditing /> : null;
+}
 
 export default function RootLayout({
   children,
@@ -32,6 +40,9 @@ export default function RootLayout({
         </a>
         <StructuredData />
         <ThemeProvider>{children}</ThemeProvider>
+        <Suspense fallback={null}>
+          <DraftModeTools />
+        </Suspense>
       </body>
     </html>
   );

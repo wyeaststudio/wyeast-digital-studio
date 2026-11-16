@@ -14,5 +14,7 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
     exclude: ['e2e/**', 'node_modules/**'],
+    // next-sanity imports `next/headers` without an extension, which Node ESM can't resolve.
+    server: { deps: { inline: ['next-sanity'] } },
   },
 });

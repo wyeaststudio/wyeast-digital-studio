@@ -35,25 +35,30 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase D — Sanity tooling
 
-- [ ] **T6 — Schemas folder**
+- [x] **T6 — Schemas folder**
   Move the `page` type to `src/sanity/schemas/documents/page.ts` (`defineType`/`defineField`) with an `index.ts` that exports `schemaTypes`, and update `sanity.config.ts` to use it.
   _Covers:_ FOUND-R10 · _Verify:_ `npm run build`, and `/studio` loads in `npm run dev`
+  - Task log: `sanity.config.ts` uses relative imports so the Sanity CLI can load it. The Studio root layout moved from `studio/[[...tool]]/layout.tsx` to `studio/layout.tsx`, because under `cacheComponents` a root layout inside `[[...tool]]` makes `tool` a required root param. `/studio` returns 200.
 
-- [ ] **T7 — Env, client, TypeGen**
+- [x] **T7 — Env, client, TypeGen**
   Extend `env.ts` (`readToken` and `revalidateSecret`, asserted only where they're used) and add both to `env.example`. Set `useCdn: false` and the stega `studioUrl: '/studio'` in `client.ts`. Create `sanity.cli.ts` with the typegen config (check the v6 options in the Sanity docs). Add `src/sanity/queries.ts` with one sample `defineQuery`, the `typegen` script, a git-ignore entry for `sanity/extract.json`, and commit the generated `sanity.types.ts`.
   _Covers:_ FOUND-R11, R15 · _Verify:_ `npm run typegen && npm run typecheck`
+  - Task log: the tracked `env.local` was ignored by Next. It's now removed from git and the values live in the git-ignored `.env.local`, with the real project ID set. The secrets are in `src/sanity/server-env.ts` and are checked only when used. **Deviation:** R11's "typed result used in a page" is verified with a compile-time test (`src/sanity/fetch.test.ts`, `expectTypeOf`) instead of a placeholder page fetch, so the build doesn't depend on network access to Sanity until real pages exist (spec 005).
 
-- [ ] **T8 — `cacheComponents` and `sanityFetch`**
+- [x] **T8 — `cacheComponents` and `sanityFetch`**
   Enable `cacheComponents: true` in `next.config.ts`. Move `opengraph-image.tsx` and `twitter-image.tsx` from the edge runtime to Node. Create `src/sanity/fetch.ts` (draft-aware, `'use cache'` + `cacheTag` + `cacheLife('max')`) and document the tag convention. Fix any Suspense or build errors that `cacheComponents` causes.
   _Covers:_ FOUND-R12 (data path), R23 (tags) · _Verify:_ `npm run build` (no edge warning) and `npm run test:e2e -- home`
+  - Task log: the build reports no warnings. `/` is static (○), and the OG and Twitter images now run on the Node runtime.
 
 - [ ] **T9 — Draft mode, Visual Editing, framing**
   Add the `api/draft-mode/enable` route (`defineEnableDraftMode`) and the `disable` route. Render `<VisualEditing />` in `(web)/layout.tsx` in a Suspense boundary when draft mode is on. Add `presentationTool` to `sanity.config.ts`. Change the headers to `X-Frame-Options: SAMEORIGIN` and `frame-ancestors 'self'`. Add a Vitest test (the enable route rejects requests without a secret) and an e2e test of the headers.
   _Covers:_ FOUND-R12, R13, R14 · _Verify:_ `npm run test -- draft-mode`, `npm run test:e2e -- headers`, then manually open the Presentation tool in `/studio` (needs `SANITY_API_READ_TOKEN`)
+  - Task log: the enable route builds its handler per request, so a missing token returns 500 instead of breaking the build. The 401 for no secret and the SAMEORIGIN headers are tested. Vitest inlines `next-sanity` because of an ESM resolution issue. **Still open:** the manual Presentation tool check needs `SANITY_API_READ_TOKEN` in `.env.local`. T9 stays unchecked until the owner verifies it.
 
-- [ ] **T10 — Webhook revalidation**
+- [x] **T10 — Webhook revalidation**
   Add `src/app/api/revalidate/route.ts` (`parseBody` with signature validation → `revalidateTag(tag, 'max')`). Add Vitest tests for the 401 response and the tag calls. Document the webhook setup (filter, projection, secret) in the README.
   _Covers:_ FOUND-R23 · _Verify:_ `npm run test -- revalidate`
+  - Task log: the route returns 401 for invalid or missing signatures, 400 without `_type`, and 500 when no secret is configured. Covered by 6 Vitest tests. The setup is documented in the README under "Sanity setup".
 
 ## Phase E — Quality pipeline
 
