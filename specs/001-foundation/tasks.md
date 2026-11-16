@@ -28,9 +28,10 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase C — Theming
 
-- [ ] **T5 — Theme provider and toggle**
+- [x] **T5 — Theme provider and toggle**
   Create `theme-provider.tsx`, the presentational `theme-toggle.tsx`, and `theme-toggle-container.tsx`. Wrap the body in the provider in `(web)/layout.tsx`. Temporarily place `ThemeToggleContainer` on the placeholder home page (the header in spec 002 will take it over). Add Vitest tests for the toggle (label, Enter and Space, placeholder, 44 px) and e2e tests for theming (system preference, persistence, no flash, reduced motion).
   _Covers:_ FOUND-R6, R7, R8, R9 · _Verify:_ `npm run test -- theme-toggle` and `npm run test:e2e -- theme`
+  - Task log: added Testing Library `cleanup` to `vitest.setup.ts` (no auto-cleanup without Vitest globals). Unit tests 40/40 pass. E2E tests 40/40 pass across chromium, firefox, webkit, and mobile-chromium, with no axe violations or hydration warnings.
 
 ## Phase D — Sanity tooling
 

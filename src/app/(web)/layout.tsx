@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { StructuredData } from '@/components/seo/structured-data';
+import { ThemeProvider } from '@/components/theme/theme-provider';
 import { montserratAlternates, playfairDisplay } from '@/app/fonts';
 import { createMetadata } from '@/lib/site-config';
 import './globals.css';
@@ -30,7 +31,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <StructuredData />
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
