@@ -6,13 +6,14 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase A — Test harness first (so later tasks can verify themselves)
 
-- [ ] **T1 — Vitest setup** _(lightweight model)_
+- [x] **T1 — Vitest setup** _(lightweight model)_
   Install `vitest @vitejs/plugin-react jsdom @testing-library/react @testing-library/user-event @testing-library/jest-dom` (dev). Add `vitest.config.ts` (jsdom, `@/` alias, setup file importing jest-dom) and the `test`, `test:watch`, and `typecheck` scripts. Add a trivial test for `cn()` in `src/lib/utils.test.ts`.
   _Covers:_ FOUND-R16 · _Verify:_ `npm run test && npm run typecheck`
 
-- [ ] **T2 — Playwright and axe helper** _(lightweight model)_
+- [x] **T2 — Playwright and axe helper** _(lightweight model)_
   Install `@playwright/test @axe-core/playwright` (dev). Add `playwright.config.ts` (webServer: `npm run build && npm run start`, projects: chromium, firefox, webkit, mobile-chromium 375 px) and `e2e/helpers/axe.ts` (`expectNoA11yViolations(page)` with WCAG 2.0/2.1/2.2 A and AA tags). Add `e2e/home.spec.ts`, which visits `/` and runs axe in light and dark mode. Add the `test:e2e` script and git-ignore `test-results/` and `playwright-report/`.
   _Covers:_ FOUND-R17, R18 · _Verify:_ `npm run test:e2e` (axe may fail until T3 fixes the colors, which is expected; note it in the task log)
+  - Task log: `PORT=3100 npm run test:e2e -- --project=chromium` → 2 failed, both expected. Only axe violation in light and dark mode: `color-contrast` (serious) on `.bg-primary` (the `/studio` link), 4.16:1 (#e5e2d9 on #626d65), needs 4.5:1. Port 3000 was held by an unrelated stale `next-server` from another project, so the run used 3100.
 
 ## Phase B — Design system
 
