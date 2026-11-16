@@ -72,10 +72,10 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   _Covers:_ FOUND-R21 · _Verify:_ `npm run ux:screens -- 001-foundation /` produces 8 PNGs
   - Task log: written by the lightweight model. It produced 8 PNGs for `/`, and the error paths (missing args, unknown feature, unreachable server) exit 1.
 
-- [ ] **T13 — GitHub Actions** _(lightweight model)_
+- [x] **T13 — GitHub Actions** _(lightweight model)_
   Add `.github/workflows/check.yml` (on: pull_request and push to main; Node from `.nvmrc`; `npm ci`; `npx playwright install --with-deps`; `npm run check`; Sanity variables from repo secrets; upload Playwright and LHCI reports on failure). Document the required repo secrets in the README.
   _Covers:_ FOUND-R22 · _Verify:_ open a PR and the check runs. The owner enables "require status check" in branch protection.
-  - Task log: the workflow was written by the lightweight model and reviewed. The repo secrets are documented in the README. **Still open:** verifying it on a real PR. That needs the repo secrets added first, so T13 stays unchecked until the first PR run passes.
+  - Task log: the workflow was written by the lightweight model and reviewed. The repo secrets are documented in the README. The repo secrets were set with `gh secret set` from `.env.local`, without printing them. CI passed on PR #1 in about 5 minutes, including Lighthouse 100. Actions were bumped to v7 to clear the Node 20 deprecation warning.
 
 ## UX review
 
@@ -85,7 +85,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Owner actions (outside the codebase)
 
-- [ ] Create a Sanity **Viewer** API token and set `SANITY_API_READ_TOKEN` in `.env.local` and Vercel
-- [ ] Generate `SANITY_REVALIDATE_SECRET`, then create the Sanity webhook (documented in T10) pointing to `https://<domain>/api/revalidate`
-- [ ] Add the Sanity variables as GitHub repo secrets (T13) and enable branch protection
+- [x] Create a Sanity **Viewer** API token and set `SANITY_API_READ_TOKEN` in `.env.local` (still needs to be added to Vercel at deploy)
+- [ ] Create the Sanity webhook (documented in T10) pointing to `https://<domain>/api/revalidate`, using the `SANITY_REVALIDATE_SECRET` already generated in `.env.local`, and add it and `SANITY_API_READ_TOKEN` to Vercel
+- [x] Add the Sanity variables as GitHub repo secrets (T13) and enable branch protection
 - [ ] Update the Figma colors to the final AAA values: primary #434945 / dark #D1AF43, accent #2A4D50, muted-foreground #3D4042 / dark #CDCBC4, destructive #733429 / dark #73352C, semantic-background #585756
