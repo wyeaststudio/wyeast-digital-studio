@@ -27,6 +27,7 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-destructive-hover: var(--destructive-hover);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-overlay: var(--overlay);
   --color-semantic-background: var(--semantic-background);
@@ -41,6 +42,7 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -71,6 +73,7 @@
   --popover: oklch(0.943 0.011 89.725); /* #EFECE4 */
   --popover-foreground: oklch(0.27 0.008 240.158); /* #23272A */
   --primary: oklch(0.3985 0.0103 156.7318); /* #434945 */
+  --primary-hover: oklch(0.3387 0.0085 159.6436); /* #343936 */
   --primary-foreground: oklch(0.913 0.013 91.525); /* #E5E2D9 */
   --secondary: oklch(0.881 0.007 160.056); /* #D4D9D6 */
   --secondary-foreground: oklch(0.27 0.008 240.158); /* #23272A */
@@ -79,6 +82,7 @@
   --accent: oklch(0.3951 0.0409 202.7353); /* #2A4D50 */
   --accent-foreground: oklch(0.913 0.013 91.525); /* #E5E2D9 */
   --destructive: oklch(0.4073 0.0915 31.5112); /* #733429 */
+  --destructive-hover: oklch(0.3515 0.0755 31.6677); /* #5C2A21 */
   --destructive-foreground: oklch(0.913 0.013 91.525); /* #E5E2D9 */
   --border: oklch(0.848 0.014 93.004); /* #D0CDC3 */
   --input: oklch(0.848 0.014 93.004); /* #D0CDC3 */
@@ -114,6 +118,7 @@
   --popover: oklch(0.344 0.011 236.901); /* #343A3E */
   --popover-foreground: oklch(0.913 0.013 91.525); /* #E5E2D9 */
   --primary: oklch(0.7645 0.1302 91.3293); /* #D1AF43 */
+  --primary-hover: oklch(0.7987 0.1157 91.9683); /* #D8BB60 */
   --primary-foreground: oklch(0.27 0.008 240.158); /* #23272A */
   --secondary: oklch(0.348 0.012 196.612); /* #333C3C */
   --secondary-foreground: oklch(0.913 0.013 91.525); /* #E5E2D9 */
@@ -122,6 +127,7 @@
   --accent: oklch(0.3951 0.0409 202.7353); /* #2A4D50 */
   --accent-foreground: oklch(0.913 0.013 91.525); /* #E5E2D9 */
   --destructive: oklch(0.4095 0.0895 29.909); /* #73352C */
+  --destructive-hover: oklch(0.3555 0.0748 29.5052); /* #5D2B24 */
   --destructive-foreground: oklch(0.913 0.013 91.525); /* #E5E2D9 */
   --border: oklch(0.379 0.012 243.115); /* #3D4348 */
   --input: oklch(0.379 0.012 243.115); /* #3D4348 */

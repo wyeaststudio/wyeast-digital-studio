@@ -15,6 +15,16 @@ test.describe('Home [FOUND-R18]', () => {
   });
 
   for (const colorScheme of ['light', 'dark'] as const) {
+    test(`hovered primary button keeps accessible contrast (${colorScheme}) [FOUND-R1]`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });
+      await page.goto('/');
+      const button = page.getByRole('link', { name: /open sanity studio/i });
+      await button.hover();
+      await expectNoA11yViolations(page, { include: 'main a[href="/studio"]', rules: ['color-contrast', 'color-contrast-enhanced'] });
+    });
+  }
+
+  for (const colorScheme of ['light', 'dark'] as const) {
     test(`loads without console errors or hydration mismatches (${colorScheme}) [FOUND-R19]`, async ({ page }) => {
       const errors: string[] = [];
       page.on('pageerror', (error) => errors.push(error.message));

@@ -39,12 +39,14 @@ const TEXT_PAIRS: [fg: string, bg: string][] = [
   ['card-foreground', 'card'],
   ['popover-foreground', 'popover'],
   ['primary-foreground', 'primary'],
+  ['primary-foreground', 'primary-hover'],
   ['secondary-foreground', 'secondary'],
   ['muted-foreground', 'muted'],
   ['muted-foreground', 'background'],
   ['muted-foreground', 'card'],
   ['accent-foreground', 'accent'],
   ['destructive-foreground', 'destructive'],
+  ['destructive-foreground', 'destructive-hover'],
   ['semantic-foreground', 'semantic-background'],
 ];
 

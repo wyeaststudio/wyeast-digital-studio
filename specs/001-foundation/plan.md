@@ -40,6 +40,8 @@ Colors (OKLCH, with a hex comment) that change from the current file:
 | `--muted-foreground` | #3D4042 | #CDCBC4 |
 | `--destructive` | #733429 | #73352C |
 | `--semantic-background` | #585756 | unchanged |
+| `--primary-hover` (new) | #343936 | #D8BB60 |
+| `--destructive-hover` (new) | #5C2A21 | #5D2B24 |
 
 New `@theme inline` entries:
 
