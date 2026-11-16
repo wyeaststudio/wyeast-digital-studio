@@ -34,11 +34,12 @@ Colors (OKLCH, with a hex comment) that change from the current file:
 | --- | --- | --- |
 | `--foreground` | #2E2924 (Figma) | unchanged #E5E2D9 |
 | `--muted` | #D9D6CC (Figma) | unchanged |
-| `--primary` | #434A45 | #D0AE41 |
-| `--ring` | #2A4E51 | #D0AE41 |
-| `--accent` | #2A4E51 | #2A4E51 |
-| `--muted-foreground` | #3E4244 | unchanged #C5C2BA |
-| `--destructive` | #75352A | #74362D |
+| `--primary` | #434945 | #D1AF43 |
+| `--ring` | #2A4D50 | #D1AF43 |
+| `--accent` | #2A4D50 | #2A4D50 |
+| `--muted-foreground` | #3D4042 | #CDCBC4 |
+| `--destructive` | #733429 | #73352C |
+| `--semantic-background` | #585756 | unchanged |
 
 New `@theme inline` entries:
 

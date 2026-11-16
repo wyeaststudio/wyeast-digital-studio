@@ -1,6 +1,6 @@
 # 001 — Foundation: Spec
 
-**Status:** Approved (amended 2026-11-16: R1 AAA colors, R14 same-origin framing, R24 added. Owner approved during planning.) · **Owner:** Wy'east Digital Studio · **Figma:** [Desktop - 1440px - Light](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=10-13)
+**Status:** Approved (amended 2026-11-16: R1 AAA colors, R14 same-origin framing, R24 added; T3 color nudges, semantic darkened, sidebar excluded. Owner approved.) · **Owner:** Wy'east Digital Studio · **Figma:** [Desktop - 1440px - Light](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=10-13)
 
 ## Summary
 
@@ -18,7 +18,7 @@ Before any page is built, set up the design system, theming, content tooling, an
 
 | ID | Requirement | Acceptance criteria |
 | --- | --- | --- |
-| FOUND-R1 | THE SYSTEM SHALL use the Figma values for light-mode `foreground` (#2E2924) and `muted` (#D9D6CC), adjust these colors so every text/background token pair reaches **≥ 7:1 (AAA)**, and keep every other color from the Wy'east tokens. Adjusted colors: `primary` light #434A45, `primary` dark (and `ring` dark) #D0AE41, `accent` (both modes) and `ring` light #2A4E51, `muted-foreground` light #3E4244, `destructive` light #75352A, `destructive` dark #74362D. | - `globals.css` contains the OKLCH equivalents with hex comments<br>- An automated contrast test (FOUND-R24) passes |
+| FOUND-R1 | THE SYSTEM SHALL use the Figma values for light-mode `foreground` (#2E2924) and `muted` (#D9D6CC), adjust these colors so every text/background token pair reaches **≥ 7:1 (AAA)**, and keep every other color from the Wy'east tokens. Adjusted colors (final, with a rounding margin, T3): `primary` light #434945, `primary`/`ring` dark #D1AF43, `accent` (both modes) and `ring` light #2A4D50, `muted-foreground` light #3D4042 and dark #CDCBC4, `destructive` light #733429 and dark #73352C, `semantic-background` light #585756. Sidebar tokens are excluded because the site has no sidebar. | - `globals.css` contains the OKLCH equivalents with hex comments<br>- An automated contrast test (FOUND-R24) passes |
 | FOUND-R2 | THE SYSTEM SHALL expose these Figma variables as Tailwind tokens: `border-accent` (#626D65 at 50%), shadow scale `shadow-sm` (0 1 3 0 / 10%), `shadow` (0 4 16 0 / 12%), and `shadow-lg` (0 8 32 −4 / 8%), `--navbar-height` (64 px), and backdrop blur (24 px). | - Classes `border-border-accent`, `shadow-sm`/`shadow`/`shadow-lg`, `h-(--navbar-height)`, and `backdrop-blur-(--blur-backdrop)` compile<br>- Vitest snapshot or a CSS assertion confirms the values |
 | FOUND-R3 | THE SYSTEM SHALL load **Montserrat Alternates** (400, 500, 700) as `font-sans` and **Playfair Display** (400, 700) as `font-serif`/`font-heading` with `next/font`, self-hosted, Latin subset. | - Headings render in Playfair Display and body text in Montserrat Alternates<br>- No request goes to `fonts.googleapis.com` at runtime<br>- CLS is 0 from font loading |
 | FOUND-R4 | THE SYSTEM SHALL provide a type scale that matches the Figma text styles (xs 12/16, sm 14/20, base 16/24, lg 18/28, xl 20/28, 4xl 36/40) through Tailwind defaults, adding custom utilities only where Figma differs. | - Each Figma text style maps to a documented utility combination in the plan |

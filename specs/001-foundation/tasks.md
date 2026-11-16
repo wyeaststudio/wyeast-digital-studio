@@ -17,11 +17,12 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase B — Design system
 
-- [ ] **T3 — Tokens: AAA colors, Figma extras, contrast test**
+- [x] **T3 — Tokens: AAA colors, Figma extras, contrast test**
   Update `globals.css` with the color table from the plan (OKLCH plus a hex comment). Add `--border-accent`, the shadow scale, `--blur-backdrop`, `--spacing-navbar`, and the reduced-motion block. Add `src/app/(web)/tokens.test.ts`, which parses `globals.css` and asserts ≥ 7:1 for every foreground/surface pair in both themes and that the new `@theme` tokens exist.
   _Covers:_ FOUND-R1, R2, R5, R9, R24 · _Verify:_ `npm run test -- tokens` and `npm run test:e2e -- home` (axe passes)
+  - Task log: the colors were nudged by one or two hex steps to stay ≥ 7:1 after rounding. Dark muted-foreground on card was 6.48, so it was lightened to #CDCBC4. Light semantic-background was darkened to #585756, and sidebar pairs are excluded (owner decision). Result: 35/35 unit tests pass, and axe finds 0 violations in light and dark (chromium, mobile-chromium).
 
-- [ ] **T4 — Fonts**
+- [x] **T4 — Fonts**
   Create `src/app/fonts.ts` (Playfair Display and Montserrat Alternates) and apply the variables in `(web)/layout.tsx`, removing Geist. Map `--font-sans`, `--font-serif`, and `--font-heading` in `@theme`, and remove the `--font-mono` Geist reference. Add base styles: `h1–h6 { font-family: var(--font-heading) }`. Add the e2e font assertions and the no-Google-request check.
   _Covers:_ FOUND-R3, R4 · _Verify:_ `npm run test:e2e -- fonts`
 
@@ -78,4 +79,4 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 - [ ] Create a Sanity **Viewer** API token and set `SANITY_API_READ_TOKEN` in `.env.local` and Vercel
 - [ ] Generate `SANITY_REVALIDATE_SECRET`, then create the Sanity webhook (documented in T10) pointing to `https://<domain>/api/revalidate`
 - [ ] Add the Sanity variables as GitHub repo secrets (T13) and enable branch protection
-- [ ] Update the Figma primary, accent, muted-foreground, and destructive colors to the AAA values
+- [ ] Update the Figma colors to the final AAA values: primary #434945 / dark #D1AF43, accent #2A4D50, muted-foreground #3D4042 / dark #CDCBC4, destructive #733429 / dark #73352C, semantic-background #585756
