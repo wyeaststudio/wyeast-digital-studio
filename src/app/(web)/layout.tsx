@@ -1,18 +1,11 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { draftMode } from 'next/headers';
+import { Suspense } from 'react';
 import { StructuredData } from '@/components/seo/structured-data';
+import { ThemeProvider } from '@/components/theme/theme-provider';
+import { montserratAlternates, playfairDisplay } from '@/app/fonts';
 import { createMetadata } from '@/lib/site-config';
 import './globals.css';
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
 
 export const metadata: Metadata = createMetadata({
   title: {
@@ -20,6 +13,14 @@ export const metadata: Metadata = createMetadata({
     template: "%s | Wy'east Digital Studio",
   },
 });
+
+async function DraftModeTools() {
+  const { isEnabled } = await draftMode();
+  if (!isEnabled) return null;
+  // Dynamic import keeps the Visual Editing bundle (~1.2 MB) out of public pages.
+  const { VisualEditing } = await import('next-sanity/visual-editing');
+  return <VisualEditing />;
+}
 
 export default function RootLayout({
   children,
@@ -29,7 +30,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${montserratAlternates.variable} ${playfairDisplay.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
@@ -40,7 +41,10 @@ export default function RootLayout({
           Skip to content
         </a>
         <StructuredData />
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
+        <Suspense fallback={null}>
+          <DraftModeTools />
+        </Suspense>
       </body>
     </html>
   );

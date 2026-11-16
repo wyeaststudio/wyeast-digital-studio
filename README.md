@@ -20,6 +20,25 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Sanity setup
+
+1. Copy `env.example` to `.env.local` and fill in the values. `.env.local` is git-ignored, so never commit tokens.
+2. **Draft mode / Visual Editing:** in [sanity.io/manage](https://sanity.io/manage) → API → Tokens, create a **Viewer** token and set it as `SANITY_API_READ_TOKEN` in `.env.local` and in Vercel. Then open `/studio` → Presentation.
+3. **Publish webhook** (content updates without a redeploy): generate a random secret (`openssl rand -hex 32`) and set it as `SANITY_REVALIDATE_SECRET`. Then go to sanity.io/manage → API → Webhooks → Create:
+   - URL: `https://<your-domain>/api/revalidate` · Method: `POST` · Trigger on: create, update, delete
+   - Filter: `!(_id in path("drafts.**"))`
+   - Projection: `{_type, "slug": slug.current}`
+   - Secret: the same value as `SANITY_REVALIDATE_SECRET`
+4. **Types:** after changing schemas or GROQ queries, run `npm run typegen` and commit the updated `sanity.types.ts`.
+
+Cache tags follow `<_type>` and `<_type>:<slug>` (see `src/sanity/fetch.ts`).
+
+## Quality checks
+
+- `npm run check` runs lint, typecheck, unit tests (Vitest), build, end-to-end and accessibility tests (Playwright + axe), and Lighthouse CI (score 100 required in every category, mobile and desktop). If port 3000 is busy, use `PORT=3100 npm run check`.
+- `npm run ux:screens -- <feature> <routes...>` captures UX review screenshots (375, 768, 1280, and 1920 px, light and dark) from a running server into `specs/<feature>/review/screenshots/`.
+- **GitHub Actions** (`.github/workflows/check.yml`) runs `npm run check` on every PR and on pushes to `main`. Add these repository secrets (Settings → Secrets and variables → Actions): `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`. Then enable branch protection on `main` with the **check** status required.
+
 ## Launch Readiness Checklist
 
 Before shipping a client project from this template, review the following:

@@ -1,6 +1,8 @@
 import { defineConfig } from 'sanity';
+import { presentationTool } from 'sanity/presentation';
 import { structureTool } from 'sanity/structure';
-import { dataset, projectId } from '@/sanity/env';
+import { schemaTypes } from './src/sanity/schemas';
+import { dataset, projectId } from './src/sanity/env';
 
 export default defineConfig({
   name: 'wyeast-studio',
@@ -10,16 +12,18 @@ export default defineConfig({
   projectId,
   dataset,
 
-  plugins: [structureTool()],
+  plugins: [
+    structureTool(),
+    presentationTool({
+      previewUrl: {
+        previewMode: {
+          enable: '/api/draft-mode/enable',
+        },
+      },
+    }),
+  ],
 
   schema: {
-    types: [
-      {
-        name: 'page',
-        type: 'document',
-        title: 'Page Content',
-        fields: [{ name: 'title', type: 'string', title: 'Title' }],
-      },
-    ],
+    types: schemaTypes,
   },
 });

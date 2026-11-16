@@ -5,5 +5,8 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true,
+  // Next's data cache (via 'use cache' in fetch.ts) handles caching; the CDN would delay webhook revalidation.
+  useCdn: false,
+  perspective: 'published',
+  stega: { studioUrl: '/studio' },
 });
