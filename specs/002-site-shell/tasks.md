@@ -38,21 +38,25 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   _Covers:_ SHELL-R11, R12 · _Verify:_ `npm run test -- theme-switch && npm run test:e2e -- theme`
   - Task log: before hydration, the switch renders the same three options disabled (rather than an empty placeholder), so the space is reserved and nothing shifts. Re-pressing the selected option is ignored, since Base UI would otherwise empty the group. The e2e helper opens the mobile menu when present, so the theme tests keep working after T12. 5/5 unit tests pass; e2e theme and home pass 26/26 (chromium, mobile-chromium).
 
-- [ ] **T7 — Current-path helper, desktop nav, and header**
+- [x] **T7 — Current-path helper, desktop nav, and header**
   Add `layout/is-current-path.ts` and its test (`/` exact match; segment prefix otherwise; parent marked when a child matches). Create `desktop-nav.tsx` (shadcn `NavigationMenu`, `nav[aria-label="Main"]`, hidden below `lg`, `aria-current`, a trigger plus a panel for items with children), `desktop-nav-container.tsx` (`usePathname`), and the presentational `site-header.tsx` (logo link named "Wy'east Digital Studio, home", the nav, the CTA as `buttonVariants({ variant: 'accent' })` at ≥ 44 px, a divider, and the theme switch). Pass every `href` through `stegaClean`. Add `site-header.test.tsx` and `desktop-nav.test.tsx` with fixtures, including `null` content.
   _Covers:_ SHELL-R3, R4, R5, R6, R7, R23 · _Verify:_ `npm run test -- is-current-path site-header desktop-nav`
+  - Task log: added `shell-props.ts` (`toShellProps`), which maps the query result to validated props, strips stega from hrefs and the site name, and drops invalid entries, plus `site-link.tsx` (next/link vs. external). Base UI's NavigationMenu root renders the `nav` itself, so it carries `aria-label="Main"`. Removed the generated `navigation-menu.tsx` classes that suppressed focus outlines on submenu links (WCAG 2.4.7), and added `'use client'` to it. A parent with an href gets a "{label} overview" first child link.
 
-- [ ] **T8 — Mobile menu**
+- [x] **T8 — Mobile menu**
   Create `layout/mobile-menu.tsx` (shadcn `Sheet` from the right; "Open menu" trigger at 44 px, visible below `lg`; `SheetTitle` "Menu"; nested link lists; the CTA; the theme switch; "Close menu"; calls `onOpenChange(false)` when a link is clicked) and `mobile-menu-container.tsx` (owns `open` and closes it when the pathname changes). Add it to `site-header.tsx`. Add `mobile-menu.test.tsx`.
   _Covers:_ SHELL-R13, R14, R15, R16 · _Verify:_ `npm run test -- mobile-menu`
+  - Task log: the generated sheet close button is 28 px, so it's replaced with a 44 px "Close menu" button. While the sheet is open, Base UI makes the rest of the page inert (including the trigger). The theme switch is injected as a slot.
 
-- [ ] **T9 — Header visibility (hide on scroll down, show on scroll up)**
+- [x] **T9 — Header visibility (hide on scroll down, show on scroll up)**
   Create `layout/use-header-visibility.ts` with a pure `nextVisibility(prevY, y, threshold)` and a passive, `requestAnimationFrame`-throttled scroll listener, and `header-visibility.tsx` (a client wrapper that sets `data-hidden` and keeps the header visible near the top, while `:focus-within`, and while a descendant has `aria-expanded="true"`). Add `use-header-visibility.test.ts` for the pure function.
   _Covers:_ SHELL-R8, R16 · _Verify:_ `npm run test -- use-header-visibility`
+  - Task log: "keep visible while focused or while a menu is open" is pure CSS (`:not(:focus-within, :has([aria-expanded='true']))`), so the hook only tracks scroll direction.
 
-- [ ] **T10 — Footer and copyright year**
+- [x] **T10 — Footer and copyright year**
   Create `src/lib/copyright-year.ts` (`'use cache'`, `cacheLife('days')`) and the presentational `layout/site-footer.tsx`: `bg-primary text-primary-foreground`, `BrandLockup` linking home, `nav[aria-label="Footer"]`, an `<address>` with `mailto:`/`tel:` and the service area, social links as text with an `sr-only` "{site name} on" prefix, the copyright line, `focus-visible:outline-primary-foreground`, and nothing rendered for empty sections. Use `stegaClean` on hrefs. Add `site-footer.test.tsx`, including `null` content. Social links use small inline SVG icons (spec Q6) in `layout/social-icons.tsx`, `aria-hidden`, with the `sr-only` name carrying the link text.
   _Covers:_ SHELL-R17, R18, R19, R23 · _Verify:_ `npm run test -- site-footer`
+  - Task log: the Figma footer's upward shadow became a `shadow-up` token instead of an arbitrary value. `mailto:`/`tel:` hrefs are built in `toShellProps`. Full unit suite: 123/123.
 
 ## Phase D — Wiring and status pages
 
