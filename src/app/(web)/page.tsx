@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { ThemeToggleContainer } from '@/components/theme/theme-toggle-container';
+import { ThemeSwitchContainer } from '@/components/theme/theme-switch-container';
 
 const checklist = [
   'Thoughtful brand-led web experiences',
@@ -23,7 +23,7 @@ export default function HomePage() {
     >
       {/* Temporary placement until the site header (spec 002) owns the toggle. */}
       <div className="absolute right-4 top-4">
-        <ThemeToggleContainer />
+        <ThemeSwitchContainer />
       </div>
       <div className="w-full max-w-3xl space-y-6 text-center">
         <div className="space-y-3">

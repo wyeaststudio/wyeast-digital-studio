@@ -33,9 +33,10 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase C — Components (presentational first, with fixtures)
 
-- [ ] **T6 — Theme switch (replaces the 001 toggle)**
+- [x] **T6 — Theme switch (replaces the 001 toggle)**
   Create `theme/theme-switch.tsx` (shadcn `ToggleGroup`, `aria-label="Theme"`, three `size-11` items named "Light theme", "System theme", and "Dark theme", plus a same-size placeholder while `value` is undefined) and `theme-switch-container.tsx` (`useTheme().theme` with the existing hydration guard). Delete `theme-toggle.tsx`, `theme-toggle-container.tsx`, and `theme-toggle.test.tsx`, and add `theme-switch.test.tsx`. Temporarily place `ThemeSwitchContainer` on the home page where the old toggle was, so the e2e tests keep working until T12. Rewrite the toggle cases in `e2e/theme.spec.ts` (choose Dark → persists after reload; System follows `colorScheme`; keyboard; no flash). Add an amendment note to the 001 spec status line saying FOUND-R8 is superseded by SHELL-R11.
   _Covers:_ SHELL-R11, R12 · _Verify:_ `npm run test -- theme-switch && npm run test:e2e -- theme`
+  - Task log: before hydration, the switch renders the same three options disabled (rather than an empty placeholder), so the space is reserved and nothing shifts. Re-pressing the selected option is ignored, since Base UI would otherwise empty the group. The e2e helper opens the mobile menu when present, so the theme tests keep working after T12. 5/5 unit tests pass; e2e theme and home pass 26/26 (chromium, mobile-chromium).
 
 - [ ] **T7 — Current-path helper, desktop nav, and header**
   Add `layout/is-current-path.ts` and its test (`/` exact match; segment prefix otherwise; parent marked when a child matches). Create `desktop-nav.tsx` (shadcn `NavigationMenu`, `nav[aria-label="Main"]`, hidden below `lg`, `aria-current`, a trigger plus a panel for items with children), `desktop-nav-container.tsx` (`usePathname`), and the presentational `site-header.tsx` (logo link named "Wy'east Digital Studio, home", the nav, the CTA as `buttonVariants({ variant: 'accent' })` at ≥ 44 px, a divider, and the theme switch). Pass every `href` through `stegaClean`. Add `site-header.test.tsx` and `desktop-nav.test.tsx` with fixtures, including `null` content.
