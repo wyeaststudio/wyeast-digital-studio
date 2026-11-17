@@ -36,6 +36,7 @@
   --color-border-accent: var(--border-accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -63,6 +64,7 @@
   --shadow-lg: 0 8px 32px -4px rgb(0 0 0 / 0.08);
   --blur-backdrop: 24px;
   --spacing-navbar: 4rem;
+  --spacing-navbar-mobile: 3.5rem;
 }
 
 :root {
@@ -80,6 +82,7 @@
   --muted: oklch(0.8757 0.0139 92.9986); /* #D9D6CC */
   --muted-foreground: oklch(0.3694 0.0053 236.6431); /* #3D4042 */
   --accent: oklch(0.3951 0.0409 202.7353); /* #2A4D50 */
+  --accent-hover: oklch(0.3462 0.0353 204.1782); /* #223F42 */
   --accent-foreground: oklch(0.913 0.013 91.525); /* #E5E2D9 */
   --destructive: oklch(0.4073 0.0915 31.5112); /* #733429 */
   --destructive-hover: oklch(0.3515 0.0755 31.6677); /* #5C2A21 */
@@ -108,6 +111,9 @@
   --border-width: 1px;
   --stroke-width: 2px;
   --border-accent: oklch(0.5229 0.0182 154.1278 / 50%); /* #626D65 */
+  /* Figma uses 45%; 85% keeps foreground text at 7:1 over any surface (SHELL-R10). */
+  --header-surface-alpha: 85%;
+  --header-offset: 1rem;
 }
 
 .dark {
@@ -125,6 +131,7 @@
   --muted: oklch(0.293 0.009 234); /* #282D30 */
   --muted-foreground: oklch(0.8417 0.0098 93.5871); /* #CDCBC4 */
   --accent: oklch(0.3951 0.0409 202.7353); /* #2A4D50 */
+  --accent-hover: oklch(0.3462 0.0353 204.1782); /* #223F42 */
   --accent-foreground: oklch(0.913 0.013 91.525); /* #E5E2D9 */
   --destructive: oklch(0.4095 0.0895 29.909); /* #73352C */
   --destructive-hover: oklch(0.3555 0.0748 29.5052); /* #5D2B24 */
@@ -161,6 +168,13 @@
   }
   html {
     @apply font-sans;
+    /* Keeps focused elements and anchor targets clear of the sticky header (SHELL-R9). */
+    scroll-padding-top: calc(var(--spacing-navbar) + var(--header-offset) + 1rem);
+  }
+  @media (width >= 64rem) {
+    :root {
+      --header-offset: 1.375rem;
+    }
   }
   h1,
   h2,
@@ -185,5 +199,14 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+}
+
+@layer components {
+  .site-header {
+    transition: translate 200ms ease-out;
+  }
+  .site-header[data-hidden='true'] {
+    translate: 0 calc(-100% - var(--header-offset));
   }
 }

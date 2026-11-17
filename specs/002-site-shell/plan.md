@@ -174,12 +174,12 @@ The existing webhook already revalidates by `_type`, so publishing either single
 | `--header-offset` | `1rem` (mobile), `1.375rem` at `lg` (Figma y = 22) | The pill floats below the viewport edge |
 | `--spacing-navbar-mobile` | `3.5rem` (56 px) | Figma `mobile-navbar` height |
 | `html { scroll-padding-top: calc(var(--spacing-navbar) + var(--header-offset) + 1rem) }` | — | SHELL-R9 (Focus Not Obscured, anchor targets) |
-| `--accent-hover` | Light and dark values derived from `--accent` (#2A4D50), darkened until `accent-foreground` stays ≥ 7:1; added to `tokens.test.ts` pairs | The teal CTA needs an opaque hover state (FOUND-R1 rule) |
+| `--accent-hover` | #223F42 in both themes (8.73:1 with `accent-foreground`); added to `tokens.test.ts` pairs | The teal CTA needs an opaque hover state (FOUND-R1 rule) |
 | Button `accent` variant | `bg-accent text-accent-foreground hover:bg-accent-hover` | The Figma "Book Appointment" teal. Added to `button.tsx` with a one-line change. |
 
-**Header surface (SHELL-R10, Figma deviation):** Figma uses `background` at 45% with a 24 px blur. With dark content (for example the `primary` footer or a dark hero image) beneath it, 45% can't hold 7:1 for `foreground` text. The plan uses `bg-background/(--header-surface-alpha)` with `backdrop-blur-backdrop`, `border-border-accent`, `shadow-lg`, and `rounded-2xl` (16 px → the 18 px token, the nearest on the scale). `--header-surface-alpha` starts at 90%. A new case in `tokens.test.ts` alpha-blends `--background` over each surface token in both themes (`background`, `card`, `muted`, `primary`, `accent`, `foreground`) and asserts `foreground` ≥ 7:1, lowering the alpha only as far as the test allows. The final value is recorded here when T4 completes.
+**Header surface (SHELL-R10, Figma deviation):** Figma uses `background` at 45% with a 24 px blur. With dark content (for example the `primary` footer or a dark hero image) beneath it, 45% can't hold 7:1 for `foreground` text. The plan uses `bg-background/(--header-surface-alpha)` with `backdrop-blur-backdrop`, `border-border-accent`, `shadow-lg`, and `rounded-2xl` (16 px → the 18 px token, the nearest on the scale). `--header-surface-alpha` is **85%** (T4: the lowest 5% step that passes in both themes; light alone would pass at 80%). A new case in `tokens.test.ts` alpha-blends `--background` over each surface token in both themes (`background`, `card`, `muted`, `primary`, `accent`, `foreground`) and asserts `foreground` ≥ 7:1.
 
-**Footer focus ring (SHELL-R19):** the `ring` token (#2A4D50 light) is too close to `primary` (#434945) to reach 3:1, so footer links use `focus-visible:outline-primary-foreground`. `tokens.test.ts` adds the pair `primary-foreground` vs `primary` ≥ 3:1 for non-text (it's already 7:1 for text).
+**Footer focus ring (SHELL-R19):** the `ring` token (#2A4D50 light) is too close to `primary` (#434945) to reach 3:1, so footer links use `focus-visible:outline-primary-foreground`. That pair is already covered at 7:1 by the existing text-pair test, so no new case is needed.
 
 ### Breakpoints
 

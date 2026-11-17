@@ -21,13 +21,15 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase B — Design system additions
 
-- [ ] **T4 — Tokens, header surface, and button accent variant**
+- [x] **T4 — Tokens, header surface, and button accent variant**
   In `globals.css`, add `--accent-hover` (light and dark), `--header-surface-alpha`, `--header-offset` (1 rem, and 1.375 rem at `lg`), `--spacing-navbar-mobile` (3.5 rem), `html { scroll-padding-top: … }`, and the `.site-header[data-hidden="true"]` translate rule. Add the `accent` variant to `button.tsx`. Extend `tokens.test.ts` with: `accent-foreground` on `accent-hover` ≥ 7:1; `primary-foreground` vs `primary` ≥ 3:1; and `foreground` on the header surface blended over `background`, `card`, `muted`, `primary`, `accent`, and `foreground` ≥ 7:1 in both themes. Start the alpha at 90%, set it to the lowest value the test allows, and record that value in the plan.
   _Covers:_ SHELL-R7, R9, R10, R19 · _Verify:_ `npm run test -- tokens`
+  - Task log: header alpha is 85% (light needs 80%, dark 85%; Figma's 45% fails). `--accent-hover` is #223F42 (8.73:1). The `primary-foreground` vs `primary` ring pair was already covered at 7:1, so no duplicate case. `button.test.ts` now covers the `accent` variant. 57/57 tests pass.
 
-- [ ] **T5 — Generated primitives and brand logo** _(lightweight model)_
+- [x] **T5 — Generated primitives and brand logo** _(lightweight model)_
   Run `npx shadcn add sheet navigation-menu toggle-group` and **decline** the `button.tsx` overwrite; confirm `git diff src/components/ui/button.tsx` shows only the T4 change. Export the Figma `Brand Logo` (31:5) and `footer-logo` (73:118) nodes as SVG with outlined text, and create `src/components/layout/brand-logo.tsx` (`BrandMark` and `BrandLockup`, using `currentColor` and `aria-hidden`).
   _Covers:_ SHELL-R3, R17 (assets) · _Verify:_ `npm run lint && npm run typecheck`
+  - Task log: the `base-nova` registry installed an unrelated npm package named `cn` and imported from it. It was uninstalled and the imports were pointed at `@/lib/utils`, so `package.json` is unchanged. `button.tsx` was kept. The Figma header mark (31:5) is a raster image, so `BrandMark` reuses the lockup's vector arrow and mountain with a cropped viewBox. Path checksums match the Figma export.
 
 ## Phase C — Components (presentational first, with fixtures)
 
