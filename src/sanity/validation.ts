@@ -1,4 +1,4 @@
-const INTERNAL_PATH = /^\/(?!\/)[^\s]*$/;
+const INTERNAL_PATH = /^\/(?!\/)[^\s\\]*$/;
 
 /** True for an internal path (`/about`) or an absolute `https://` URL. */
 export function isValidHref(value: unknown): value is string {
