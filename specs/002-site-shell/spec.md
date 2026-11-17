@@ -1,6 +1,6 @@
 # 002 — Site shell: Spec
 
-**Status:** Approved (2026-11-16; Q6 and Q7 still open) · **Owner:** Wy'east Digital Studio · **Figma:** [navbar-header (desktop)](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=21-58), [mobile-navbar](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=36-99), [Footer](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=68-620)
+**Status:** Approved (2026-11-16) · **Owner:** Wy'east Digital Studio · **Figma:** [navbar-header (desktop)](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=21-58), [mobile-navbar](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=36-99), [Footer](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=68-620)
 
 ## Summary
 
@@ -123,5 +123,5 @@ SEO defaults (title template, description, OG image) are **not** part of this fe
 - [x] **Q3** Footer: the Figma look plus footer links, contact email and phone, the PNW service area, and social links, all from Sanity. (Owner)
 - [x] **Q4** Header scroll: hide on scroll down, show on scroll up. (Owner)
 - [x] **Q5** Mobile menu: a full-height side sheet (modal dialog). (Owner)
-- [ ] **Q6** Social links render as **text** ("LinkedIn") because `lucide-react` v1 has no brand icons, and adding an icon package is a new dependency. Is text acceptable, or should the plan add a small set of hand-drawn inline SVG icons?
-- [ ] **Q7** Seed content: the plan seeds Home, Services (with children from the Figma service cards), About, Contact, and a "Book Appointment" CTA pointing to `/contact`. Confirm these labels and the CTA destination, and supply the contact email, phone, service area wording, and social profile URLs.
+- [x] **Q6** Social links use small hand-drawn inline SVG icons with visually hidden names (no icon package). (Owner)
+- [x] **Q7** Seed the proposed nav (Home, Services with the six Figma service children at `/services/<slug>`, About, Contact; footer links Services, About, Contact) and CTA "Book Appointment" → `/contact`. Contact: kelly.gibbens@wyeast.studio, (503) 583-2805, "Portland, Oregon and the Pacific Northwest". No social URLs yet. (Owner)

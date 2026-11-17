@@ -7,7 +7,7 @@ Features are built in this order. Each one goes through the spec → plan → ta
 | # | Feature | Depends on | Status |
 | --- | --- | --- | --- |
 | 001 | **Foundation**: testing toolchain (Vitest, Playwright, axe, Lighthouse CI), fonts, theme toggle, TypeGen, Sanity Visual Editing and draft mode, the `.dark` class wired through `next-themes` | — | In progress |
-| 002 | **Site shell**: header and navigation, footer, skip link, the `siteSettings`/`navigation` singletons, and 404 and error pages | 001 | In progress (spec and plan approved, tasks in review) |
+| 002 | **Site shell**: header and navigation, footer, skip link, the `siteSettings`/`navigation` singletons, and 404 and error pages | 001 | In progress (spec and plan approved, tasks approved) |
 | 003 | **SEO, GEO, and AEO system**: SEO object, metadata from Sanity, JSON-LD builders, sitemap from content, `llms.txt`, and FAQ block | 001 | Not started |
 | 004 | **Page builder**: section block library (hero, rich text, feature grid, CTA, FAQ, testimonial) and the `landingPage` type | 002, 003 | Not started |
 | 005 | **Home page** | 004 | Not started |

@@ -43,7 +43,9 @@ src/sanity/validation.ts        # isValidHref(): pure, unit-tested (SHELL-R21)
 src/sanity/structure.ts         # Structure Builder: singletons first, then other types
 ```
 
-### `link` (object)
+### `siteLink` (object)
+
+> Implementation note (T1): named `siteLink` instead of `link` because `link` is Portable Text's default annotation name and would collide once 004 adds rich text. A `labelledLink` object (`{ label, link: siteLink }`) is shared by nav children, the header CTA, and footer links.
 
 | Field | Type | Validation |
 | --- | --- | --- |
@@ -157,7 +159,7 @@ The existing webhook already revalidates by `_type`, so publishing either single
 | `src/components/layout/desktop-nav-container.tsx` | Client | `usePathname()` → `currentPath` |
 | `src/components/layout/mobile-menu.tsx` | Client | shadcn `Sheet` (Base UI `Dialog`) from the right. Trigger "Open menu" (44 px, `Menu` icon); `SheetTitle` "Menu"; nested link lists; CTA; `ThemeSwitchContainer`; "Close menu". Closes on link click. Props: `{ items, cta, currentPath, open, onOpenChange }`. |
 | `src/components/layout/mobile-menu-container.tsx` | Client | Owns `open` with `useState` and closes it on `usePathname()` change |
-| `src/components/layout/site-footer.tsx` | Server (presentational) | `bg-primary text-primary-foreground`: the logo lockup, `nav[aria-label="Footer"]`, `<address>` with `mailto:`/`tel:` and the service area, social links as text ("LinkedIn") with an `sr-only` prefix so the name reads "Wy'east Digital Studio on LinkedIn", and the copyright line. Sections without data render nothing. Props: `{ settings, links, year }`. |
+| `src/components/layout/site-footer.tsx` | Server (presentational) | `bg-primary text-primary-foreground`: the logo lockup, `nav[aria-label="Footer"]`, `<address>` with `mailto:`/`tel:` and the service area, social links as inline SVG icons (`social-icons.tsx`, spec Q6) with an `sr-only` name "Wy'east Digital Studio on LinkedIn", and the copyright line. Sections without data render nothing. Props: `{ settings, links, year }`. |
 | `src/components/layout/brand-logo.tsx` | Server | Inline SVG components `BrandMark` (header) and `BrandLockup` (footer), exported from the Figma `Brand Logo` (31:5) and `footer-logo` (73:118) nodes with text outlined, using `currentColor` so the tokens drive them in both themes. `aria-hidden`; the parent link carries the name. |
 | `src/components/layout/is-current-path.ts` | Shared | Pure `isCurrentPath(href, currentPath)` and `itemIsCurrent(item, currentPath)`. Exact match for `/`; segment-prefix match otherwise. |
 | `src/components/layout/status-page.tsx` | Server-safe (presentational) | Shared 404 and error layout: `h1`, body, and an actions slot. Top padding clears the floating header. |
@@ -239,6 +241,6 @@ UX review: `npm run ux:screens 002-site-shell / /this-does-not-exist`.
 - **`NavigationMenu` opens on hover by default.** Hover-open with a close delay is fine for pointer users, but the trigger must still toggle on click and keyboard. If Base UI's hover behavior causes flicker in tests, set it to click-only.
 - **Shadcn generation overwriting `button.tsx`** would drop the 001 AAA hover tokens. The task explicitly declines the overwrite and checks the diff.
 - **Stega in hrefs** would break links in draft mode; `stegaClean` on every attribute value prevents it.
-- **Text social links** instead of icons (spec Q6). If the owner wants icons, add hand-drawn inline SVGs in `brand-logo.tsx`'s pattern; no package.
+- **Social icons** are hand-drawn inline SVGs (spec Q6), so there's no icon package. Only the platforms in the `socialLink` options list get an icon.
 - **Links to unbuilt pages** (Services, About, Contact) return 404 until 005–010 ship. That's acceptable before launch (011).
 - **Alternative considered:** a single `siteSettings` document that also holds navigation. Rejected because the roadmap names two singletons, and keeping navigation separate keeps each editor form short and lets 003 grow `siteSettings` with SEO fields.

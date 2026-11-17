@@ -1,22 +1,23 @@
 # 002 — Site shell: Tasks
 
-**Status:** In review · **Plan:** [plan.md](./plan.md)
+**Status:** Approved (2026-11-16) · **Plan:** [plan.md](./plan.md)
 
 Run the tasks in order. Each is small and independently verifiable, and each lists the requirements it covers and how to verify it. While working, run only the task's own check. Run the full Definition of Done (constitution §9) once, in T14. Tasks marked _(lightweight model)_ are routine generation that can go to a cheaper model (constitution §10).
 
 ## Phase A — Content
 
-- [ ] **T1 — Link validation and object types** _(lightweight model)_
+- [x] **T1 — Link validation and object types** _(lightweight model)_
   Add `src/sanity/validation.ts` with `isValidHref()` (accepts `/path` and `https://…`; rejects bare words, `//host`, `http:`, `mailto:`, `javascript:`) and `src/sanity/validation.test.ts`. Add `schemas/objects/link.ts`, `nav-item.ts` (children are an inline `{ label, link }` object, so nesting stops at one level), and `social-link.ts`, with the validation from the plan.
   _Covers:_ SHELL-R21 · _Verify:_ `npm run test -- validation`
 
-- [ ] **T2 — Singletons and Studio structure**
+- [x] **T2 — Singletons and Studio structure**
   Add `schemas/singletons/site-settings.ts`, `navigation.ts`, and `index.ts` (`SINGLETON_TYPES`), and register every new type in `schemas/index.ts`. Add `src/sanity/structure.ts` (singletons first, then a divider, then other types without the singletons). In `sanity.config.ts`, pass the structure to `structureTool`, filter singleton templates out of `schema.templates`, and limit singleton `document.actions` to publish, discard changes, and restore. Check the v6 Structure Builder API in the current Sanity docs first.
   _Covers:_ SHELL-R20, R21 · _Verify:_ `npm run build`; in `npm run dev`, `/studio` shows "Site settings" and "Navigation" with no create, delete, or duplicate actions
 
-- [ ] **T3 — Shell query, TypeGen, and loader**
+- [x] **T3 — Shell query, TypeGen, and loader**
   Add `SHELL_QUERY` to `src/sanity/queries.ts` and run `npm run typegen` (commit `sanity.types.ts`). Add `src/sanity/loaders/shell.ts` (`getShell()` with the tags `siteSettings` and `navigation`; returns `null` and logs on error) and `shell.test.ts`, which mocks `sanityFetch` to reject and resolve.
   _Covers:_ SHELL-R22, R23 · _Verify:_ `npm run typegen && npm run typecheck && npm run test -- shell`
+  - Task log: the query filters on `_type` as well as `_id` so TypeGen produces a single non-union result type. `@sanity/icons` v5 only exposes per-icon subpaths (`@sanity/icons/Cog`). `sanity schema validate` reports 0 errors and 0 warnings. The Studio's singleton UI is checked manually in the UX review.
 
 ## Phase B — Design system additions
 
@@ -47,7 +48,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   _Covers:_ SHELL-R8, R16 · _Verify:_ `npm run test -- use-header-visibility`
 
 - [ ] **T10 — Footer and copyright year**
-  Create `src/lib/copyright-year.ts` (`'use cache'`, `cacheLife('days')`) and the presentational `layout/site-footer.tsx`: `bg-primary text-primary-foreground`, `BrandLockup` linking home, `nav[aria-label="Footer"]`, an `<address>` with `mailto:`/`tel:` and the service area, social links as text with an `sr-only` "{site name} on" prefix, the copyright line, `focus-visible:outline-primary-foreground`, and nothing rendered for empty sections. Use `stegaClean` on hrefs. Add `site-footer.test.tsx`, including `null` content. (If spec Q6 is answered with "icons", add inline SVG icons here.)
+  Create `src/lib/copyright-year.ts` (`'use cache'`, `cacheLife('days')`) and the presentational `layout/site-footer.tsx`: `bg-primary text-primary-foreground`, `BrandLockup` linking home, `nav[aria-label="Footer"]`, an `<address>` with `mailto:`/`tel:` and the service area, social links as text with an `sr-only` "{site name} on" prefix, the copyright line, `focus-visible:outline-primary-foreground`, and nothing rendered for empty sections. Use `stegaClean` on hrefs. Add `site-footer.test.tsx`, including `null` content. Social links use small inline SVG icons (spec Q6) in `layout/social-icons.tsx`, `aria-hidden`, with the `sr-only` name carrying the link text.
   _Covers:_ SHELL-R17, R18, R19, R23 · _Verify:_ `npm run test -- site-footer`
 
 ## Phase D — Wiring and status pages
@@ -64,7 +65,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   Add `e2e/shell.spec.ts`: landmarks on `/` and `/this-does-not-exist`; the skip link is first and moves focus; `aria-current` on Home; the CTA is ≥ 44×44; the Services submenu works from the keyboard (desktop projects; skipped if the seed has no children); the header hides on scroll down, shows on scroll up, and shows when you Tab into it; focus isn't obscured after the skip link and on a footer link; the mobile sheet (375 px project) opens, traps focus, closes in all four ways, and returns focus; the sheet's transition under `reducedMotion: 'reduce'`; the 404 status, `h1`, and `noindex`; and `expectNoA11yViolations` on `/` and the 404 page in both themes, with the sheet open and with the submenu open.
   _Covers:_ SHELL-R1, R2, R5–R9, R13–R16, R19, R24 · _Verify:_ `npm run test:e2e -- shell`
 
-- [ ] **T14 — Seed content and Definition of Done** · _Blocked by spec Q7 (seed values)_
+- [ ] **T14 — Seed content and Definition of Done**
   Create `sanity/seed/shell.json` with the content confirmed in Q7, document `npx sanity documents create sanity/seed/shell.json --missing` in the README, and run it. Then run `npm run check` (lint, typecheck, unit, build, e2e, Lighthouse 100 on `/` for mobile and desktop).
   _Covers:_ all · _Verify:_ `npm run check` passes
 

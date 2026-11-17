@@ -15,6 +15,41 @@
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: sanity/extract.json
+export type SocialLink = {
+  _type: "socialLink";
+  platform?:
+    | "linkedin"
+    | "instagram"
+    | "facebook"
+    | "github"
+    | "youtube"
+    | "bluesky"
+    | "x";
+  url?: string;
+};
+
+export type NavItem = {
+  _type: "navItem";
+  label?: string;
+  link?: SiteLink;
+  children?: Array<
+    {
+      _key: string;
+    } & LabelledLink
+  >;
+};
+
+export type LabelledLink = {
+  _type: "labelledLink";
+  label?: string;
+  link?: SiteLink;
+};
+
+export type SiteLink = {
+  _type: "siteLink";
+  href?: string;
+};
+
 export type Page = {
   _id: string;
   _type: "page";
@@ -22,6 +57,42 @@ export type Page = {
   _updatedAt: string;
   _rev: string;
   title?: string;
+};
+
+export type Navigation = {
+  _id: string;
+  _type: "navigation";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  headerLinks?: Array<
+    {
+      _key: string;
+    } & NavItem
+  >;
+  headerCta?: LabelledLink;
+  footerLinks?: Array<
+    {
+      _key: string;
+    } & LabelledLink
+  >;
+};
+
+export type SiteSettings = {
+  _id: string;
+  _type: "siteSettings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  siteName?: string;
+  email?: string;
+  phone?: string;
+  serviceArea?: string;
+  socialLinks?: Array<
+    {
+      _key: string;
+    } & SocialLink
+  >;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -144,7 +215,13 @@ export type Slug = {
 };
 
 export type AllSanitySchemaTypes =
+  | SocialLink
+  | NavItem
+  | LabelledLink
+  | SiteLink
   | Page
+  | Navigation
+  | SiteSettings
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -165,10 +242,57 @@ export type PAGES_QUERY_RESULT = Array<{
   title: string;
 }>;
 
+// Source: src/sanity/queries.ts
+// Variable: SHELL_QUERY
+// Query: {  "settings": *[_type == "siteSettings" && _id == "siteSettings"][0]{    siteName,    email,    phone,    serviceArea,    socialLinks[]{ _key, platform, url }  },  "navigation": *[_type == "navigation" && _id == "navigation"][0]{    headerLinks[]{ _key, label, "href": link.href, children[]{ _key, label, "href": link.href } },    headerCta{ label, "href": link.href },    footerLinks[]{ _key, label, "href": link.href }  }}
+export type SHELL_QUERY_RESULT = {
+  settings: {
+    siteName: string | null;
+    email: string | null;
+    phone: string | null;
+    serviceArea: string | null;
+    socialLinks: Array<{
+      _key: string;
+      platform:
+        | "bluesky"
+        | "facebook"
+        | "github"
+        | "instagram"
+        | "linkedin"
+        | "x"
+        | "youtube"
+        | null;
+      url: string | null;
+    }> | null;
+  } | null;
+  navigation: {
+    headerLinks: Array<{
+      _key: string;
+      label: string | null;
+      href: string | null;
+      children: Array<{
+        _key: string;
+        label: string | null;
+        href: string | null;
+      }> | null;
+    }> | null;
+    headerCta: {
+      label: string | null;
+      href: string | null;
+    } | null;
+    footerLinks: Array<{
+      _key: string;
+      label: string | null;
+      href: string | null;
+    }> | null;
+  } | null;
+};
+
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '*[_type == "page" && defined(title)]{ _id, title }': PAGES_QUERY_RESULT;
+    '{\n  "settings": *[_type == "siteSettings" && _id == "siteSettings"][0]{\n    siteName,\n    email,\n    phone,\n    serviceArea,\n    socialLinks[]{ _key, platform, url }\n  },\n  "navigation": *[_type == "navigation" && _id == "navigation"][0]{\n    headerLinks[]{ _key, label, "href": link.href, children[]{ _key, label, "href": link.href } },\n    headerCta{ label, "href": link.href },\n    footerLinks[]{ _key, label, "href": link.href }\n  }\n}': SHELL_QUERY_RESULT;
   }
 }
