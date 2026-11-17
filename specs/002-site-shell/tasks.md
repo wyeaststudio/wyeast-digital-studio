@@ -82,6 +82,8 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## UX review
 
+> Deferred by the owner on 2026-11-17: 002 is marked Done in the roadmap, and these checks remain open.
+
 - [ ] AI review agent: `npm run build && npm run start`, then `npm run ux:screens 002-site-shell / /this-does-not-exist`; compare to the spec checklist and the Figma frames (`21:58`, `36:99`, `68:620`) → `review/findings.md`
 - [ ] Manual: keyboard walkthrough, VoiceOver on macOS and iOS, 200% zoom with hide-on-scroll, and Presentation click-to-edit on a nav label and the footer email
 - [ ] Fix blocking findings
