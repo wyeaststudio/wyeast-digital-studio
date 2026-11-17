@@ -207,8 +207,8 @@
   .site-header {
     transition: translate 200ms ease-out;
   }
-  /* Stays visible while focused or while its submenu or mobile menu is open (SHELL-R8). */
-  .site-header[data-hidden='true']:not(:focus-within, :has([aria-expanded='true'])) {
+  /* Stays visible while its submenu or mobile menu is open; focus is handled in HeaderVisibility (SHELL-R8). */
+  .site-header[data-hidden='true']:not(:has([aria-expanded='true'])) {
     translate: 0 calc(-100% - var(--header-offset));
   }
 }

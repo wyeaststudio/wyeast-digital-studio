@@ -32,6 +32,20 @@ describe('DesktopNav submenu [SHELL-R5, SHELL-R6]', () => {
     expect(services()).toHaveFocus();
   });
 
+  it('closes when clicking outside', async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <DesktopNav items={navItemsFixture} currentPath="/" />
+        <p>Outside</p>
+      </>,
+    );
+    await user.click(services());
+    expect(services()).toHaveAttribute('aria-expanded', 'true');
+    await user.click(screen.getByText('Outside'));
+    expect(services()).toHaveAttribute('aria-expanded', 'false');
+  });
+
   it('marks the parent when a child page is current', () => {
     render(<DesktopNav items={navItemsFixture} currentPath="/services/accessibility" />);
     expect(services()).toHaveAttribute('aria-current', 'true');

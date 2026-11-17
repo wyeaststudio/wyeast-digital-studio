@@ -60,21 +60,25 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase D — Wiring and status pages
 
-- [ ] **T11 — Status page, 404, and errors**
+- [x] **T11 — Status page, 404, and errors**
   Create `layout/status-page.tsx` (one `h1`, body, actions slot, top padding that clears the header). Add `(web)/not-found.tsx` (title "Page not found", `robots: { index: false }`, links to `/` and the CTA href, from `getShell()`), `(web)/[...notFound]/page.tsx` (calls `notFound()`), `(web)/error.tsx` ("Something went wrong", "Try again" → `unstable_retry`, home link, never renders `error.message`), and `src/app/global-error.tsx` (its own `html`/`body`, `globals.css`, fonts, `ThemeProvider`, React `<title>`). Add `error.test.tsx` and `global-error.test.tsx`.
   _Covers:_ SHELL-R24, R25, R26 · _Verify:_ `npm run test -- error && npm run build` (the build output lists the catch-all route)
+  - Task log: the error UI is a shared `ErrorContent` client component (used by both `error.tsx` and `global-error.tsx`), which shows the digest as a reference but never the message. The catch-all is partially prerendered, and a production `curl` confirms `/this-does-not-exist` and `/a/b/c` return **404** with `noindex`, so the `global-not-found` fallback isn't needed.
 
-- [ ] **T12 — Layout wiring and home page cleanup**
+- [x] **T12 — Layout wiring and home page cleanup**
   In `(web)/layout.tsx`, call `getShell()` and `getCopyrightYear()`, then render the skip link (`focus:z-60`), `<HeaderVisibility><SiteHeader/></HeaderVisibility>`, `<main id="main-content" tabIndex={-1}>`, and `<SiteFooter/>`. Remove the `main` wrapper and the temporary `ThemeSwitchContainer` from `(web)/page.tsx`. Update `e2e/home.spec.ts` if it targets the old `main`.
   _Covers:_ SHELL-R1, R2, R22 · _Verify:_ `npm run build && npm run test:e2e -- home theme`
+  - Task log: the skip link is now `focus:fixed focus:z-60` so it sits above the fixed header. `/` is static with a 1-day revalidate (from `getCopyrightYear`). Visual check: the active link's generated muted background was removed (Figma shows bold only) and the submenu widened to fit the longest service name. Child, CTA, and footer labels allow 32 characters (top-level header labels stay at 24) because three Figma service names exceed 24.
 
-- [ ] **T13 — Shell end-to-end tests**
+- [x] **T13 — Shell end-to-end tests**
   Add `e2e/shell.spec.ts`: landmarks on `/` and `/this-does-not-exist`; the skip link is first and moves focus; `aria-current` on Home; the CTA is ≥ 44×44; the Services submenu works from the keyboard (desktop projects; skipped if the seed has no children); the header hides on scroll down, shows on scroll up, and shows when you Tab into it; focus isn't obscured after the skip link and on a footer link; the mobile sheet (375 px project) opens, traps focus, closes in all four ways, and returns focus; the sheet's transition under `reducedMotion: 'reduce'`; the 404 status, `h1`, and `noindex`; and `expectNoA11yViolations` on `/` and the 404 page in both themes, with the sheet open and with the submenu open.
   _Covers:_ SHELL-R1, R2, R5–R9, R13–R16, R19, R24 · _Verify:_ `npm run test:e2e -- shell`
+  - Task log: axe flagged Base UI `NavigationMenu` focus guards (`aria-hidden-focus`; `aria-command-name` on WebKit), so the submenu became a hand-written disclosure and `navigation-menu.tsx` was deleted. WebKit didn't reveal the hidden header on focus through the CSS `:focus-within` rule, so focus is now tracked in `HeaderVisibility`. Scroll tests wait for `networkidle` (hydration), and the focus-trap test first waits for focus to enter the dialog. Because the header floats over the page top by design, R9 is checked on an element scrolled back into view from below. `--repeat-each=3` is stable.
 
-- [ ] **T14 — Seed content and Definition of Done**
+- [x] **T14 — Seed content and Definition of Done**
   Create `sanity/seed/shell.json` with the content confirmed in Q7, document `npx sanity documents create sanity/seed/shell.json --missing` in the README, and run it. Then run `npm run check` (lint, typecheck, unit, build, e2e, Lighthouse 100 on `/` for mobile and desktop).
   _Covers:_ all · _Verify:_ `npm run check` passes
+  - Task log: seeded both singletons with `--missing` (project `qvmh6mvs`, dataset `production`). Local builds reuse `.next/cache/fetch-cache`, so the first build after seeding still showed the empty shell; the README now documents `rm -rf .next/cache`. Port 3000 was held by another local `next-server`, so checks ran with `PORT=3100`. `npm run check`: lint, typecheck, 126 unit tests, and the build pass; e2e 132 passed and 23 skipped (desktop/mobile-only cases), plus one Base UI focus-guard timing flake in the focus-trap test, fixed by polling where focus settles (10/10 on repeat). Lighthouse is 100/100/100/100 on mobile and desktop.
 
 ## UX review
 

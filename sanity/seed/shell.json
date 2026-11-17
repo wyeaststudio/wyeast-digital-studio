@@ -1,0 +1,40 @@
+[
+  {
+    "_id": "siteSettings",
+    "_type": "siteSettings",
+    "siteName": "Wy'east Digital Studio",
+    "email": "kelly.gibbens@wyeast.studio",
+    "phone": "(503) 583-2805",
+    "serviceArea": "Portland, Oregon and the Pacific Northwest",
+    "socialLinks": []
+  },
+  {
+    "_id": "navigation",
+    "_type": "navigation",
+    "headerLinks": [
+      { "_key": "home", "_type": "navItem", "label": "Home", "link": { "_type": "siteLink", "href": "/" } },
+      {
+        "_key": "services",
+        "_type": "navItem",
+        "label": "Services",
+        "link": { "_type": "siteLink", "href": "/services" },
+        "children": [
+          { "_key": "accessibility", "_type": "labelledLink", "label": "Accessibility", "link": { "_type": "siteLink", "href": "/services/accessibility" } },
+          { "_key": "performance", "_type": "labelledLink", "label": "High Performance", "link": { "_type": "siteLink", "href": "/services/high-performance" } },
+          { "_key": "aeo", "_type": "labelledLink", "label": "Answer Engine Optimization", "link": { "_type": "siteLink", "href": "/services/answer-engine-optimization" } },
+          { "_key": "geo", "_type": "labelledLink", "label": "Generative Engine Optimization", "link": { "_type": "siteLink", "href": "/services/generative-engine-optimization" } },
+          { "_key": "seo", "_type": "labelledLink", "label": "Search Engine Optimization", "link": { "_type": "siteLink", "href": "/services/search-engine-optimization" } },
+          { "_key": "local", "_type": "labelledLink", "label": "Local Business Websites", "link": { "_type": "siteLink", "href": "/services/local-business-websites" } }
+        ]
+      },
+      { "_key": "about", "_type": "navItem", "label": "About", "link": { "_type": "siteLink", "href": "/about" } },
+      { "_key": "contact", "_type": "navItem", "label": "Contact", "link": { "_type": "siteLink", "href": "/contact" } }
+    ],
+    "headerCta": { "_type": "labelledLink", "label": "Book Appointment", "link": { "_type": "siteLink", "href": "/contact" } },
+    "footerLinks": [
+      { "_key": "services", "_type": "labelledLink", "label": "Services", "link": { "_type": "siteLink", "href": "/services" } },
+      { "_key": "about", "_type": "labelledLink", "label": "About", "link": { "_type": "siteLink", "href": "/about" } },
+      { "_key": "contact", "_type": "labelledLink", "label": "Contact", "link": { "_type": "siteLink", "href": "/contact" } }
+    ]
+  }
+]

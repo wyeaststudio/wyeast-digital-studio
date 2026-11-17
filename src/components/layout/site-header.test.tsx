@@ -14,7 +14,7 @@ describe('SiteHeader [SHELL-R3, R4, R5, R7, R23]', () => {
   it('renders the main nav in order and marks the current page', () => {
     render(<SiteHeader siteName="Site" navItems={navItemsFixture} cta={ctaFixture} />);
     const nav = screen.getByRole('navigation', { name: 'Main' });
-    const entries = [...nav.querySelectorAll('a, button')].map((el) => el.textContent?.trim());
+    const entries = [...nav.querySelectorAll(':scope > ul > li > a, :scope > ul > li > button')].map((el) => el.textContent?.trim());
     expect(entries).toEqual(['Home', 'Services', 'About', 'Contact']);
     expect(within(nav).getByRole('link', { name: 'About' })).toHaveAttribute('aria-current', 'page');
     expect(within(nav).getByRole('link', { name: 'Home' })).not.toHaveAttribute('aria-current');

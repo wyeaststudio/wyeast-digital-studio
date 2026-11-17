@@ -1,18 +1,19 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
 
-const labelField = defineField({
-  name: 'label',
-  title: 'Label',
-  type: 'string',
-  validation: (rule) => rule.required().max(24),
-});
+const labelField = (max: number) =>
+  defineField({
+    name: 'label',
+    title: 'Label',
+    type: 'string',
+    validation: (rule) => rule.required().max(max),
+  });
 
 /** A labelled link: footer links, nav children, and the header CTA. */
 export const labelledLink = defineType({
   name: 'labelledLink',
   title: 'Link',
   type: 'object',
-  fields: [labelField, defineField({ name: 'link', title: 'Link', type: 'siteLink', validation: (rule) => rule.required() })],
+  fields: [labelField(32), defineField({ name: 'link', title: 'Link', type: 'siteLink', validation: (rule) => rule.required() })],
   preview: { select: { title: 'label', subtitle: 'link.href' } },
 });
 
@@ -21,7 +22,8 @@ export const navItem = defineType({
   title: 'Navigation item',
   type: 'object',
   fields: [
-    labelField,
+    // Top-level header labels sit side by side in the bar, so they stay short.
+    labelField(24),
     defineField({
       name: 'link',
       title: 'Link',
