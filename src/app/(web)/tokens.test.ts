@@ -12,7 +12,9 @@ function block(selector: string): Record<string, string> {
   );
 }
 
-function oklchToLuminance(value: string): number {
+type Rgb = [number, number, number];
+
+function oklchToLinearRgb(value: string): Rgb {
   const match = value.match(/oklch\(([\d.]+) ([\d.]+) ([\d.]+)/);
   if (!match) throw new Error(`Not an oklch() color: ${value}`);
   const [L, C, H] = match.slice(1).map(Number);
@@ -22,15 +24,30 @@ function oklchToLuminance(value: string): number {
   const m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3;
   const s = (L - 0.0894841775 * a - 1.291485548 * b) ** 3;
   const clamp = (x: number) => Math.min(1, Math.max(0, x));
-  const r = clamp(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s);
-  const g = clamp(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s);
-  const bl = clamp(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s);
-  return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+  return [
+    clamp(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s),
+    clamp(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s),
+    clamp(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s),
+  ];
+}
+
+const encode = (x: number) => (x <= 0.0031308 ? 12.92 * x : 1.055 * x ** (1 / 2.4) - 0.055);
+const decode = (x: number) => (x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4);
+
+/** Alpha-composites `top` over `bottom` in gamma-encoded sRGB, as browsers do. */
+function blend(top: Rgb, bottom: Rgb, alpha: number): Rgb {
+  return top.map((t, i) => decode(alpha * encode(t) + (1 - alpha) * encode(bottom[i]))) as Rgb;
+}
+
+const luminance = ([r, g, b]: Rgb) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+function contrastRgb(x: Rgb, y: Rgb): number {
+  const [hi, lo] = [luminance(x), luminance(y)].sort((p, q) => q - p);
+  return (hi + 0.05) / (lo + 0.05);
 }
 
 function contrast(a: string, b: string): number {
-  const [hi, lo] = [oklchToLuminance(a), oklchToLuminance(b)].sort((x, y) => y - x);
-  return (hi + 0.05) / (lo + 0.05);
+  return contrastRgb(oklchToLinearRgb(a), oklchToLinearRgb(b));
 }
 
 // Sidebar tokens are excluded: the site has no sidebar (owner decision, T3).
@@ -45,6 +62,7 @@ const TEXT_PAIRS: [fg: string, bg: string][] = [
   ['muted-foreground', 'background'],
   ['muted-foreground', 'card'],
   ['accent-foreground', 'accent'],
+  ['accent-foreground', 'accent-hover'],
   ['destructive-foreground', 'destructive'],
   ['destructive-foreground', 'destructive-hover'],
   ['semantic-foreground', 'semantic-background'],
@@ -60,6 +78,20 @@ describe.each([
 
   it('focus ring is at least 3:1 against the background (WCAG 2.4.13)', () => {
     expect(contrast(tokens.ring, tokens.background)).toBeGreaterThanOrEqual(3);
+  });
+});
+
+const HEADER_ALPHA = Number(block(':root')['header-surface-alpha'].replace('%', '')) / 100;
+// Any of these can scroll beneath the translucent header.
+const BACKDROPS = ['background', 'card', 'muted', 'secondary', 'primary', 'accent', 'foreground', 'semantic-background'];
+
+describe.each([
+  ['light', block(':root')],
+  ['dark', block('.dark')],
+])('%s header surface [SHELL-R10]', (_theme, tokens) => {
+  it.each(BACKDROPS)('foreground stays at least 7:1 over %s', (backdrop) => {
+    const surface = blend(oklchToLinearRgb(tokens.background), oklchToLinearRgb(tokens[backdrop]), HEADER_ALPHA);
+    expect(contrastRgb(oklchToLinearRgb(tokens.foreground), surface)).toBeGreaterThanOrEqual(7);
   });
 });
 

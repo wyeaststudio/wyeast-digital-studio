@@ -1,6 +1,6 @@
 # 001 — Foundation: Spec
 
-**Status:** Approved (amended 2026-11-16: R1 AAA colors, R14 same-origin framing, R24 added; T3 color nudges, semantic darkened, sidebar excluded. Owner approved.) · **Owner:** Wy'east Digital Studio · **Figma:** [Desktop - 1440px - Light](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=10-13)
+**Status:** Approved (amended 2026-11-16: R1 AAA colors, R14 same-origin framing, R24 added; T3 color nudges, semantic darkened, sidebar excluded. Owner approved. 2026-11-16: FOUND-R8 superseded by SHELL-R11, the three-option theme switch in spec 002.) · **Owner:** Wy'east Digital Studio · **Figma:** [Desktop - 1440px - Light](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=10-13)
 
 ## Summary
 
@@ -30,7 +30,7 @@ Before any page is built, set up the design system, theming, content tooling, an
 | --- | --- | --- |
 | FOUND-R6 | WHEN a visitor first arrives, THE SYSTEM SHALL use the theme that matches their OS `prefers-color-scheme`. | - Playwright with `colorScheme: 'dark'` renders `html.dark`, and with `'light'` it does not |
 | FOUND-R7 | WHEN a visitor activates the theme toggle, THE SYSTEM SHALL switch between light and dark, persist the choice, and apply it on later visits with no flash of the wrong theme. | - The choice survives a reload<br>- No flash of the wrong theme occurs (an inline script sets the class before paint) |
-| FOUND-R8 | THE SYSTEM SHALL provide a presentational `ThemeToggle` component with an accessible name that reflects the current state, a 44×44 px target, and a visible focus ring. Header placement belongs to spec 002. | - axe passes<br>- It works with Enter and Space<br>- The screen reader announces e.g. "Switch to dark theme" |
+| FOUND-R8 | _(Superseded by SHELL-R11.)_ THE SYSTEM SHALL provide a presentational `ThemeToggle` component with an accessible name that reflects the current state, a 44×44 px target, and a visible focus ring. Header placement belongs to spec 002. | - axe passes<br>- It works with Enter and Space<br>- The screen reader announces e.g. "Switch to dark theme" |
 | FOUND-R9 | WHILE the user prefers reduced motion, THE SYSTEM SHALL turn off non-essential transitions and animations globally. | - Under `reducedMotion: 'reduce'` in Playwright, computed `transition-duration` and `animation-duration` are ≈ 0 |
 
 ### Sanity content tooling

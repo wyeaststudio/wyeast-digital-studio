@@ -6,6 +6,7 @@ import { buttonVariants } from './button';
 describe('Button filled variants use contrast-tested token pairs [FOUND-R1, FOUND-R24]', () => {
   it.each([
     ['default', 'primary'],
+    ['accent', 'accent'],
     ['destructive', 'destructive'],
   ] as const)('%s uses bg-%s, its foreground, and an opaque hover token', (variant, token) => {
     const classes = buttonVariants({ variant }).split(/\s+/);

@@ -30,8 +30,9 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
    - Projection: `{_type, "slug": slug.current}`
    - Secret: the same value as `SANITY_REVALIDATE_SECRET`
 4. **Types:** after changing schemas or GROQ queries, run `npm run typegen` and commit the updated `sanity.types.ts`.
+5. **Site shell content:** the header and footer come from the `siteSettings` and `navigation` singletons (Studio → "Site settings" and "Navigation"). To create them in a new dataset, run `npx sanity documents create sanity/seed/shell.json --missing` (`--missing` never overwrites existing documents). Without them, the site still renders a minimal header and footer.
 
-Cache tags follow `<_type>` and `<_type>:<slug>` (see `src/sanity/fetch.ts`).
+Cache tags follow `<_type>` and `<_type>:<slug>` (see `src/sanity/fetch.ts`). Local production builds reuse fetched content from `.next/cache`; if you change content without the webhook, run `rm -rf .next/cache` before `npm run build`.
 
 ## Quality checks
 
