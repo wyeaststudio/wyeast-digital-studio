@@ -125,11 +125,11 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase D — FAQ
 
-- [ ] **T11 — Rich text component** _(lightweight model)_
+- [x] **T11 — Rich text component** _(lightweight model)_
   Add `src/components/rich-text/rich-text.tsx`, a `PortableText` renderer that supports only paragraphs, bullet and numbered lists, `strong`, `em`, and `link` through `SiteLink`. Unknown types render nothing. Add `rich-text.test.tsx` with fixtures, including an external link `rel` and a dropped unknown mark.
   _Covers:_ SEO-R21 · _Verify:_ `npm run test -- rich-text`
 
-- [ ] **T12 — FAQ section component**
+- [x] **T12 — FAQ section component**
   Add `src/components/sections/faq-section.tsx`, with `faq-section.test.tsx` and fixtures:
   - **Structure:** `section[aria-labelledby]`, an outlined eyebrow badge, an `h2`, and an intro.
   - **Columns:** the items split into two DOM-ordered columns (`lg:grid-cols-2`).
@@ -139,7 +139,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   The tests check the heading level, the order, that items are collapsed, that answers are in the markup, and that empty `items` renders nothing.
   _Covers:_ SEO-R20, R22 · _Verify:_ `npm run test -- faq-section`
 
-- [ ] **T13 — Temporary home FAQ wiring**
+- [x] **T13 — Temporary home FAQ wiring**
   In `(web)/page.tsx`, render `FaqSection` from `getHomeFaqs()` with the Figma eyebrow, heading, and intro hard-coded, and add `<JsonLd data={faqPage(faqs)} />` only when there are FAQs. Add a comment saying 005 replaces this wiring. Check click-to-edit for a question in Presentation.
   _Covers:_ SEO-R13, R23, R24 · _Verify:_ `npm run build && npm run start`; `/` shows six questions, and its JSON-LD has six `FAQPage` entries
 
