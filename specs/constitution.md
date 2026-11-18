@@ -1,6 +1,6 @@
 # Constitution — Wy'east Digital Studio website
 
-**Status:** Approved · **Version:** 1.0.0
+**Status:** Approved · **Version:** 2.0.0
 
 These principles override any individual spec, plan, or task. If a spec conflicts with the constitution, the constitution wins. Change it only through an amendment that the owner approves (see the end of this file).
 
@@ -45,9 +45,7 @@ The site is the studio's primary **lead-generation** tool. It shows small busine
 
 ## 4. Content model (Sanity)
 
-- **Hybrid model:**
-  - *Fixed templates* for core pages (Home, Services, About, Process, Contact): structured fields so the layout stays on-brand.
-  - *Page builder* (an ordered array of reusable section blocks) for landing and campaign pages.
+- **Page builder for every page.** Every page, including Home, Services overview, About, Process, and Contact, is composed in Sanity from an ordered array of reusable section blocks. The block library, Studio validation, and design tokens keep pages on-brand; new layouts are added as new blocks, not as one-off templates. Collection item pages (for example a service detail page) may use structured fields when their content is uniform.
 - Global settings (navigation, footer, contact details, SEO defaults, social links) live in singleton documents.
 - Every routable document has an SEO object (title, description, OG image, `noindex`) and a unique slug.
 - Every image field requires **alt text** (or an explicit "decorative" flag) through validation.
@@ -122,3 +120,7 @@ A **feature** is done when all its tasks are done and it has passed the **UX rev
 ## Amendments
 
 Propose amendments by editing this file in a PR or task with the reason stated. Bump the version (major for removing or redefining a principle, minor for adding one, patch for wording). The owner must approve each amendment.
+
+### Amendment log
+
+- **2.0.0 (2026-11-18):** §4 replaces the hybrid model (fixed templates for core pages, page builder for landing pages) with the page builder for every page. Reason: owner decision Q-A in [004 Page builder](./004-page-builder/spec.md).
