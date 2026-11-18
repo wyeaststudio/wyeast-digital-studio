@@ -36,19 +36,23 @@ test.describe('SEO head tags [SEO-R1, R2, R8]', () => {
 });
 
 test.describe('Structured data [SEO-R10, R13]', () => {
-  test('JSON-LD parses, and FAQPage questions equal the visible questions', async ({ page }) => {
-    await page.goto('/');
-    const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
-    const data = blocks.map((text) => JSON.parse(text));
-    const graph = data.find((item) => item['@graph'])['@graph'];
-    expect(graph.map((node: { '@type': string }) => node['@type'])).toEqual(['ProfessionalService', 'WebSite']);
+  for (const path of ['/', '/page-builder-demo']) {
+    test(`${path} JSON-LD parses, and FAQPage questions equal the visible questions [PB-R18]`, async ({ page }) => {
+      await page.goto(path);
+      const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
+      const data = blocks.map((text) => JSON.parse(text));
+      const graph = data.find((item) => item['@graph'])['@graph'];
+      expect(graph.map((node: { '@type': string }) => node['@type'])).toEqual(['ProfessionalService', 'WebSite']);
 
-    const faq = data.find((item) => item['@type'] === 'FAQPage');
-    const names = faq.mainEntity.map((question: { name: string }) => question.name);
-    const visible = await page.locator('section[aria-labelledby="faq-heading"] summary').allTextContents();
-    expect(names.length).toBeGreaterThan(0);
-    expect(names).toEqual(visible.map((text) => text.trim()));
-  });
+      const faqs = data.filter((item) => item['@type'] === 'FAQPage');
+      expect(faqs).toHaveLength(1);
+      const faq = faqs[0];
+      const names = faq.mainEntity.map((question: { name: string }) => question.name);
+      const visible = await page.locator('main section summary').allTextContents();
+      expect(names.length).toBeGreaterThan(0);
+      expect(names).toEqual(visible.map((text) => text.trim()));
+    });
+  }
 
   test('the 404 page is noindex', async ({ page }) => {
     const response = await page.goto('/this-page-does-not-exist');

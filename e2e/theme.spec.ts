@@ -83,7 +83,7 @@ test.describe('Reduced motion [FOUND-R9]', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
     const duration = await page
-      .getByRole('link', { name: /open sanity studio/i })
+      .getByRole('main').getByRole('link', { name: 'Book Appointment', exact: true })
       .evaluate((el) => parseFloat(getComputedStyle(el).transitionDuration));
     expect(duration).toBeLessThan(0.001);
   });

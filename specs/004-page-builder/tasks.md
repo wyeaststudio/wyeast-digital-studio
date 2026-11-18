@@ -96,17 +96,20 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase C — Wiring
 
-- [ ] **T11 — Home and page routes**
+- [x] **T11 — Home and page routes**
   Rewrite `(web)/page.tsx`: `generateMetadata` with the Home page SEO, `PageSections` from `getHomePage()`, and `FAQPage` JSON-LD from `faqPageForSections`; remove the temporary home content and the 003 FAQ wiring. Add `(web)/[slug]/page.tsx` with `generateStaticParams` (a `__placeholder__` param when empty), `notFound()` for unknown slugs, `generateMetadata`, `PageSections`, and `FAQPage` JSON-LD. Read the bundled `generate-static-params.md`, `dynamic-routes.md`, and `not-found.md` first.
   _Covers:_ PB-R2, R3, R4, R5, R6, R18 · _Verify:_ `rm -rf .next/cache && npm run build` lists `/[slug]` as prerendered; on `npm run start`, `curl` `/`, `/page-builder-demo`, `/no-such-page`, and `/sitemap.xml`
+  - Task log (2026-11-18): replaced temporary Home content with the singleton's sections and aggregated FAQPage; added the single-segment Page route, metadata, missing-document handling, and empty-dataset build placeholder. Home keeps the site-settings title while accepting Home SEO overrides. Six route regression tests and the production build pass; build output includes prerendered `/page-builder-demo`. Production HTTP checks return 200 for Home/demo/sitemap and 404/noindex for an unknown slug; both pages have one h1 and one FAQPage, and the noindex demo is absent from the sitemap. The build succeeded without clearing its cache.
 
-- [ ] **T12 — Presentation and Visual Editing**
+- [x] **T12 — Presentation and Visual Editing**
   Add `resolve.mainDocuments` and `resolve.locations` to `presentationTool` in `sanity.config.ts` (`homePage` → `/`, `page` → `/{slug}`). Confirm in Presentation that clicking a block heading focuses its field and that dragging a section reorders it; if reordering doesn't work without optimistic state, add the draft-mode-only client wrapper described in the plan's risks. Extend `draft-mode.spec.ts` so draft mode renders the demo page.
   _Covers:_ PB-R7 · _Verify:_ `npm run test:e2e -- draft-mode`; manual check in Presentation
+  - Task log (2026-11-18): configured current Sanity `defineDocuments` and `defineLocations` resolvers for Home and single-segment Pages, with no location for an unslugged document. All 20 draft-mode browser checks pass across four projects, including demo HTML, keyed section edit attributes, Visual Editing, and exit behavior; typecheck/build pass. Studio was opened on the existing CORS-approved `http://localhost:3333` origin (3100 is not approved). Authentication is required; the owner explicitly deferred authenticated document navigation, click-to-edit and drag-to-reorder checks. Those manual checks remain unchecked in the UX review below; no optimistic client wrapper was added without evidence it is needed. A pre-existing CSP warning blocks Sanity's optional `core.sanity-cdn.com/bridge.js`; CSP was not broadened.
 
-- [ ] **T13 — Update the 003 end-to-end tests**
+- [x] **T13 — Update the 003 end-to-end tests**
   `faq.spec.ts` and `seo.spec.ts` target the FAQ on `/`. Point them at the seeded home FAQ section (now rendered through `PageSections`) and keep their assertions. Add the demo page to the `FAQPage` check.
   _Covers:_ PB-R18, SEO-R13 · _Verify:_ `npm run test:e2e -- faq seo`
+  - Task log (2026-11-18): Home FAQ tests now target the keyed builder section; structured-data checks verify exactly one FAQPage with questions matching rendered disclosures on both Home and demo. Home, theme and shell regressions now target the real hero CTA instead of the removed temporary Studio link. Across four browser projects, 165 affected FAQ/SEO/Home/shell/theme tests pass (23 existing conditional skips), including axe in both themes; the 20 draft-mode checks also pass. Lint, typecheck, 63 focused unit tests across eight files, the production build and `git diff --check` pass. Phase C implementation is complete; authenticated Presentation checks are explicitly owner-deferred, and Phase D/full Lighthouse gate and feature UX review remain pending.
 
 ## Phase D — End to end
 
