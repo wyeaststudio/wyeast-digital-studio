@@ -1,6 +1,5 @@
-import { createImageUrlBuilder } from '@sanity/image-url';
 import { stegaClean } from 'next-sanity';
-import { dataset, projectId } from '@/sanity/env';
+import { urlForImage } from '@/lib/sanity-image';
 import type { OgImage, SeoImageInput } from './metadata';
 import { absoluteUrl } from './site';
 
@@ -8,8 +7,6 @@ export const OG_SIZE = { width: 1200, height: 630 } as const;
 
 /** Light-theme `--primary` / `--primary-foreground` as hex; ImageResponse can't read CSS variables. Guarded by tokens.test.ts. */
 export const OG_PALETTE = { background: '#434945', foreground: '#E5E2D9' } as const;
-
-const imageBuilder = createImageUrlBuilder({ projectId, dataset });
 
 /** Short FNV-1a hash, used to version generated card URLs so caches pick up title changes. */
 export function fnv1a(input: string): string {
@@ -53,8 +50,7 @@ export function resolveOgImage({ title, siteName, path, seoImage, defaultImage }
   const upload = [seoImage, defaultImage].find((image) => image?.asset?._ref);
 
   if (upload) {
-    const url = imageBuilder
-      .image(stegaClean(upload) as Parameters<typeof imageBuilder.image>[0])
+    const url = urlForImage(upload as Parameters<typeof urlForImage>[0])
       .width(OG_SIZE.width)
       .height(OG_SIZE.height)
       .fit('crop')

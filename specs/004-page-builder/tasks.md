@@ -52,7 +52,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase B — Components (presentational, with fixtures)
 
-- [ ] **T5 — Section shell, icons, and image helper**
+- [x] **T5 — Section shell, icons, and image helper**
   Add:
   - `src/lib/sanity-image.ts` (`urlForImage`, `sanityImageLoader` for `next/image` with hotspot crop and `auto=format`); switch `og.ts` to use `urlForImage`;
   - `src/components/sections/section.tsx` (landmark, `aria-labelledby`, anchor `id`, surface classes, padding and max width, optional `data-sanity`);
@@ -61,24 +61,29 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
   Extend `tokens.test.ts` so the focus ring (`primary-foreground` on `primary`, `ring` on `card`) is at least 3:1 on every surface. Add tests for `Section`, `Icon`, and the loader URL.
   _Covers:_ PB-R8, R10, R11, R12 · _Verify:_ `npm run test -- section icons sanity-image og tokens`
+  - Task log (2026-11-18): added the typed surface/landmark shell, fallback page heading, curated decorative icons, and shared image builder/loader; OG output is unchanged. The loader preserves editor crop/hotspot rectangles and aspect ratios across responsive widths. All 93 selected tests and typecheck pass, including focus contrast on every surface in both themes.
 
-- [ ] **T6 — Hero block**
-  Add `hero-section.tsx` and its test: `next/image` with `fill`, `preload`, `fetchPriority="high"`, `sizes="100vw"`, the Sanity loader, LQIP blur, and `alt` (empty when decorative); the gradient scrim; the optional `BrandLockup`; the `h1`; and up to two CTAs with `buttonVariants`. Match Figma `35:256` and `45:4` at 375 and 1280 px. Read the bundled `image.md` first.
+- [x] **T6 — Hero block**
+  Add `hero-section.tsx` and its test: `getImageProps` from `next/image` with `fill`, explicit responsive preload, `fetchPriority="high"`, `sizes="100vw"`, the Sanity loader, an LQIP CSS background, and `alt` (empty when decorative); the gradient scrim; the optional `BrandLockup`; the `h1`; and up to two CTAs with `buttonVariants`. This server-only image approach was approved by the owner on 2026-11-18; see the plan. Match Figma `35:256` and `45:4` at 375 and 1280 px. Read the bundled `image.md` first.
   _Covers:_ PB-R9, R13 · _Verify:_ `npm run test -- hero-section`
+  - Task log (2026-11-18): implemented the hero from the desktop/mobile Figma context, reusing BrandLockup and button variants. Server-only art-directed image source sets preserve hotspot crops, with explicit media-specific preload, high priority, reserved layout space, and an LQIP background. Three fixture tests and typecheck pass. Figma's stock preview remains replaced by the approved gradient; final rendered-page comparison follows route wiring and UX review.
 
-- [ ] **T7 — Trust bar, CTA banner, and process steps** _(lightweight model)_
+- [x] **T7 — Trust bar, CTA banner, and process steps** _(lightweight model)_
   Add `trust-bar-section.tsx` (a list; dividers from `lg`), `cta-banner-section.tsx` (rounded panel, `h2`, one button), and `process-steps-section.tsx` (`ol`, "Step 01" labels, `aria-hidden` arrows; a row from `lg`), each with fixture tests. Match Figma `47:3`, `61:256` (panel), and `66:253`.
   _Covers:_ PB-R14, R16, R17 · _Verify:_ `npm run test -- trust-bar cta-banner process-steps`
+  - Task log (2026-11-18): added the stacked/desktop-row trust list, rounded CTA panel, and ordered process cards with automatic step labels and decorative arrows. Reused the surface shell, icons, link/button primitives and a shared heading layout. All four fixture tests and typecheck pass.
 
-- [ ] **T8 — Feature grid** _(lightweight model)_
+- [x] **T8 — Feature grid** _(lightweight model)_
   Add `feature-grid-section.tsx` and its test: an optional eyebrow badge, `h2`, intro, and a 1/2/3-column grid of cards (icon tile, badge, `h3`, description, optional link with an `ArrowUpRight` icon). The link's accessible name includes the card title (a visually hidden suffix), and its target is at least 44 px tall. Match Figma `61:256`.
   _Covers:_ PB-R15 · _Verify:_ `npm run test -- feature-grid`
+  - Task log (2026-11-18): added responsive 1/2/3-column cards from the Figma context, optional eyebrow/badges, decorative icons, and links named with their card titles. Links reserve a 44px minimum height. Both fixture tests and typecheck pass.
 
-- [ ] **T9 — Rich text and testimonials** _(lightweight model)_
-  Give `RichText` a `variant` prop: `faq` (003, unchanged) and `prose` (adds `h3` and `h4`). Add `rich-text-section.tsx` (optional `h2`, prose at about 65 characters wide) and `testimonials-section.tsx` (`figure` > `blockquote` + `figcaption`, optional photo through `next/image` with the Sanity loader, a 1/2/3-column grid of cards), each with fixture tests.
+- [x] **T9 — Rich text and testimonials** _(lightweight model)_
+  Give `RichText` a `variant` prop: `faq` (003, unchanged) and `prose` (adds `h3` and `h4`). Add `rich-text-section.tsx` (optional `h2`, prose at about 65 characters wide) and `testimonials-section.tsx` (`figure` > `blockquote` + `figcaption`, optional photo through `getImageProps` with the Sanity loader per the approved server-only adjustment, a 1/2/3-column grid of cards), each with fixture tests.
   _Covers:_ PB-R19, R20 · _Verify:_ `npm run test -- rich-text testimonials`
+  - Task log (2026-11-18): added the prose variant, readable-width section and semantic testimonial cards with optional lazy square photos using server-only image props. Portable Text's default heading renderers required an explicit block renderer to keep FAQ content paragraph-only and restrict prose to h3/h4. All 15 selected tests and typecheck pass.
 
-- [ ] **T10 — Page sections renderer and FAQ block**
+- [x] **T10 — Page sections renderer and FAQ block**
   Adapt `faq-section.tsx` to render inside `Section` (surface and anchor props; keep its 003 tests passing). Add `faqPageForSections(sections)` to `json-ld.ts` (collects the FAQ items from every FAQ section, in order) with tests. Add `page-sections.tsx` and its test:
   - maps `_type` to block and passes `data-sanity` attributes for each array item (`createDataAttribute`);
   - skips unknown and incomplete sections;
@@ -86,6 +91,8 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   - keeps order and heading levels.
 
   _Covers:_ PB-R7, R8, R9, R18 · _Verify:_ `npm run test -- page-sections faq-section json-ld`
+  - Task log (2026-11-18): all eight blocks render through the shared shell with keyed Visual Editing attributes. Incomplete/unknown/misplaced blocks are skipped with a warning; a missing or invalid first hero gets the page-title h1. FAQ surfaces and anchors preserve the 003 disclosures; shared filtering keeps visible questions and the combined FAQPage JSON-LD aligned.
+  - Phase B verification: lint, typecheck, 145 focused tests across 19 files, and production build pass. All 24 existing FAQ browser tests pass across Chromium, Firefox, WebKit and mobile Chromium, including axe in both themes. Isolated Home/demo fixtures using production CSS/fonts pass axe in light/dark at 320, 375 and 1280px (12 cases), with one h1, no horizontal overflow, loaded hero images, and 44px feature links. Screenshots were inspected at mobile/desktop sizes. Browser checks caught a dark CTA-button contrast issue; merging button variants with `cn` and using an opaque token background fixed it. Public route wiring, route-level performance/CLS, Presentation checks and formal UX review remain in later phases.
 
 ## Phase C — Wiring
 

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import type { FaqAnswer } from '../../../sanity.types';
+import type { FaqAnswer, RichTextBody } from '../../../sanity.types';
 import { RichText } from './rich-text';
 
 const block = (key: string, children: object[], extra: object = {}) => ({
@@ -17,6 +17,19 @@ const span = (key: string, text: string, marks: string[] = []) => ({ _type: 'spa
 const fixture = (...blocks: object[]) => blocks as unknown as FaqAnswer;
 
 describe('RichText [SEO-R21]', () => {
+  it('only enables h3/h4 in the prose variant [PB-R19]', () => {
+    const body: RichTextBody = (['h3', 'h4'] as const).map((style, index) => ({
+      _type: 'block', _key: String(index), style, markDefs: [],
+      children: [{ _type: 'span', _key: 'text', text: `Heading ${index + 3}`, marks: [] }],
+    }));
+    const { rerender } = render(<RichText value={body} variant="prose" />);
+    expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Heading 3');
+    expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent('Heading 4');
+    rerender(<RichText value={body} />);
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+    expect(screen.getByText('Heading 3').tagName).toBe('P');
+  });
+
   it('renders paragraphs with strong and em marks', () => {
     const { container } = render(
       <RichText

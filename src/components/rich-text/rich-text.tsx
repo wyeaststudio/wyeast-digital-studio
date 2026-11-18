@@ -1,13 +1,18 @@
-import { PortableText, type PortableTextComponents } from '@portabletext/react';
+import { PortableText, type PortableTextBlockComponent, type PortableTextComponents } from '@portabletext/react';
 import { SiteLink } from '@/components/layout/site-link';
 import { cn } from '@/lib/utils';
-import type { FaqAnswer } from '../../../sanity.types';
+import type { FaqAnswer, RichTextBody } from '../../../sanity.types';
 import { isValidHref } from '@/sanity/validation';
 
+const FaqBlock: PortableTextBlockComponent = ({ children }) => <p>{children}</p>;
+const ProseBlock: PortableTextBlockComponent = ({ children, value }) => {
+  if (value.style === 'h3') return <h3 className="pt-4 text-2xl leading-8">{children}</h3>;
+  if (value.style === 'h4') return <h4 className="pt-3 text-xl leading-7">{children}</h4>;
+  return <p>{children}</p>;
+};
+
 const components: PortableTextComponents = {
-  block: {
-    normal: ({ children }) => <p>{children}</p>,
-  },
+  block: FaqBlock,
   list: {
     bullet: ({ children }) => <ul className="list-disc space-y-1 pl-6">{children}</ul>,
     number: ({ children }) => <ol className="list-decimal space-y-1 pl-6">{children}</ol>,
@@ -36,12 +41,21 @@ const components: PortableTextComponents = {
   unknownMark: ({ children }) => <>{children}</>,
 };
 
-/** Renders limited FAQ rich text (SEO-R21); unknown types, styles, lists, and marks are dropped. */
-export function RichText({ value, className }: { value: FaqAnswer | null | undefined; className?: string }) {
+const proseComponents: PortableTextComponents = {
+  ...components,
+  block: ProseBlock,
+};
+
+/** FAQ keeps its limited styles; prose additionally allows h3/h4 (PB-R19). */
+export function RichText({ value, className, variant = 'faq' }: {
+  value: FaqAnswer | RichTextBody | null | undefined;
+  className?: string;
+  variant?: 'faq' | 'prose';
+}) {
   if (!value || value.length === 0) return null;
   return (
     <div className={cn('space-y-3', className)}>
-      <PortableText value={value} components={components} onMissingComponent={false} />
+      <PortableText value={value} components={variant === 'prose' ? proseComponents : components} onMissingComponent={false} />
     </div>
   );
 }

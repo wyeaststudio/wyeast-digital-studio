@@ -19,6 +19,14 @@ const items: FaqItem[] = ['One?', 'Two?', 'Three?', 'Four?', 'Five?'].map((quest
 }));
 
 describe('FaqSection [SEO-R20, R22]', () => {
+  it('supports alternate surfaces, anchors and edit attributes [PB-R10, PB-R11, PB-R18]', () => {
+    render(<FaqSection heading="FAQ" items={items} surface="card" anchor="questions" data-sanity="edit-faq" />);
+    const section = screen.getByRole('region', { name: 'FAQ' });
+    expect(section).toHaveClass('bg-card', 'text-card-foreground');
+    expect(section).toHaveAttribute('id', 'questions');
+    expect(section).toHaveAttribute('data-sanity', 'edit-faq');
+  });
+
   it('renders a labelled section with the eyebrow, an h2, and the intro', () => {
     render(<FaqSection eyebrow="FAQ" heading="Frequently Asked Questions" intro="Common queries." items={items} />);
     const heading = screen.getByRole('heading', { level: 2, name: 'Frequently Asked Questions' });

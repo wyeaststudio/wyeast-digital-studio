@@ -80,6 +80,21 @@ describe.each([
   it('focus ring is at least 3:1 against the background (WCAG 2.4.13)', () => {
     expect(contrast(tokens.ring, tokens.background)).toBeGreaterThanOrEqual(3);
   });
+
+  it.each([
+    ['primary-foreground', 'primary'],
+    ['ring', 'card'],
+  ])('section focus %s on %s is at least 3:1 [PB-R10]', (fg, bg) => {
+    expect(contrast(tokens[fg], tokens[bg])).toBeGreaterThanOrEqual(3);
+  });
+
+  it.each([
+    ['black', [0, 0, 0]],
+    ['white', [1, 1, 1]],
+  ] as const)('hero text stays at least 7:1 over a %s photo at the weakest scrim stop [PB-R13]', (_name, photo) => {
+    const surface = blend(oklchToLinearRgb(tokens.background), [...photo], 0.9);
+    expect(contrastRgb(oklchToLinearRgb(tokens.foreground), surface)).toBeGreaterThanOrEqual(7);
+  });
 });
 
 const HEADER_ALPHA = Number(block(':root')['header-surface-alpha'].replace('%', '')) / 100;

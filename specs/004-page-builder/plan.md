@@ -13,6 +13,10 @@
 
 ### Docs consulted
 
+Owner-approved adjustment (2026-11-18, Phase B): use `getImageProps` from `next/image` with native server-rendered images instead of the `Image` component. A custom loader prop cannot cross its client boundary without client code, contrary to PB-R12. The hero explicitly preloads its responsive source set and uses an LQIP CSS background underneath the loaded image (not `placeholder="blur"`, which `getImageProps` cannot remove). Testimonials use the same server-only path. `sanityImageLoader` resizes pre-cropped URLs while preserving their hotspot rectangle and aspect ratio. This supersedes `Image` component references below; sections add no client image code.
+
+Phase B implementation: Home and Page components derive their data from the generated shared section union. A shared completeness guard handles unfinished drafts, and FAQ filtering is reused by rendering and JSON-LD. Hero source sets have mobile/desktop crops with matching media-specific preloads; a 90–95% token-background scrim keeps foreground text above 7:1 even over black or white images in either theme. CTA buttons use an opaque background and an inset current-color focus outline so every panel surface remains accessible. The strong scrim intentionally prioritizes the contrast requirement over Figma's lighter photo treatment; the licensed photo still needs the launch UX review.
+
 - Bundled Next.js 16 docs: `generate-static-params.md` (with Cache Components, an empty array is a build error, so the route returns a placeholder param when there are no pages and calls `notFound()` for it), `dynamic-routes.md`, `image.md` (`preload` replaces the deprecated `priority`; custom `loader`), `not-found.md`, and `generate-metadata.md`.
 - Sanity: `sanity/presentation` (`defineDocuments`, `defineLocations`), `createDataAttribute` from `next-sanity`, array validation, and `@sanity/image-url` (already a direct dependency from 003).
 
