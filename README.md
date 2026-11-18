@@ -45,8 +45,8 @@ Cache tags follow `<_type>` and `<_type>:<slug>` (see `src/sanity/fetch.ts`). Lo
 
 Before shipping a client project from this template, review the following:
 
-- Update the site metadata in the environment variables and in the shared config for title, description, keywords, and social links.
-- Review the robots rules to ensure the intended search and AI crawlers are allowed while suspicious or unknown agents remain blocked.
+- Set `NEXT_PUBLIC_SITE_URL` to the production origin, and fill Studio → "Site settings" → "SEO and business" (home title, descriptions, location, social links). Replace all placeholder copy.
+- Review `AI_TRAINING_AGENTS` in `src/lib/seo/robots.ts`: AI training crawlers are blocked; search engines and AI search and answer agents are allowed.
 - Confirm the sitemap and social share images are appropriate for the launch brand.
 - Verify accessibility basics such as semantic headings, keyboard focus visibility, and skip links.
 - Ensure HTTPS, CSP, and security headers are enabled in the production environment.

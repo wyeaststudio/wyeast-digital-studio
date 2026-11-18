@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { withStega } from '@/test-utils/stega';
-import { fnv1a, ogCardPath, resolveOgImage } from './og';
+import { cardTitle, fnv1a, ogCardPath, resolveOgImage } from './og';
 import { SITE_URL } from './site';
 
 const upload = {
@@ -52,5 +52,13 @@ describe('resolveOgImage [SEO-R8]', () => {
   it('maps the home page to /og', () => {
     expect(ogCardPath('/')).toBe('/og');
     expect(ogCardPath('/services/web-design')).toBe('/og/services/web-design');
+  });
+
+  it('drops a leading or trailing site name from the card title and alt', () => {
+    expect(cardTitle('Studio | Accessible websites', 'Studio')).toBe('Accessible websites');
+    expect(cardTitle('About — Studio', 'Studio')).toBe('About');
+    expect(cardTitle('Studio', 'Studio')).toBe('Studio');
+    expect(cardTitle('Studio tips', 'Studio')).toBe('Studio tips');
+    expect(resolveOgImage({ title: 'Studio | Home', siteName: 'Studio', path: '/' }).alt).toBe('Home, Studio');
   });
 });

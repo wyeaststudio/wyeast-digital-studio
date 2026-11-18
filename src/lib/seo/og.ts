@@ -25,6 +25,17 @@ export function ogCardPath(path: string): string {
   return path === '/' ? '/og' : `/og${path}`;
 }
 
+/** The title without a leading or trailing "{siteName} |", since the card and alt text already name the site. */
+export function cardTitle(title: string, siteName: string): string {
+  const text = stegaClean(title).trim();
+  const name = stegaClean(siteName).trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const stripped = text
+    .replace(new RegExp(`^${name}\\s*[|:–—-]\\s*`), '')
+    .replace(new RegExp(`\\s*[|:–—-]\\s*${name}$`), '')
+    .trim();
+  return stripped || text;
+}
+
 type ResolveOgImageInput = {
   title: string;
   siteName: string;
@@ -36,8 +47,8 @@ type ResolveOgImageInput = {
 
 /** The page upload, else the site default upload, else the generated branded card (SEO-R8). */
 export function resolveOgImage({ title, siteName, path, seoImage, defaultImage }: ResolveOgImageInput): OgImage {
-  const cleanTitle = stegaClean(title);
   const cleanSiteName = stegaClean(siteName);
+  const cleanTitle = cardTitle(title, cleanSiteName);
   const fallbackAlt = `${cleanTitle}, ${cleanSiteName}`;
   const upload = [seoImage, defaultImage].find((image) => image?.asset?._ref);
 

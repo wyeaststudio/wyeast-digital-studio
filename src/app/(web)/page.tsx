@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { buttonVariants } from '@/components/ui/button';
 import {
@@ -7,12 +8,19 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { buildMetadata } from '@/lib/seo/metadata';
+import { isIndexableDeployment, resolveSite } from '@/lib/seo/site';
+import { getSiteSeo } from '@/sanity/loaders/seo';
 
 const checklist = [
   'Thoughtful brand-led web experiences',
   'Flexible content management with Sanity',
   'Built for accessibility, discoverability, and growth',
 ];
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildMetadata({ site: resolveSite(await getSiteSeo()), path: '/', indexable: isIndexableDeployment() });
+}
 
 export default function HomePage() {
   return (

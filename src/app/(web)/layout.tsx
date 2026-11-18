@@ -5,20 +5,21 @@ import { HeaderVisibility } from '@/components/layout/header-visibility';
 import { toShellProps } from '@/components/layout/shell-props';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { SiteHeader } from '@/components/layout/site-header';
-import { StructuredData } from '@/components/seo/structured-data';
+import { JsonLd } from '@/components/seo/json-ld';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { montserratAlternates, playfairDisplay } from '@/app/fonts';
 import { getCopyrightYear } from '@/lib/copyright-year';
-import { createMetadata } from '@/lib/site-config';
+import { siteGraph } from '@/lib/seo/json-ld';
+import { buildMetadata } from '@/lib/seo/metadata';
+import { isIndexableDeployment, resolveSite } from '@/lib/seo/site';
+import { getSiteSeo } from '@/sanity/loaders/seo';
 import { getShell } from '@/sanity/loaders/shell';
 import './globals.css';
 
-export const metadata: Metadata = createMetadata({
-  title: {
-    default: "Wy'east Digital Studio",
-    template: "%s | Wy'east Digital Studio",
-  },
-});
+// Site-wide defaults; pages override them with their own buildMetadata() output (SEO-R1, R2).
+export async function generateMetadata(): Promise<Metadata> {
+  return buildMetadata({ site: resolveSite(await getSiteSeo()), path: '/', indexable: isIndexableDeployment() });
+}
 
 async function DraftModeTools() {
   const { isEnabled } = await draftMode();
@@ -33,7 +34,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [shell, year] = await Promise.all([getShell(), getCopyrightYear()]);
+  const [shell, year, seo] = await Promise.all([getShell(), getCopyrightYear(), getSiteSeo()]);
   const { siteName, navItems, cta, footerLinks, contact, socialLinks } = toShellProps(shell);
 
   return (
@@ -49,7 +50,7 @@ export default async function RootLayout({
         >
           Skip to content
         </a>
-        <StructuredData />
+        <JsonLd data={siteGraph(resolveSite(seo))} />
         <ThemeProvider>
           <HeaderVisibility>
             <SiteHeader siteName={siteName} navItems={navItems} cta={cta} />

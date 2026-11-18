@@ -96,7 +96,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase C — Wiring
 
-- [ ] **T8 — Layout, home metadata, JSON-LD, sitemap, robots, and `llms.txt` routes**
+- [x] **T8 — Layout, home metadata, JSON-LD, sitemap, robots, and `llms.txt` routes**
   - **Layout:** `(web)/layout.tsx` uses `generateMetadata()` with `getSiteSeo()` and renders `<JsonLd data={siteGraph(…)} />`.
   - **Home:** add `generateMetadata()` to `(web)/page.tsx`.
   - **Rewrites:** rewrite `src/app/sitemap.ts` and `robots.ts` as thin wrappers.
@@ -106,7 +106,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   Read the bundled `generate-metadata.md` (with `cacheComponents`) and `route.md` first. Confirm that the 404 page keeps `noindex`.
   _Covers:_ SEO-R1, R2, R5, R10, R14, R16, R17, R18 · _Verify:_ `npm run build`; `curl` `/`, `/sitemap.xml`, `/robots.txt`, `/llms.txt`, and `/this-does-not-exist` on `npm run start`
 
-- [ ] **T9 — Social card route**
+- [x] **T9 — Social card route**
   Add `src/app/og/[[...path]]/route.tsx`:
   - **Resolution:** the path goes through `resolvePath`; the home page uses `homeTitle`; an unknown or noindex path returns 404; query strings are ignored.
   - **Rendering:** `ImageResponse` at 1200×630 with the brand mark, title, and site name, using the T7 fonts and palette.
@@ -115,7 +115,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   Delete `(web)/opengraph-image.tsx` and `twitter-image.tsx`. Read the bundled `image-response.md` and `route.md` first.
   _Covers:_ SEO-R8, R9 · _Verify:_ `npm run build`; on `npm run start`, `curl -I /og` returns `200 image/png`, `/og/nope` returns 404, and the PNG is 1200×630
 
-- [ ] **T10 — Template config cleanup** _(lightweight model)_
+- [x] **T10 — Template config cleanup** _(lightweight model)_
   Remove these from `env.example`, the README, and any remaining code:
   - `NEXT_PUBLIC_SITE_NAME`, `_TITLE`, `_DESCRIPTION`, and `_KEYWORDS`;
   - `NEXT_PUBLIC_TWITTER_HANDLE` and `NEXT_PUBLIC_LINKEDIN_URL`.
