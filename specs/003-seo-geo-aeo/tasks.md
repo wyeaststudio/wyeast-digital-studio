@@ -50,7 +50,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase B — Builders (pure, unit-tested)
 
-- [ ] **T4 — Site defaults and metadata builder**
+- [x] **T4 — Site defaults and metadata builder**
   Add `src/lib/seo/site.ts` (`SITE_URL`, `SITE_DEFAULTS`, `absoluteUrl`, and `isIndexableDeployment`) and `metadata.ts` (`buildMetadata`), with `metadata.test.ts` covering:
   - `null` settings use the Wy'east defaults;
   - the title template, and the absolute home title;
@@ -64,7 +64,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   The OG image comes from a stub until T7.
   _Covers:_ SEO-R1, R2, R3, R4, R5, R6 · _Verify:_ `npm run test -- metadata`
 
-- [ ] **T5 — JSON-LD builders, component, and logo** _(lightweight model)_
+- [x] **T5 — JSON-LD builders, component, and logo** _(lightweight model)_
   Add `src/lib/seo/json-ld.ts`:
   - `siteGraph`, `breadcrumbList`, `faqPage`, and `serializeJsonLd`;
   - minimal types and a `compact()` helper;
@@ -73,7 +73,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   Add `json-ld.test.ts` covering omitted empty fields, the address having no street, plain-text FAQ answers, the `</script>` escape, and stega input. Add `src/components/seo/json-ld.tsx` and a small test. Export the brand lockup from Figma as a 512×512 PNG to `public/brand/logo.png`.
   _Covers:_ SEO-R10, R11, R12, R6 · _Verify:_ `npm run test -- json-ld`
 
-- [ ] **T6 — Sitemap, robots, and `llms.txt` builders** _(lightweight model)_
+- [x] **T6 — Sitemap, robots, and `llms.txt` builders** _(lightweight model)_
   Add `src/lib/seo/sitemap.ts`, `robots.ts` (`AI_TRAINING_AGENTS`, checked against current vendor docs, with a policy comment), and `llms-txt.ts`, with tests. `robots.test.ts` includes the small specific-group-wins matcher, which checks that:
   - `GPTBot` is blocked;
   - `OAI-SearchBot`, `PerplexityBot`, and `Googlebot` are allowed;
@@ -84,7 +84,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   The sitemap and `llms.txt` tests cover the home-only case (`null` settings, no docs) and skipping noindex documents.
   _Covers:_ SEO-R4, R5, R14, R16, R17, R18 · _Verify:_ `npm run test -- sitemap robots llms`
 
-- [ ] **T7 — Social image resolver, fonts, and palette**
+- [x] **T7 — Social image resolver, fonts, and palette**
   Add `src/lib/seo/og.ts`:
   - `resolveOgImage`;
   - `OG_SIZE` and `OG_PALETTE`;
