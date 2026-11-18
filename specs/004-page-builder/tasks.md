@@ -6,14 +6,16 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase A — Content
 
-- [ ] **T1 — Validation helpers** _(lightweight model)_
+- [x] **T1 — Validation helpers** _(lightweight model)_
   Extend `src/sanity/validation.ts` and `validation.test.ts` with:
   - `RESERVED_SLUGS` (with a comment) and `isValidPageSlug` (lowercase letters, digits, single hyphens; 1–60 characters; not reserved);
   - `isValidAnchor` (lowercase, digits, hyphens; max 40);
   - `pageSectionsRule` (a hero only first and only once; unique anchors), returning `true` or a message;
   - `altOrDecorative` (alt text required unless `decorative` is on).
 
-  _Covers:_ PB-R1, R2, R9, R11 · _Verify:_ `npm run test -- validation`
+  _Covers:_ PB-R1, R2, R9, R11, R13 · _Verify:_ `npm run test -- validation`
+  - Task log (2026-11-18): added the reserved-path list, slug and anchor validators, hero-position and unique-anchor rules, and alt-text/decorative-image validation. Optional unset values are left to schema-required rules. All 89 validation tests pass, including length boundaries, malformed paths, repeated heroes/anchors, and whitespace-only alt text.
+  - Definition of Done: `PORT=3100 npm run check` passed lint, typecheck, 282 unit tests, build, 189 end-to-end tests across all four browser projects (including axe), and Lighthouse 100 in all four categories on mobile and desktop. No page rendering or schema wiring changes in T1.
 
 - [ ] **T2 — Schema types and Studio structure** _(lightweight model)_
   Following the plan's schema section, add:
