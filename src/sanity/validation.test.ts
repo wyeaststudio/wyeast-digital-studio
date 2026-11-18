@@ -7,6 +7,7 @@ import {
   pageSectionsRule,
   seoDescriptionWarning,
   seoTitleWarning,
+  testimonialPermission,
   uniqueRefs,
 } from './validation';
 
@@ -155,6 +156,15 @@ describe('altOrDecorative [PB-R13, PB-R20]', () => {
     expect(altOrDecorative({ alt: 'Portrait of the client', decorative: false })).toBe(true);
     expect(altOrDecorative({ decorative: true })).toBe(true);
     expect(altOrDecorative({ alt: '', decorative: true })).toBe(true);
+  });
+
+  describe('testimonialPermission [PB-R21]', () => {
+    it('requires explicit permission before publishing', () => {
+      expect(testimonialPermission(true)).toBe(true);
+      for (const value of [false, undefined, null, 'true', 1]) {
+        expect(testimonialPermission(value)).toEqual(expect.stringContaining('permission'));
+      }
+    });
   });
 
   it.each([{}, { alt: '' }, { alt: ' \n ' }, { alt: 123 }, { decorative: false }, { decorative: 'true' }])(

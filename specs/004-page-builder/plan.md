@@ -99,6 +99,8 @@ Queries also filter `permission == true` (PB-R21), so a testimonial can't render
 
 `faqSection` keeps its 003 name and fields; it gains the shared fields by being re-declared through `defineBlock` (no data migration: the fields are optional).
 
+Implementation note (Phase A): Sanity field-level validation replaces the named array type's validation. `page.sections` inherits the shared rules unchanged; `homePage.sections` repeats `pageSectionsRule` alongside its required/min/max rules. Compiled-schema regression tests verify both document types reject duplicate heroes, misplaced heroes, and duplicate anchors.
+
 ### Icons (`src/components/sections/icons.tsx`)
 
 `ICONS` maps a name to a `lucide-react` component: `accessibility`, `activity`, `bar-chart`, `code`, `cpu`, `map-pin`, `message-square`, `rocket`, `search`, `shapes`, `target`, `zap`, `shield-check`, `gauge`, `sparkles`, `layout`. The schema imports only the names (`ICON_NAMES`, from a tiny `icon-names.ts`) so the Studio bundle doesn't pull the components. `Icon` renders nothing for an unknown name and always sets `aria-hidden="true"`.
@@ -126,7 +128,7 @@ export const SECTIONS_PROJECTION = `
   _type == "processStepsSection" => { heading, intro, steps[]{ _key, icon, title, description } },
   _type == "faqSection" => { eyebrow, heading, intro, "items": faqs[]->{ ${FAQ_PROJECTION} } },
   _type == "richTextSection" => { heading, body },
-  _type == "testimonialsSection" => { heading, "items": items[]->[permission == true]{ _id, quote, name, role, company, photo{ asset, hotspot, crop, alt } } }
+  _type == "testimonialsSection" => { heading, "items": items[@->permission == true]->{ _id, quote, name, role, company, photo{ asset, hotspot, crop, alt } } }
 `;
 
 export const HOME_PAGE_QUERY = defineQuery(`*[_id == "homePage"][0]{ _id, _type, seo, sections[]{ ${SECTIONS_PROJECTION} } }`);
@@ -134,7 +136,9 @@ export const PAGE_QUERY = defineQuery(`*[_type == "page" && slug.current == $slu
 export const PAGE_SLUGS_QUERY = defineQuery(`*[_type == "page" && defined(slug.current)].slug.current`);
 ```
 
-If TypeGen can't narrow the conditional projections into a discriminated union, the fallback is one projection per block type joined with `select()`; T2 confirms which works and records it here.
+If TypeGen can't narrow the conditional projections into a discriminated union, the fallback is one projection per block type joined with `select()`.
+
+Implementation note (T3): direct conditional projections generate matching eight-member `_type`-discriminated section unions for Home and Page; no fallback is needed. Testimonials are filtered on reference targets before dereferencing, so denied, unconfirmed, and broken references are omitted; both queries have in-memory GROQ regression tests. The SEO loader now derives `RoutableDoc` from `ROUTABLE_DOCS_QUERY_RESULT`, and downstream path/title builders explicitly handle its nullable slug.
 
 ### Loaders (`src/sanity/loaders/pages.ts`)
 
@@ -189,7 +193,7 @@ None. `lucide-react`, `@portabletext/react`, `@sanity/image-url`, and `next-sani
 
 - **Fixed templates for core pages (the constitution's original model).** *Rejected by the owner (Q-A)*: the page builder gives editors more control, and the block library plus validation keep pages on-brand.
 - **One `[slug]` route with nested paths.** *Deferred*: one segment keeps routing, reserved slugs, and the registry simple; 006 adds `/services/{slug}` as its own type.
-- **TypeGen and conditional projections.** If the union type isn't narrowed, use `select()` per type or hand-narrow in the renderer with a type guard; T2 decides and records it.
+- **TypeGen and conditional projections.** Confirmed in T3: direct conditional projections produce the required discriminated union; `select()` is unnecessary.
 - **Empty `generateStaticParams` with Cache Components** is a build error; the placeholder param plus `notFound()` keeps fresh datasets building.
 - **Drag-to-reorder in Presentation.** Relies on Sanity overlays reading `data-sanity` array-item attributes and the existing refresh. If reordering is unreliable without optimistic state, the fallback is a small draft-mode-only client wrapper using `useOptimistic` from `next-sanity`, loaded the same way as `<VisualEditing />` so public pages stay JavaScript-free.
 - **Hero image size.** Sanity CDN resizing (`w`, `q`, `auto=format`) through a custom `next/image` loader avoids the Next image optimiser and its cost on Vercel. If LCP misses the budget, add `srcset` widths tuned to Figma breakpoints and a smaller `q`.

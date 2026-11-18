@@ -1,8 +1,5 @@
 import { defineQuery } from 'next-sanity';
 
-// Probe query proving TypeGen wiring; replaced by real page queries in later features.
-export const PAGES_QUERY = defineQuery(`*[_type == "page" && defined(title)]{ _id, title }`);
-
 export const SHELL_QUERY = defineQuery(`{
   "settings": *[_type == "siteSettings" && _id == "siteSettings"][0]{
     siteName,
@@ -56,3 +53,40 @@ export const FAQ_PROJECTION = `_id, question, answer`;
 export const HOME_FAQS_QUERY = defineQuery(
   `*[_type == "faq" && defined(question)] | order(_createdAt asc, _id asc)[0...12]{ ${FAQ_PROJECTION} }`,
 );
+
+export const SECTIONS_PROJECTION = `
+  _key, _type, anchor, surface,
+  _type == "heroSection" => {
+    eyebrow, heading, body, showLockup,
+    primaryCta{ label, "href": link.href },
+    secondaryCta{ label, "href": link.href },
+    image{ asset, hotspot, crop, alt, decorative, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions }
+  },
+  _type == "trustBarSection" => { items[]{ _key, icon, text } },
+  _type == "featureGridSection" => {
+    eyebrow, heading, intro,
+    cards[]{ _key, icon, badge, title, description, link{ label, "href": link.href } }
+  },
+  _type == "ctaBannerSection" => { heading, body, cta{ label, "href": link.href } },
+  _type == "processStepsSection" => { heading, intro, steps[]{ _key, icon, title, description } },
+  _type == "faqSection" => { eyebrow, heading, intro, "items": faqs[]->{ ${FAQ_PROJECTION} } },
+  _type == "richTextSection" => { heading, body },
+  _type == "testimonialsSection" => {
+    heading,
+    "items": items[@->permission == true]->{
+      _id, quote, name, role, company, photo{ asset, hotspot, crop, alt }
+    }
+  }
+`;
+
+export const HOME_PAGE_QUERY = defineQuery(
+  `*[_type == "homePage" && _id == "homePage"][0]{ _id, _type, seo, sections[]{ ${SECTIONS_PROJECTION} } }`,
+);
+
+export const PAGE_QUERY = defineQuery(
+  `*[_type == "page" && slug.current == $slug][0]{
+    _id, _type, title, "slug": slug.current, seo, sections[]{ ${SECTIONS_PROJECTION} }
+  }`,
+);
+
+export const PAGE_SLUGS_QUERY = defineQuery(`*[_type == "page" && defined(slug.current)].slug.current`);

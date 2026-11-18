@@ -103,3 +103,7 @@ export function altOrDecorative(value: unknown): true | string {
   }
   return 'Add alt text or mark the image as decorative.';
 }
+
+export function testimonialPermission(value: unknown): true | string {
+  return value === true ? true : 'Confirm permission before publishing this testimonial.';
+}

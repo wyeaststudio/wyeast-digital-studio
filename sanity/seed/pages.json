@@ -1,0 +1,220 @@
+[
+  {
+    "_id": "homePage",
+    "_type": "homePage",
+    "sections": [
+      {
+        "_key": "hero",
+        "_type": "heroSection",
+        "heading": "Where Vision Meets the Summit",
+        "body": "Digital experiences crafted with precision, elevated by design. We build high-performance products tailored to your loftiest goals.",
+        "showLockup": true,
+        "primaryCta": { "_type": "labelledLink", "label": "Book Appointment", "link": { "_type": "siteLink", "href": "/contact" } },
+        "image": { "_type": "image", "alt": "", "decorative": true }
+      },
+      {
+        "_key": "trust",
+        "_type": "trustBarSection",
+        "surface": "primary",
+        "items": [
+          { "_key": "performance", "_type": "trustItem", "icon": "shield-check", "text": "90+ Guaranteed Google Lighthouse Score" },
+          { "_key": "accessibility", "_type": "trustItem", "icon": "accessibility", "text": "100% WCAG AA Accessibility Compliance" },
+          { "_key": "lightweight", "_type": "trustItem", "icon": "zap", "text": "Zero Page-Builder Bloat" }
+        ]
+      },
+      {
+        "_key": "features",
+        "_type": "featureGridSection",
+        "surface": "background",
+        "heading": "Precision Engineering, Elevated Design",
+        "intro": "We construct lightweight, high-performance, and deeply optimized digital products tailored to survive the ever-shifting landscape of the modern web.",
+        "cards": [
+          {
+            "_key": "accessibility", "_type": "featureCard", "icon": "accessibility", "badge": "A11Y",
+            "title": "Accessibility (a11y)",
+            "description": "Inclusive design from the first line of code. We deliver 100% WCAG AA compliance to ensure every user enjoys a seamless experience.",
+            "link": { "_type": "labelledLink", "label": "Learn about this capability", "link": { "_type": "siteLink", "href": "/services/accessibility" } }
+          },
+          {
+            "_key": "performance", "_type": "featureCard", "icon": "zap", "badge": "FAST",
+            "title": "High Performance",
+            "description": "Ultra-fast loading speeds built on clean architecture. We guarantee 90+ Google Lighthouse scores with zero page-builder bloat.",
+            "link": { "_type": "labelledLink", "label": "Learn about this capability", "link": { "_type": "siteLink", "href": "/services/high-performance" } }
+          },
+          {
+            "_key": "aeo", "_type": "featureCard", "icon": "message-square", "badge": "AEO",
+            "title": "Answer Engine Optimization",
+            "description": "Prepare your brand for the zero-click search era. We structure your raw data so conversational AI agents and LLMs cite you directly.",
+            "link": { "_type": "labelledLink", "label": "Learn about this capability", "link": { "_type": "siteLink", "href": "/services/answer-engine-optimization" } }
+          },
+          {
+            "_key": "geo", "_type": "featureCard", "icon": "cpu", "badge": "GEO",
+            "title": "Generative Engine Optimization",
+            "description": "Ensure your product is recommended by generative search tools like Perplexity. We optimize authority vectors and semantic relevance.",
+            "link": { "_type": "labelledLink", "label": "Learn about this capability", "link": { "_type": "siteLink", "href": "/services/generative-engine-optimization" } }
+          },
+          {
+            "_key": "seo", "_type": "featureCard", "icon": "search", "badge": "SEO",
+            "title": "Search Engine Optimization",
+            "description": "High-rank organic discoverability driven by modern schema structures, semantic search patterns, and optimized Core Web Vitals.",
+            "link": { "_type": "labelledLink", "label": "Learn about this capability", "link": { "_type": "siteLink", "href": "/services/search-engine-optimization" } }
+          },
+          {
+            "_key": "local", "_type": "featureCard", "icon": "map-pin", "badge": "LOCAL",
+            "title": "Local Business Websites",
+            "description": "High-converting, accessible local footprints tailored to geographical search maps, structured review models, and localized intent.",
+            "link": { "_type": "labelledLink", "label": "Learn about this capability", "link": { "_type": "siteLink", "href": "/services/local-business-websites" } }
+          }
+        ]
+      },
+      {
+        "_key": "cta",
+        "_type": "ctaBannerSection",
+        "surface": "primary",
+        "heading": "Have a project in mind?",
+        "body": "Let's build an accessible, lightning-fast digital experience that drives growth. Book a call to discuss your vision.",
+        "cta": { "_type": "labelledLink", "label": "Schedule Consultation", "link": { "_type": "siteLink", "href": "/contact" } }
+      },
+      {
+        "_key": "process",
+        "_type": "processStepsSection",
+        "surface": "background",
+        "heading": "Our Process",
+        "intro": "A structured, disciplined approach to engineering high-performance digital products that load instantly and conform to strict accessibility standards.",
+        "steps": [
+          { "_key": "audit", "_type": "processStep", "icon": "target", "title": "Audit & Strategy", "description": "We inspect your current lighthouse scores, SEO authority vectors, and WCAG accessibility blindspots to outline a clear plan." },
+          { "_key": "design", "_type": "processStep", "icon": "shapes", "title": "Design & Engineering", "description": "Crafting clean semantics, lightweight frameworks, and accessible structures with zero page-builder bloat." },
+          { "_key": "tuning", "_type": "processStep", "icon": "bar-chart", "title": "Performance Tuning", "description": "Meticulous optimization of assets, network payloads, and hydration paths to guarantee a 90+ Lighthouse Score." },
+          { "_key": "launch", "_type": "processStep", "icon": "rocket", "title": "Launch", "description": "Seamless deployment paired with structured microdata to ensure search engines and generative AI agents cite you directly." }
+        ]
+      },
+      {
+        "_key": "faq",
+        "_type": "faqSection",
+        "surface": "primary",
+        "eyebrow": "FAQ",
+        "heading": "Frequently Asked Questions",
+        "intro": "Answering common queries about our engineering standards, launch timelines, custom technology stack, and ongoing partnerships.",
+        "faqs": [
+          { "_key": "timeline", "_type": "reference", "_ref": "faq-01-timeline" },
+          { "_key": "pricing", "_type": "reference", "_ref": "faq-02-pricing" },
+          { "_key": "stack", "_type": "reference", "_ref": "faq-03-stack" },
+          { "_key": "accessibility", "_type": "reference", "_ref": "faq-04-accessibility" },
+          { "_key": "seo-ai", "_type": "reference", "_ref": "faq-05-seo-ai" },
+          { "_key": "maintenance", "_type": "reference", "_ref": "faq-06-maintenance" }
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "page-builder-demo",
+    "_type": "page",
+    "title": "Page builder demo",
+    "slug": { "_type": "slug", "current": "page-builder-demo" },
+    "seo": {
+      "_type": "seo",
+      "title": "Page builder demo",
+      "description": "Placeholder: explore every page-builder block, including accessible content, FAQs, and a clearly marked example testimonial.",
+      "noindex": true
+    },
+    "sections": [
+      {
+        "_key": "hero", "_type": "heroSection", "anchor": "intro",
+        "eyebrow": "Placeholder: demo",
+        "heading": "A page built for every visitor",
+        "body": "Placeholder: this noindex example shows all eight reusable sections. It is not a studio service page.",
+        "showLockup": false,
+        "primaryCta": { "_type": "labelledLink", "label": "Explore the details", "link": { "_type": "siteLink", "href": "/page-builder-demo#details" } },
+        "secondaryCta": { "_type": "labelledLink", "label": "Visit the home page", "link": { "_type": "siteLink", "href": "/" } },
+        "image": { "_type": "image", "alt": "", "decorative": true }
+      },
+      {
+        "_key": "trust", "_type": "trustBarSection", "surface": "card",
+        "items": [
+          { "_key": "accessible", "_type": "trustItem", "icon": "accessibility", "text": "Placeholder: accessible by design" },
+          { "_key": "fast", "_type": "trustItem", "icon": "gauge", "text": "Placeholder: built for speed" }
+        ]
+      },
+      {
+        "_key": "features", "_type": "featureGridSection", "surface": "primary",
+        "eyebrow": "Placeholder: capabilities",
+        "heading": "Flexible sections, clear content",
+        "intro": "Placeholder: reusable cards demonstrate meaningful link names on the primary surface.",
+        "cards": [
+          {
+            "_key": "design", "_type": "featureCard", "icon": "layout", "badge": "EXAMPLE",
+            "title": "Accessible layouts", "description": "Placeholder: a flexible layout with a clear heading and an easy-to-find link.",
+            "link": { "_type": "labelledLink", "label": "Read the demo details", "link": { "_type": "siteLink", "href": "/page-builder-demo#details" } }
+          },
+          {
+            "_key": "code", "_type": "featureCard", "icon": "code",
+            "title": "Thoughtful engineering", "description": "Placeholder: lightweight, server-rendered content without unnecessary interactions.",
+            "link": { "_type": "labelledLink", "label": "Visit the home page", "link": { "_type": "siteLink", "href": "/" } }
+          }
+        ]
+      },
+      {
+        "_key": "cta", "_type": "ctaBannerSection", "surface": "card",
+        "heading": "See what comes next",
+        "body": "Placeholder: a call-to-action panel using the card surface.",
+        "cta": { "_type": "labelledLink", "label": "Read the details", "link": { "_type": "siteLink", "href": "/page-builder-demo#details" } }
+      },
+      {
+        "_key": "process", "_type": "processStepsSection", "surface": "primary",
+        "heading": "A simple example process",
+        "intro": "Placeholder: ordered steps show the process block on the primary surface.",
+        "steps": [
+          { "_key": "plan", "_type": "processStep", "icon": "target", "title": "Plan together", "description": "Placeholder: agree on the goal and the content." },
+          { "_key": "build", "_type": "processStep", "icon": "code", "title": "Build carefully", "description": "Placeholder: turn the approved plan into an accessible experience." },
+          { "_key": "launch", "_type": "processStep", "icon": "rocket", "title": "Review and launch", "description": "Placeholder: test the result before publishing." }
+        ]
+      },
+      {
+        "_key": "faq", "_type": "faqSection", "surface": "background",
+        "eyebrow": "FAQ", "heading": "Example questions",
+        "intro": "Placeholder: these questions reuse the studio's seeded FAQ documents.",
+        "faqs": [
+          { "_key": "timeline", "_type": "reference", "_ref": "faq-01-timeline" },
+          { "_key": "accessibility", "_type": "reference", "_ref": "faq-04-accessibility" }
+        ]
+      },
+      {
+        "_key": "rich-text", "_type": "richTextSection", "surface": "card", "anchor": "details",
+        "heading": "Details that are easy to read",
+        "body": [
+          { "_key": "intro", "_type": "block", "style": "normal", "markDefs": [], "children": [
+            { "_key": "a", "_type": "span", "marks": [], "text": "Placeholder: " },
+            { "_key": "b", "_type": "span", "marks": ["strong"], "text": "clear content" },
+            { "_key": "c", "_type": "span", "marks": [], "text": " helps " },
+            { "_key": "d", "_type": "span", "marks": ["em"], "text": "every visitor" },
+            { "_key": "e", "_type": "span", "marks": [], "text": " find their next step." }
+          ] },
+          { "_key": "heading", "_type": "block", "style": "h3", "markDefs": [], "children": [{ "_key": "a", "_type": "span", "marks": [], "text": "A clear heading" }] },
+          { "_key": "bullet-1", "_type": "block", "style": "normal", "listItem": "bullet", "level": 1, "markDefs": [], "children": [{ "_key": "a", "_type": "span", "marks": [], "text": "Placeholder: short paragraphs." }] },
+          { "_key": "bullet-2", "_type": "block", "style": "normal", "listItem": "bullet", "level": 1, "markDefs": [], "children": [{ "_key": "a", "_type": "span", "marks": [], "text": "Placeholder: useful links." }] },
+          { "_key": "number-1", "_type": "block", "style": "normal", "listItem": "number", "level": 1, "markDefs": [], "children": [{ "_key": "a", "_type": "span", "marks": [], "text": "Placeholder: read the details." }] },
+          { "_key": "number-2", "_type": "block", "style": "normal", "listItem": "number", "level": 1, "markDefs": [], "children": [{ "_key": "a", "_type": "span", "marks": [], "text": "Placeholder: choose your next step." }] },
+          { "_key": "link", "_type": "block", "style": "normal", "markDefs": [{ "_key": "contact", "_type": "link", "href": "/contact" }], "children": [
+            { "_key": "a", "_type": "span", "marks": [], "text": "Placeholder: " },
+            { "_key": "b", "_type": "span", "marks": ["contact"], "text": "contact the studio" },
+            { "_key": "c", "_type": "span", "marks": [], "text": " to talk about a real project." }
+          ] }
+        ]
+      },
+      {
+        "_key": "testimonials", "_type": "testimonialsSection", "surface": "background",
+        "heading": "An example, not a client endorsement",
+        "items": [{ "_key": "example", "_type": "reference", "_ref": "testimonial-placeholder" }]
+      }
+    ]
+  },
+  {
+    "_id": "testimonial-placeholder",
+    "_type": "testimonial",
+    "quote": "Placeholder: this is an example testimonial for testing the page builder. It is not a real client endorsement and must be replaced before launch.",
+    "name": "Placeholder: example client",
+    "role": "Example role",
+    "company": "Example company",
+    "permission": true
+  }
+]

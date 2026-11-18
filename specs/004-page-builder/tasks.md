@@ -17,7 +17,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   - Task log (2026-11-18): added the reserved-path list, slug and anchor validators, hero-position and unique-anchor rules, and alt-text/decorative-image validation. Optional unset values are left to schema-required rules. All 89 validation tests pass, including length boundaries, malformed paths, repeated heroes/anchors, and whitespace-only alt text.
   - Definition of Done: `PORT=3100 npm run check` passed lint, typecheck, 282 unit tests, build, 189 end-to-end tests across all four browser projects (including axe), and Lighthouse 100 in all four categories on mobile and desktop. No page rendering or schema wiring changes in T1.
 
-- [ ] **T2 — Schema types and Studio structure** _(lightweight model)_
+- [x] **T2 — Schema types and Studio structure** _(lightweight model)_
   Following the plan's schema section, add:
   - `src/sanity/schemas/icon-names.ts` (`ICON_NAMES`) and an `iconName` string type;
   - `objects/define-block.ts` (`defineBlock` adds `anchor` and `surface`);
@@ -27,14 +27,18 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
   Register everything in `schemas/index.ts`. Add "Pages" and "Testimonials" to `structure.ts` after "FAQs", and list "Home page" with the singletons. Give each block a preview (type label plus heading).
   _Covers:_ PB-R1, R4, R10, R11, R12, R21 · _Verify:_ `npx sanity schema validate && npm run typecheck`
+  - Task log (2026-11-18): registered all eight blocks, shared anchors/surfaces, curated icons, accessible image fields, Home singleton, Page, and Testimonial; updated the Studio structure without duplicate lists. Schema validation reports zero errors and warnings; typecheck passes.
+  - Validation regression: field-level Home array rules initially replaced the inherited hero/anchor validator. Home now explicitly composes it, while Page inherits the shared array rules. Eight compiled-schema tests cover valid sections, repeated/misplaced heroes, and duplicate anchors for both document types. CLI validation rejects all four negative fixtures (duplicate hero, duplicate anchor, unknown icon, and missing permission).
 
-- [ ] **T3 — Queries, TypeGen, loaders, and registry**
+- [x] **T3 — Queries, TypeGen, loaders, and registry**
   Add `SECTIONS_PROJECTION`, `HOME_PAGE_QUERY`, `PAGE_QUERY`, and `PAGE_SLUGS_QUERY` to `queries.ts`. Move the `fetch.test.ts` type check from `PAGES_QUERY` to `PAGE_SLUGS_QUERY` and delete `PAGES_QUERY`. Run `npm run typegen` and confirm the sections type is a discriminated union on `_type`; if not, use the plan's fallback and record it in the plan.
 
   Add `src/sanity/loaders/pages.ts` (`getHomePage`, `getPage`, `getPageSlugs`) with the plan's cache tags and `pages.test.ts`. Add `page: '/'` to `ROUTES`, update the `routes.ts` comment and `routes.test.ts` examples from `landingPage` to `page`.
   _Covers:_ PB-R5, R6, R21 · _Verify:_ `npm run typegen && npm run typecheck && npm run test -- pages routes fetch`
+  - Task log (2026-11-18): added the shared sections projection, three queries, draft-preserving loaders with reference cache tags and logged failures, and the Page route registration. TypeGen generates eight queries and 37 schema types, including matching eight-block discriminated unions; no projection fallback is needed. The SEO loader now uses generated routable-document types, with nullable slugs handled by dependent builders.
+  - Verification: TypeGen and typecheck pass; 171 affected tests across 13 files pass. In-memory evaluation of both content queries confirms denied, unconfirmed, and broken testimonial references cannot render; loader tests cover cache tags, slug parameters, stega preservation, and failures.
 
-- [ ] **T4 — Seed content and README** _(lightweight model)_
+- [x] **T4 — Seed content and README** _(lightweight model)_
   Generate `sanity/seed/hero-placeholder.jpg` (2400×1350, a soft gradient in the brand palette, under 150 KB) and add `scripts/seed-hero-image.ts` (uploads it with `client.assets.upload` and patches `homePage` and the demo page hero). Create `sanity/seed/pages.json`:
   - `homePage` with the Figma Home sections and copy (hero, trust bar, feature grid, CTA banner, process steps, FAQ referencing the six 003 FAQs);
   - the `page-builder-demo` page (`seo.noindex: true`) with all eight blocks on varied surfaces, two anchors, and a rich text section with `h3`, lists, and a link;
@@ -42,6 +46,9 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
   Apply with `npx sanity documents create sanity/seed/pages.json --missing`, then run the image script. Add the steps to the README's Sanity setup section, and note the placeholder hero image and testimonial are replaced in 011.
   _Covers:_ PB-R22, R23 · _Verify:_ `npx sanity documents query '*[_id in ["homePage"] || _type == "page"]{_id, "n": count(sections)}'` lists the home and demo pages with their section counts
+  - Task log (2026-11-18): seeded the Figma Home copy and six sections, the noindex eight-block demo (two anchors and varied surfaces), and a clearly marked example testimonial. The decorative brand-gradient JPEG is 2400×1350 and 32,349 bytes. README documents safe setup, future service links, and replacement of placeholders in 011.
+  - Live verification: `--missing` created the three documents; the image script set both hero assets. Its second run performed no upload or mutation. Published Home and demo section counts are six and eight, demo noindex is true, and all three exported documents validate with zero errors and warnings.
+  - Phase A regression gate: `PORT=3100 npm run check` passed lint, typecheck, 301 unit tests, production build, and 189 end-to-end tests across four browser projects (23 existing conditional skips), including axe in both themes. Lighthouse scored 100 in all four categories on mobile and desktop. Phase A is complete; section components, route rendering, and feature-level UX review remain in later phases.
 
 ## Phase B — Components (presentational, with fixtures)
 

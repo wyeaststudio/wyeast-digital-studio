@@ -1,10 +1,10 @@
 /**
  * Registry of routable document types: `_type` → URL prefix. A document's path is `prefix + slug`.
- * Empty in 003; features 004–010 add entries such as `landingPage: '/'` or `service: '/services/'`.
+ * Page-builder pages live at the root; later features add entries such as `service: '/services/'`.
  */
 export type RouteRegistry = Readonly<Record<string, string>>;
 
-export const ROUTES: RouteRegistry = {};
+export const ROUTES: RouteRegistry = { page: '/' };
 
 export type ResolvedPath = { kind: 'home' } | { kind: 'document'; type: string; slug: string };
 
@@ -12,7 +12,7 @@ export function routableTypes(routes: RouteRegistry = ROUTES): string[] {
   return Object.keys(routes);
 }
 
-export function pathFor(type: string, slug: string, routes: RouteRegistry = ROUTES): string | null {
+export function pathFor(type: string, slug: string | null, routes: RouteRegistry = ROUTES): string | null {
   const prefix = routes[type];
   return prefix === undefined || !slug ? null : `${prefix}${slug}`;
 }
