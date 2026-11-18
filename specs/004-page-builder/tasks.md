@@ -113,7 +113,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase D — End to end
 
-- [ ] **T14 — Page builder end-to-end tests**
+- [x] **T14 — Page builder end-to-end tests**
   Add `e2e/pages.spec.ts`:
   - `/` and the demo page: sections render in order; one `h1`; no skipped heading levels;
   - the demo page: its own `<title>`, canonical, and `og:image`; absent from `/sitemap.xml`; the anchor link scrolls to its section;
@@ -124,10 +124,16 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
   Add the demo page URL to `lighthouserc.json` and `lighthouserc.desktop.json`.
   _Covers:_ PB-R2–R5, R9, R10, R11, R13, R15, R23 · _Verify:_ `npm run test:e2e -- pages`
+  - Task log (2026-11-18): added section-order/heading checks against seed content, meaningful 44px feature links, real social-image HTTP verification, crawler exclusion, header-offset-aware anchor scrolling, 404/noindex, and whole-page axe in both themes for Home/demo. Chromium desktop/mobile additionally delay image requests, verify unchanged hero geometry before/after loading, and measure layout shifts with PerformanceObserver against the 0.1 budget. All 48 supported browser cases pass; four Firefox/WebKit Layout Instability API cases are explicitly skipped. Both Lighthouse configurations now audit Home and demo with explicit LCP/CLS thresholds and the owner-approved noindex exception.
+  - The social-image check exposed the demo's generated card returning 404. The owner approved a site-card fallback only when a noindex page has neither a page upload nor a site-default upload; uploaded images, indexable-page cards, page-specific text metadata and published-only card restrictions are preserved. Three metadata regression cases cover the fallback and both upload sources; typecheck/build pass. The original anchor assertion expected zero offset; the corrected test preserves the shell's intentional scroll padding.
 
-- [ ] **T15 — Definition of Done**
-  Run `npm run check` (lint, typecheck, unit tests, build, e2e, and Lighthouse on mobile and desktop at 100 for `/` and the demo page). Update the task logs and the roadmap.
+- [x] **T15 — Definition of Done**
+  Run `npm run check` (lint, typecheck, unit tests, build, e2e, and Lighthouse on mobile and desktop). Home requires 100 in all four categories; the demo follows the owner-approved constitution §6 noindex exception, with all other applicable SEO audits and the other three category scores at 100. Update the task logs and the roadmap.
   _Covers:_ all · _Verify:_ `npm run check`
+  - Task log (2026-11-18): `PORT=3100 npm run check` passes lint, typecheck, all 352 Vitest tests across 43 files, production build, and 249 Playwright tests across four projects (27 explicit skips: the 23 existing conditional cases plus four unsupported Layout Instability API cases). Axe reports zero violations on Home/demo in both themes. Both routes remain prerendered.
+  - Final Lighthouse results, three runs per URL per form factor: Home scores 100/100/100/100; demo scores 100/100/100/69, with only `is-crawlable` failing as required by its noindex setting. Every other applicable automated SEO audit passes. The demo's expected crawlability/category warnings are the sole owner-approved exception in constitution v3.0.0. Home LCP ranges 1.058–1.064 s mobile and 0.290–0.301 s desktop; demo LCP ranges 0.908–0.912 s mobile and 0.249–0.252 s desktop. CLS is 0 for every run on both routes.
+  - The first full run exposed background 404s from automatic prefetch to future seeded CMS destinations, failing Home Best Practices at 96. The owner approved disabling speculative prefetch in shared `SiteLink`, preserving client navigation on click and external links. A new browser case verifies initial/hover requests and subsequent navigation; the full gate then passes without suppressing errors or weakening Home's audit. Identical duplicate generated `.next/types/* 2.ts` cache files also briefly blocked typecheck; they were compared byte-for-byte and preserved outside the build inputs, with no tracked configuration workaround.
+  - Phases A–D are implemented and automatically verified. Formal UX review, manual keyboard/VoiceOver/Studio checks, authenticated Presentation navigation/click-to-edit/reordering (owner-deferred), and owner feature sign-off remain outstanding; the feature is not marked Done.
 
 ## UX review
 

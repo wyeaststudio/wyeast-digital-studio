@@ -83,7 +83,7 @@ The plan defines the schema. Editors need:
 
 ## Non-functional requirements
 
-- The constitution applies in full. Lighthouse 100 in all four categories (mobile and desktop) on `/` and on the demo page, and axe with zero violations in both themes.
+- The constitution applies in full. Lighthouse 100 in all four categories (mobile and desktop) on `/`; the noindex demo follows the narrowly scoped constitution §6 exception approved by the owner on 2026-11-18: 100 in the other three categories, every other applicable automated SEO audit passing, and only the expected crawlability/SEO-category warnings. No audit is disabled. Axe reports zero violations in both themes.
 - **No client JavaScript** from blocks. The only image is the hero's, served through `next/image` from the Sanity CDN with explicit sizes; other icons are inline SVG.
 - Studio validation keeps pages on-brand: field length limits (headings, badges, trust items), item counts per block, alt text on every image, and the hero position rule.
 - Placeholder copy (hero image, testimonial, and any text not taken from Figma) is marked as a placeholder and listed for replacement in 011.
@@ -128,3 +128,6 @@ The plan defines the schema. Editors need:
 - [x] **Q-H** Testimonials are reusable documents picked by reference. (Owner)
 - [x] **Q-I** A page without a hero shows its title as a simple page header `h1`. (Owner)
 - [x] **Q-J** The constitution amendment (PB-R24) and the roadmap change to 005 are approved. (Owner, 2026-11-18)
+- [x] **Q-K** Keep the demo noindex and apply the narrowly scoped Lighthouse exception in constitution §6; Home still requires 100 in all four categories. (Owner, 2026-11-18)
+- [x] **Q-L** Preserve the SEO system's restriction on generated noindex-document cards. When a noindex page has neither a page upload nor a site-default upload, use the valid site-wide card instead of a document-card URL that returns 404; retain page-specific text metadata and uploaded images. (Owner, 2026-11-18)
+- [x] **Q-M** Disable speculative prefetch for CMS-driven `SiteLink` paths while retaining client-side navigation on click, avoiding background 404 requests to seeded destinations owned by later features. (Owner, 2026-11-18)

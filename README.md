@@ -38,7 +38,7 @@ Cache tags follow `<_type>` and `<_type>:<slug>` (see `src/sanity/fetch.ts`). Lo
 
 ## Quality checks
 
-- `npm run check` runs lint, typecheck, unit tests (Vitest), build, end-to-end and accessibility tests (Playwright + axe), and Lighthouse CI (score 100 required in every category, mobile and desktop). If port 3000 is busy, use `PORT=3100 npm run check`.
+- `npm run check` runs lint, typecheck, unit tests (Vitest), build, end-to-end and accessibility tests (Playwright + axe), and Lighthouse CI on Home and the builder demo, mobile and desktop. Home requires 100 in every category. The intentionally noindex demo has the sole exception in [constitution §6](specs/constitution.md): its expected crawlability/SEO-category findings are warnings; all other applicable SEO audits and the other three category scores remain blocking at 100. Both routes also enforce LCP ≤ 2.5 s and CLS ≤ 0.1. If port 3000 is busy, use `PORT=3100 npm run check`.
 - `npm run ux:screens -- <feature> <routes...>` captures UX review screenshots (375, 768, 1280, and 1920 px, light and dark) from a running server into `specs/<feature>/review/screenshots/`.
 - **GitHub Actions** (`.github/workflows/check.yml`) runs `npm run check` on every PR and on pushes to `main`. Add these repository secrets (Settings → Secrets and variables → Actions): `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`. Then enable branch protection on `main` with the **check** status required.
 

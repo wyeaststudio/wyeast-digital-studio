@@ -52,10 +52,12 @@ export function buildMetadata({ site, path, title, seo, indexable }: BuildMetada
   const pageTitle = isHome ? site.homeTitle : (clean(seo?.title) ?? clean(title) ?? site.siteName);
   const fullTitle = isHome || pageTitle === site.siteName ? pageTitle : `${pageTitle} | ${site.siteName}`;
   const description = clean(seo?.description) ?? site.description;
+  // Generated document cards intentionally exclude noindex pages; use the valid site card instead.
+  const useSiteCard = seo?.noindex === true && !seo?.ogImage?.asset?._ref && !site.defaultOgImage?.asset?._ref;
   const image = resolveOgImage({
-    title: pageTitle,
+    title: useSiteCard ? site.homeTitle : pageTitle,
     siteName: site.siteName,
-    path: isHome ? '/' : new URL(canonical).pathname,
+    path: isHome || useSiteCard ? '/' : new URL(canonical).pathname,
     seoImage: seo?.ogImage,
     defaultImage: site.defaultOgImage,
   });

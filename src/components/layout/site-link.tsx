@@ -3,8 +3,8 @@ import type { ComponentProps } from 'react';
 
 type SiteLinkProps = Omit<ComponentProps<'a'>, 'href'> & { href: string };
 
-/** Internal paths use next/link; external URLs open in the same tab without leaking the opener or referrer. */
+/** CMS paths navigate on click without speculatively fetching unpublished destinations. */
 export function SiteLink({ href, ...props }: SiteLinkProps) {
-  if (href.startsWith('/')) return <Link href={href} {...props} />;
+  if (href.startsWith('/')) return <Link href={href} prefetch={false} {...props} />;
   return <a href={href} rel="noopener noreferrer" {...props} />;
 }

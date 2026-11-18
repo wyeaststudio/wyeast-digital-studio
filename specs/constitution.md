@@ -1,6 +1,6 @@
 # Constitution — Wy'east Digital Studio website
 
-**Status:** Approved · **Version:** 2.0.0
+**Status:** Approved · **Version:** 3.0.0
 
 These principles override any individual spec, plan, or task. If a spec conflicts with the constitution, the constitution wins. Change it only through an amendment that the owner approves (see the end of this file).
 
@@ -64,6 +64,7 @@ The site is the studio's primary **lead-generation** tool. It shows small busine
 ## 6. Performance
 
 - **Lighthouse 100** in Performance, Accessibility, Best Practices, and SEO on mobile and desktop for every page template.
+- **Sole audit exception: the intentionally noindex page-builder demo.** It must retain 100 Performance, Accessibility, and Best Practices, and every other applicable automated SEO audit must pass. Its expected `is-crawlable` failure and resulting SEO category penalty are warnings, not blockers; browser tests must enforce its noindex setting and exclusion from sitemap/`llms.txt`. No audit is disabled, and indexable pages retain the full four-category 100 gate.
 - **Core Web Vitals "Good"** at the 75th percentile: LCP ≤ 2.5 s (target ≤ 2.0 s), INP ≤ 200 ms, CLS ≤ 0.1.
 - Use `next/image` with Sanity image URLs sized for each image. The LCP image gets priority loading and every image has explicit dimensions.
 - Use `next/font` with subsetting and no layout shift.
@@ -123,4 +124,5 @@ Propose amendments by editing this file in a PR or task with the reason stated. 
 
 ### Amendment log
 
+- **3.0.0 (2026-11-18):** §6 adds an owner-approved exception solely for the intentionally noindex page-builder demo. Lighthouse's weighted `is-crawlable` audit necessarily fails on noindex, so a four-category 100 gate contradicts PB-R23. All other applicable SEO audits remain blocking, as do the other three category scores and Home's four-category 100 gate. The major version records the redefined performance-audit principle.
 - **2.0.0 (2026-11-18):** §4 replaces the hybrid model (fixed templates for core pages, page builder for landing pages) with the page builder for every page. Reason: owner decision Q-A in [004 Page builder](./004-page-builder/spec.md).

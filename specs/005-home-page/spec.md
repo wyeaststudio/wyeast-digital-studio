@@ -12,7 +12,7 @@ This is a specification draft, not implementation authorization. The owner has r
 
 ## Dependencies and delivery gate
 
-- **004 Page builder:** finish the remaining end-to-end/performance gate and obtain its required UX sign-off, unless the owner explicitly approves a deferral. Phase C implementation is committed; authenticated Presentation checks were owner-deferred, and Phase D and feature UX review remain pending.
+- **004 Page builder:** Phases A-D and the end-to-end/performance gate are complete. Obtain its required UX sign-off unless the owner explicitly approves a deferral; authenticated Presentation checks were owner-deferred, and formal feature UX review remains pending.
 - **009 Contact:** deliver the reusable booking section, its real Google Workspace scheduling configuration, accessible fallback, privacy behavior, and lazy-loading/CSP integration.
 - **Owner inputs:** a licensed hero photo and approval of final copy, claims, image treatment, metadata, and CTA destinations.
 - **Owner decision (2026-11-18): all 005 implementation waits for 009.** Do not deliver a content-only first stage or recreate booking inside 005. Specification review may proceed now.
