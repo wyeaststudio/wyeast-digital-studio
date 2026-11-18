@@ -1,7 +1,7 @@
 import { stegaClean } from 'next-sanity';
 import type { HOME_FAQS_QUERY_RESULT, OG_DOC_QUERY_RESULT, SITE_SEO_QUERY_RESULT } from '../../../sanity.types';
 import { routableTypes } from '@/lib/seo/routes';
-import { sanityFetch } from '../fetch';
+import { sanityFetch, sanityFetchPublished } from '../fetch';
 import { HOME_FAQS_QUERY, OG_DOC_QUERY, ROUTABLE_DOCS_QUERY, SITE_SEO_QUERY } from '../queries';
 
 export type SiteSeo = NonNullable<SITE_SEO_QUERY_RESULT>;
@@ -17,9 +17,10 @@ export type RoutableDoc = {
 };
 
 /** SEO defaults and business details; cleaned of stega (SEO-R6). Null if Sanity is unreachable. */
-export async function getSiteSeo(): Promise<SiteSeo | null> {
+export async function getSiteSeo({ publishedOnly = false }: { publishedOnly?: boolean } = {}): Promise<SiteSeo | null> {
   try {
-    return stegaClean(await sanityFetch({ query: SITE_SEO_QUERY, tags: ['siteSettings'] }));
+    const fetch = publishedOnly ? sanityFetchPublished : sanityFetch;
+    return stegaClean(await fetch({ query: SITE_SEO_QUERY, tags: ['siteSettings'] }));
   } catch (error) {
     console.error('Failed to load SEO settings from Sanity', error);
     return null;
@@ -39,10 +40,10 @@ export async function getRoutableDocs(): Promise<RoutableDoc[]> {
   }
 }
 
-/** Title for a document's social card, or null if it is missing or noindex (SEO-R9). */
+/** Published title for a document's social card, or null if it is missing or noindex (SEO-R9). */
 export async function getOgTitle(type: string, slug: string): Promise<string | null> {
   try {
-    const doc: OG_DOC_QUERY_RESULT = await sanityFetch({
+    const doc: OG_DOC_QUERY_RESULT = await sanityFetchPublished({
       query: OG_DOC_QUERY,
       params: { type, slug },
       tags: [type, `${type}:${slug}`],

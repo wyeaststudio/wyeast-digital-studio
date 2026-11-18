@@ -47,7 +47,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   - six `faq` documents with the Figma questions and answers that start with "Placeholder:";
   - the new `siteSettings` values. The home title and business description are the placeholders from spec Q9 and Q10. The seed also sets Portland, OR, and the areas served.
 
-  Apply the FAQs with `npx sanity documents create sanity/seed/seo.json --missing`. Enter the `siteSettings` values in the Studio, or apply them with the merged `--replace` path. Add the seed steps to the README's Sanity setup section, and note that the copy is placeholder content to be replaced in 011.
+  Apply missing documents with `npx sanity documents create sanity/seed/seo.json --missing`. Enter existing `siteSettings` values in Studio; never replace the full seed, which also overwrites FAQ edits. Add the seed steps to the README's Sanity setup section, and note that the copy is placeholder content to be replaced in 011.
   _Covers:_ SEO-R1, R23 (content) · _Verify:_ `npx sanity documents query '*[_type=="faq"]{question}'` returns six; the Studio shows the new fields filled
   - Task log: the live `siteSettings` matched `shell.json`, so the merged seed was applied with `--replace` (no Studio edits lost). FAQ ids are `faq-01-…`–`faq-06-…`, and `HOME_FAQS_QUERY` orders by `_createdAt, _id`, because seeded documents share a creation time. The Q9 wording wasn't recorded, so new placeholder text was written (prefixed "Placeholder:").
 
@@ -169,6 +169,14 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   Run `npm run check` (lint, typecheck, unit tests, build, e2e, and Lighthouse on mobile and desktop at 100). Update the task logs.
   _Covers:_ SEO-R2, R8, R9, R10, R13, R14, R16, R17, R20, R22, R23 · _Verify:_ `npm run check`
   - Task log: `PORT=3100 npm run check` passed: lint, typecheck, 212 unit tests, build, 185 e2e tests (Chromium, Firefox, WebKit, mobile Chromium), and Lighthouse 100 on `/` for mobile and desktop.
+
+### PR #3 review follow-up (2026-11-18)
+
+- Published-only cached fetching now supplies social card settings and document titles; page previews remain draft-aware (SEO-R9, R15).
+- Missing or unavailable settings produce fallback artwork with `Cache-Control: no-store`; successful settings retain the existing immutable policy (SEO-R1, R18).
+- Generated PNG dimensions and query-string handling are tested directly at `/og`, independently of uploaded metadata images; draft-cookie requests must return the same card (SEO-R8, R9).
+- Seed instructions use `--missing` and Studio edits only, and warn that full-seed replacement overwrites edited FAQs as well as site settings.
+- Verification: `PORT=3100 npm run check` passed lint, typecheck, 218 unit tests, build, 189 end-to-end tests across all four browser projects (including axe), and Lighthouse 100 in all four categories on mobile and desktop.
 
 ## UX review
 

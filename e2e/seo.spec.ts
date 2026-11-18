@@ -1,14 +1,9 @@
-import { expect, test, type APIRequestContext } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 /** Width and height from a PNG's IHDR chunk. */
 function pngSize(buffer: Buffer): { width: number; height: number } {
   expect(buffer.subarray(1, 4).toString('ascii')).toBe('PNG');
   return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) };
-}
-
-async function fetchPath(request: APIRequestContext, absolute: string) {
-  const url = new URL(absolute);
-  return request.get(`${url.pathname}${url.search}`);
 }
 
 test.describe('SEO head tags [SEO-R1, R2, R8]', () => {
@@ -19,17 +14,14 @@ test.describe('SEO head tags [SEO-R1, R2, R8]', () => {
     await expect(head.locator('meta[name="description"]')).toHaveAttribute('content', /.{20,}/);
     await expect(head.locator('link[rel="canonical"]')).toHaveAttribute('href', /^https?:\/\/[^/]+\/?$/);
     await expect(head.locator('meta[property="og:title"]')).toHaveAttribute('content', /Wy.east/);
+    await expect(head.locator('meta[property="og:image"]')).toHaveAttribute('content', /^https?:\/\/.+/);
     await expect(head.locator('meta[property="og:image:alt"]')).toHaveAttribute('content', /.+/);
     await expect(head.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
     expect(await page.content()).not.toMatch(/agency template/i);
   });
 
-  test('og:image is a 1200×630 PNG, ignores ?title=, and unknown paths 404 [SEO-R9]', async ({ page, request }) => {
-    await page.goto('/');
-    const ogImage = await page.locator('meta[property="og:image"]').getAttribute('content');
-    expect(ogImage).toBeTruthy();
-
-    const card = await fetchPath(request, ogImage!);
+  test('/og is a 1200×630 PNG, ignores ?title=, and unknown paths 404 [SEO-R9]', async ({ request }) => {
+    const card = await request.get('/og');
     expect(card.status()).toBe(200);
     expect(card.headers()['content-type']).toBe('image/png');
     const body = await card.body();

@@ -1,11 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { withStega } from '@/test-utils/stega';
-import { sanityFetch } from '../fetch';
+import { sanityFetch, sanityFetchPublished } from '../fetch';
 import { getHomeFaqs, getOgTitle, getRoutableDocs, getSiteSeo } from './seo';
 
-vi.mock('../fetch', () => ({ sanityFetch: vi.fn() }));
+vi.mock('../fetch', () => ({ sanityFetch: vi.fn(), sanityFetchPublished: vi.fn() }));
 
 const mockFetch = vi.mocked(sanityFetch);
+const mockPublishedFetch = vi.mocked(sanityFetchPublished);
 
 describe('SEO loaders [SEO-R6, R15, R18]', () => {
   afterEach(() => vi.restoreAllMocks());
@@ -24,16 +25,26 @@ describe('SEO loaders [SEO-R6, R15, R18]', () => {
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
-  it('getOgTitle tags the type and slug and cleans the title', async () => {
-    mockFetch.mockResolvedValueOnce({ title: withStega('Web design') });
+  it('getSiteSeo can fetch published settings without the draft-aware loader [SEO-R9]', async () => {
+    mockFetch.mockClear();
+    mockPublishedFetch.mockResolvedValueOnce({ siteName: withStega('Published studio') });
+    await expect(getSiteSeo({ publishedOnly: true })).resolves.toEqual({ siteName: 'Published studio' });
+    expect(mockPublishedFetch).toHaveBeenCalledWith(expect.objectContaining({ tags: ['siteSettings'] }));
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  it('getOgTitle uses published content, tags the type and slug, and cleans the title [SEO-R9]', async () => {
+    mockFetch.mockClear();
+    mockPublishedFetch.mockResolvedValueOnce({ title: withStega('Web design') });
     await expect(getOgTitle('service', 'web-design')).resolves.toBe('Web design');
-    expect(mockFetch).toHaveBeenCalledWith(
+    expect(mockPublishedFetch).toHaveBeenCalledWith(
       expect.objectContaining({ params: { type: 'service', slug: 'web-design' }, tags: ['service', 'service:web-design'] }),
     );
+    expect(mockFetch).not.toHaveBeenCalled();
   });
 
   it('getOgTitle returns null for a missing document', async () => {
-    mockFetch.mockResolvedValueOnce(null);
+    mockPublishedFetch.mockResolvedValueOnce(null);
     await expect(getOgTitle('service', 'nope')).resolves.toBeNull();
   });
 
@@ -47,9 +58,12 @@ describe('SEO loaders [SEO-R6, R15, R18]', () => {
   it('returns null or [] instead of throwing when Sanity is unreachable', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     mockFetch.mockRejectedValue(new Error('network down'));
+    mockPublishedFetch.mockRejectedValue(new Error('network down'));
     await expect(getSiteSeo()).resolves.toBeNull();
+    await expect(getSiteSeo({ publishedOnly: true })).resolves.toBeNull();
     await expect(getOgTitle('service', 'x')).resolves.toBeNull();
     await expect(getHomeFaqs()).resolves.toEqual([]);
     mockFetch.mockReset();
+    mockPublishedFetch.mockReset();
   });
 });

@@ -21,7 +21,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ pat
   const target = resolvePath(`/${path.join('/')}`);
   if (!target) return new Response('Not found', { status: 404 });
 
-  const site = resolveSite(await getSiteSeo());
+  const settings = await getSiteSeo({ publishedOnly: true });
+  const site = resolveSite(settings);
   const title = target.kind === 'home' ? site.homeTitle : await getOgTitle(target.type, target.slug);
   if (!title) return new Response('Not found', { status: 404 });
 
@@ -58,7 +59,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ pat
         { name: 'Playfair Display', data: playfair, weight: 400, style: 'normal' },
         { name: 'Montserrat Alternates', data: montserrat, weight: 500, style: 'normal' },
       ],
-      headers: { 'Cache-Control': CACHE_CONTROL },
+      headers: { 'Cache-Control': settings ? CACHE_CONTROL : 'no-store' },
     },
   );
 }

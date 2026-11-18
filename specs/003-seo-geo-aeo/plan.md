@@ -137,7 +137,7 @@ No images or custom blocks. The annotation can be named `link` here because it i
 - the six FAQ documents, using the Figma questions and placeholder answers (spec Q8). Each answer starts with "Placeholder:" so it can't be mistaken for final copy;
 - a `siteSettings` **patch** for the new fields.
 
-The new documents are applied with `npx sanity documents create sanity/seed/seo.json --missing`. Because `siteSettings` already exists, its new fields are set with `--replace` on a merged copy of the document, which the README documents. Alternatively, the owner enters the values in the Studio; the README offers both.
+The new documents are applied with `npx sanity documents create sanity/seed/seo.json --missing`. Because `siteSettings` already exists, its new fields are entered in Studio. Never apply the full seed with `--replace`, which would overwrite edited FAQs as well as site settings.
 
 ## GROQ queries
 
@@ -175,12 +175,14 @@ TypeGen can't type a string fragment, so `FAQ_PROJECTION` is interpolated as a c
 
 | Loader | Query | Cache tags | On error |
 | --- | --- | --- | --- |
-| `getSiteSeo()` | `SITE_SEO_QUERY` | `siteSettings` | `null` and log |
+| `getSiteSeo({ publishedOnly? })` | `SITE_SEO_QUERY` | `siteSettings` | `null` and log |
 | `getRoutableDocs()` | `ROUTABLE_DOCS_QUERY` with `types = routableTypes()` | `siteSettings`, plus each registered type | `[]` and log |
 | `getOgTitle(type, slug)` | `OG_DOC_QUERY` | `type`, `type:slug` | `null` |
 | `getHomeFaqs()` | `HOME_FAQS_QUERY` | `faq` | `[]` |
 
 Each loader runs `stegaClean` over its result before returning it (SEO-R6). The FAQ loader is the exception: the FAQ **component** receives stega strings so Visual Editing works, and only the **JSON-LD builder** cleans them.
+
+For SEO-R9, the social card route calls `getSiteSeo({ publishedOnly: true })`, and `getOgTitle` always uses `sanityFetchPublished`. This helper caches the published client's results with the same tags and lifetime, without reading draft mode or using an authenticated draft client. Other settings callers and FAQ previews remain draft-aware. If settings are missing or unavailable, fallback cards use `Cache-Control: no-store` so recovery cannot leave fallback artwork cached at a published title's versioned URL.
 
 **Cache-tag map (SEO-R15).** The webhook revalidates `<_type>` and `<_type>:<slug>`.
 
@@ -237,7 +239,7 @@ Sitemap: {SITE_URL}/sitemap.xml
 | `src/app/sitemap.ts` | Server | `buildSitemap(await getRoutableDocs(), …)` |
 | `src/app/robots.ts` | Server | `buildRobots({ indexable: isIndexableDeployment() })` |
 | `src/app/llms.txt/route.ts` | Server (route handler) | `GET` returns `buildLlmsTxt()` with `Content-Type: text/plain; charset=utf-8` |
-| `src/app/og/[[...path]]/route.tsx` | Server (route handler, Node runtime) | Resolves the path through the registry (home uses `homeTitle`); returns 404 for unknown or noindex paths; renders `ImageResponse` 1200×630 with the brand mark, title, and site name; sets `Cache-Control: public, max-age=86400, s-maxage=31536000, immutable`, which is safe because the URL is versioned |
+| `src/app/og/[[...path]]/route.tsx` | Server (route handler, Node runtime) | Resolves the path through the registry using published content only (home uses `homeTitle`); returns 404 for unknown or noindex paths; renders `ImageResponse` 1200×630 with the brand mark, title, and site name; sets `Cache-Control: public, max-age=86400, s-maxage=31536000, immutable` for loaded settings and `no-store` for fallback artwork |
 | `src/app/og/fonts/*.ttf` | Asset | Playfair Display Regular and Montserrat Alternates Medium (OFL 1.1, licence file included), Latin subset, under 200 KB in total |
 | `src/components/seo/json-ld.tsx` | Server | `<JsonLd data />` renders the script using `serializeJsonLd` |
 | `src/components/sections/faq-section.tsx` | Server | Presentational. Splits the items into two columns in DOM order: the first half, then the second, which matches Figma and keeps the reading order. Each item is `details > summary + div`. The summary has `min-h-11`, a `list-none` marker, and a `ChevronDown` that rotates with `motion-safe:transition-transform` on `[open]`. The section has `aria-labelledby` pointing to its heading. |
@@ -284,7 +286,7 @@ Approved by the owner (2026-11-17). No new packages enter the lockfile. Two pack
 | R1, R2, R3, R4, R5 | `metadata.test.ts`: fallbacks with `null` settings, the title template, an absolute canonical URL, complete OG and Twitter objects, the noindex paths, and the env matrix | `seo.spec.ts`: head tags on `/`; no "Agency Template" in the HTML |
 | R6 | Each builder test includes a stega-encoded fixture (made with `stegaEncodeSourceMap`, or with the zero-width characters directly) | — |
 | R7, R19, R21 | `validation.test.ts`: the length warnings at their boundaries, `uniqueRefs`, and the `faqAnswer` link href | — |
-| R8, R9 | `og.test.ts`: upload vs. generated, the alt text, and the hash changes with the title; a palette-to-token equality test in `tokens.test.ts` | `seo.spec.ts`: `og:image` returns 1200×630 PNG; `?title=x` is ignored; `/og/nope` returns 404 |
+| R8, R9 | `og.test.ts`: upload vs. generated, the alt text, and the hash changes with the title; a palette-to-token equality test in `tokens.test.ts`; fetch/loader/route regressions for published-only data and uncached fallback artwork | `seo.spec.ts`: `/og` returns 1200×630 PNG independently of an uploaded metadata image; `?title=x` is ignored; `/og/nope` returns 404; `draft-mode.spec.ts`: preview cookies do not change social cards |
 | R10, R11, R12, R13 | `json-ld.test.ts`: the graph, omitted empty fields, the breadcrumb, the FAQ page with plain-text answers, and `</script>` escaping | `seo.spec.ts`: parse every `ld+json` script on `/`; `FAQPage` names equal the visible summaries |
 | R14, R16, R17, R18 | `sitemap.test.ts`, `robots.test.ts` (with a ~15-line matcher that applies the specific-group-wins rule to check that `OAI-SearchBot` and `Googlebot` are allowed and `GPTBot` is disallowed), `llms-txt.test.ts`, and loader tests (`null` or `[]` on a rejected fetch) | `seo.spec.ts`: `/sitemap.xml`, `/robots.txt`, `/llms.txt` (status, content type, key lines) |
 | R20, R22, R23 | `faq-section.test.tsx` and `rich-text.test.tsx` with fixtures | `faq.spec.ts`: keyboard toggle, 44 px summaries, axe on `/` in light and dark, reduced motion |
@@ -306,5 +308,5 @@ Lighthouse CI already runs against `/`, and the FAQ section is now part of `/`, 
 - **CDN caching of cards.** The URL carries a content hash, so the CDN can cache forever and title changes produce a new URL. Social platforms cache by URL anyway.
 - **`ImageResponse` with `cacheComponents`.** If the route handler can't be prerendered or cached as described, it falls back to dynamic rendering with the same `Cache-Control` header. That is acceptable because the CDN absorbs repeat requests.
 - **Raw colors in the social card.** This is a justified exception to §2; it is limited to `og.ts` and guarded by a token-equality test.
-- **Seeding `siteSettings` fields.** `documents create --missing` won't touch an existing document. The README gives the Studio steps as the primary path, and the merged JSON with `--replace` as the scripted path.
+- **Seeding `siteSettings` fields.** `documents create --missing` won't touch an existing document. The README directs editors to Studio for existing settings and warns that full-seed replacement also overwrites FAQ edits.
 - **Crawler names change over time.** The training-bot list is one constant, tested and commented with its sources, and 011 re-checks it before launch.

@@ -16,6 +16,15 @@ test.describe('Draft mode [FOUND-R12, FOUND-R13]', () => {
     expect(html).not.toContain('VisualEditing');
   });
 
+  test('social cards are identical with and without a draft-mode cookie [SEO-R9]', async ({ request }) => {
+    const published = await request.get('/og');
+    const preview = await request.get('/og', { headers: { cookie: `__prerender_bypass=${previewModeId()}` } });
+    expect(published.status()).toBe(200);
+    expect(preview.status()).toBe(200);
+    expect(preview.headers()['content-type']).toBe('image/png');
+    expect((await preview.body()).equals(await published.body())).toBe(true);
+  });
+
   test('draft mode renders Visual Editing, and the disable route exits', async ({ request, baseURL }) => {
     const headers = { cookie: `__prerender_bypass=${previewModeId()}` };
     const html = await (await request.get('/', { headers })).text();
