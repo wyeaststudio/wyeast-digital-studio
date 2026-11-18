@@ -31,6 +31,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
    - Secret: the same value as `SANITY_REVALIDATE_SECRET`
 4. **Types:** after changing schemas or GROQ queries, run `npm run typegen` and commit the updated `sanity.types.ts`.
 5. **Site shell content:** the header and footer come from the `siteSettings` and `navigation` singletons (Studio → "Site settings" and "Navigation"). To create them in a new dataset, run `npx sanity documents create sanity/seed/shell.json --missing` (`--missing` never overwrites existing documents). Without them, the site still renders a minimal header and footer.
+6. **SEO and FAQ content:** `sanity/seed/seo.json` holds six FAQ documents and the "SEO and business" values for `siteSettings` (home title, default description, business description, Portland, OR, and areas served). Run `npx sanity documents create sanity/seed/seo.json --missing` to create missing documents without overwriting existing content. `--missing` skips `siteSettings` if it already exists; enter its SEO values in Studio → "Site settings" → "SEO and business". Do not apply the full seed with `--replace`: it overwrites both site settings (including social links) and all six FAQs, discarding any edited questions and answers. All of this copy is **placeholder** content (answers start with "Placeholder:") and must be replaced before launch (roadmap 011).
 
 Cache tags follow `<_type>` and `<_type>:<slug>` (see `src/sanity/fetch.ts`). Local production builds reuse fetched content from `.next/cache`; if you change content without the webhook, run `rm -rf .next/cache` before `npm run build`.
 
@@ -44,8 +45,8 @@ Cache tags follow `<_type>` and `<_type>:<slug>` (see `src/sanity/fetch.ts`). Lo
 
 Before shipping a client project from this template, review the following:
 
-- Update the site metadata in the environment variables and in the shared config for title, description, keywords, and social links.
-- Review the robots rules to ensure the intended search and AI crawlers are allowed while suspicious or unknown agents remain blocked.
+- Set `NEXT_PUBLIC_SITE_URL` to the production origin, and fill Studio → "Site settings" → "SEO and business" (home title, descriptions, location, social links). Replace all placeholder copy.
+- Review `AI_TRAINING_AGENTS` in `src/lib/seo/robots.ts`: AI training crawlers are blocked; search engines and AI search and answer agents are allowed.
 - Confirm the sitemap and social share images are appropriate for the launch brand.
 - Verify accessibility basics such as semantic headings, keyboard focus visibility, and skip links.
 - Ensure HTTPS, CSP, and security headers are enabled in the production environment.

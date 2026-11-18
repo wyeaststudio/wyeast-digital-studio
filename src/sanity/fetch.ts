@@ -4,6 +4,24 @@ import { draftMode } from 'next/headers';
 import { client } from './client';
 import { getReadToken } from './server-env';
 
+type SanityFetchOptions<Q extends string> = {
+  query: Q;
+  params?: QueryParams;
+  tags: string[];
+};
+
+/** Published content only, even when the caller has a draft-mode cookie. */
+export async function sanityFetchPublished<const Q extends string>({
+  query,
+  params = {},
+  tags,
+}: SanityFetchOptions<Q>): Promise<ClientReturn<Q>> {
+  'use cache';
+  cacheTag(...tags);
+  cacheLife('max');
+  return client.fetch(query, params);
+}
+
 /**
  * Cache tag convention (revalidated by /api/revalidate on publish):
  * - `<_type>` for collections and singletons, e.g. `page`, `siteSettings`
@@ -13,11 +31,7 @@ export async function sanityFetch<const Q extends string>({
   query,
   params = {},
   tags,
-}: {
-  query: Q;
-  params?: QueryParams;
-  tags: string[];
-}): Promise<ClientReturn<Q>> {
+}: SanityFetchOptions<Q>): Promise<ClientReturn<Q>> {
   'use cache';
   // Draft mode bypasses 'use cache' automatically, so drafts are always fresh.
   const { isEnabled } = await draftMode();
@@ -31,7 +45,5 @@ export async function sanityFetch<const Q extends string>({
       .fetch(query, params);
   }
 
-  cacheTag(...tags);
-  cacheLife('max');
-  return client.fetch(query, params);
+  return sanityFetchPublished({ query, params, tags });
 }

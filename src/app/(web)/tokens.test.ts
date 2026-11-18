@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { OG_PALETTE } from '@/lib/seo/og';
 
 const css = readFileSync(join(__dirname, 'globals.css'), 'utf8');
 
@@ -114,5 +115,21 @@ describe('Figma extra tokens [FOUND-R2, FOUND-R9]', () => {
 
   it('disables motion for prefers-reduced-motion', () => {
     expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\)[\s\S]*transition-duration: 0\.01ms !important/);
+  });
+});
+
+function toHex(value: string): string {
+  return `#${oklchToLinearRgb(value)
+    .map((channel) => Math.round(encode(channel) * 255).toString(16).padStart(2, '0'))
+    .join('')}`.toUpperCase();
+}
+
+describe('social card palette [SEO-R8]', () => {
+  it('matches the light-theme primary surface tokens', () => {
+    const light = block(':root');
+    const near = (a: string, b: string) =>
+      [1, 3, 5].every((i) => Math.abs(parseInt(a.slice(i, i + 2), 16) - parseInt(b.slice(i, i + 2), 16)) <= 1);
+    expect(near(OG_PALETTE.background.toUpperCase(), toHex(light.primary))).toBe(true);
+    expect(near(OG_PALETTE.foreground.toUpperCase(), toHex(light['primary-foreground']))).toBe(true);
   });
 });
