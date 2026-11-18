@@ -169,7 +169,7 @@ export const FAQ_PROJECTION = `_id, question, answer`;
 export const HOME_FAQS_QUERY = defineQuery(`*[_type == "faq" && defined(question)] | order(_createdAt asc)[0...12]{ _id, question, answer }`);
 ```
 
-TypeGen can't type a string fragment, so `FAQ_PROJECTION` is interpolated as a constant inside each `defineQuery` template, which TypeGen supports. The plan will confirm that during T1 and inline the fields if it doesn't.
+TypeGen can't type a string fragment, so `FAQ_PROJECTION` is interpolated as a constant inside each `defineQuery` template, which TypeGen supports. Confirmed in T2: TypeGen evaluates the interpolated constant and types `HOME_FAQS_QUERY` correctly.
 
 ### Loaders (`src/sanity/loaders/seo.ts`)
 
@@ -197,7 +197,7 @@ Each loader runs `stegaClean` over its result before returning it (SEO-R6). The 
 | File | Exports | Notes |
 | --- | --- | --- |
 | `site.ts` | `SITE_URL`, `SITE_DEFAULTS`, `absoluteUrl(path)`, `isIndexableDeployment()` | `SITE_URL` comes from `NEXT_PUBLIC_SITE_URL` with the trailing slash removed. The defaults hold the Wy'east name, home title, description, and business description (SEO-R1). `isIndexableDeployment()` is false only for `VERCEL_ENV` `preview` or `development` (SEO-R5). |
-| `routes.ts` | `ROUTES`, `routableTypes()`, `pathFor(type, slug)`, `resolvePath(path)` | The registry is an empty object in 003, and 004 to 010 add entries such as `landingPage: (slug) => '/' + slug`. `resolvePath` reverses a path to `{ type, slug }`, or to `home`, for the social card route. |
+| `routes.ts` | `ROUTES`, `routableTypes()`, `pathFor(type, slug)`, `resolvePath(path)` | The registry maps each `_type` to a URL prefix (path = prefix + slug). It is an empty object in 003, and 004 to 010 add entries such as `landingPage: '/'` or `service: '/services/'`; the most specific prefix wins when resolving. `resolvePath` reverses a path to `{ type, slug }`, or to `home`, for the social card route. |
 | `metadata.ts` | `buildMetadata({ settings, page, path, indexable })` | Returns a complete `Metadata` with `metadataBase`, title (absolute on the home page, otherwise `{title} \| {siteName}`), description, `alternates.canonical`, full `openGraph`, full `twitter` (with `site` from the X social link if there is one), and `robots` (noindex if `page.seo.noindex` or the deployment isn't indexable). |
 | `og.ts` | `resolveOgImage({ title, siteName, path, seoImage, defaultImage })`, `OG_SIZE`, `OG_PALETTE` | For an upload, it returns a `@sanity/image-url` URL cropped to 1200×630 from the hotspot, `fm=png` or `jpg`, with the editor's alt text. Otherwise it returns `/og{path}?v={hash}`, where `hash` is a short FNV-1a hash of the title and site name, so link previews and the CDN pick up title changes. The alt text is "{title}, {siteName}". |
 | `json-ld.ts` | `siteGraph(settings)`, `breadcrumbList(items)`, `faqPage(faqs)`, `serializeJsonLd(data)` | Minimal hand-written types (no `schema-dts` dependency). The `@id` values are `{SITE_URL}/#business` and `{SITE_URL}/#website`. A `compact()` helper removes empty values. `faqPage` uses `toPlainText(answer)` and `stegaClean`. `serializeJsonLd` uses `JSON.stringify` and replaces `<` with `\u003c` (SEO-R12). |

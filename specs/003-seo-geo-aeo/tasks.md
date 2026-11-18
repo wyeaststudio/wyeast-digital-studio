@@ -6,7 +6,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
 
 ## Phase A — Content
 
-- [ ] **T1 — Validation helpers and schema types** _(lightweight model)_
+- [x] **T1 — Validation helpers and schema types** _(lightweight model)_
   Extend `src/sanity/validation.ts` and `validation.test.ts` with:
   - `seoTitleWarning` (over 60 characters);
   - `seoDescriptionWarning` (missing, or outside 70–160 characters);
@@ -21,7 +21,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   Add the "SEO and business" group and fields to `singletons/site-settings.ts`, and put the existing fields in a "General" group. Add an "FAQs" list item after the singletons in `structure.ts`.
   _Covers:_ SEO-R7, R19, R21 · _Verify:_ `npm run test -- validation && npx sanity schema validate`
 
-- [ ] **T2 — Dependencies, queries, TypeGen, and loaders**
+- [x] **T2 — Dependencies, queries, TypeGen, and loaders**
   Run `npm install @portabletext/react@^6.2.0 @sanity/image-url@^2.1.1`. Confirm that the lockfile versions are unchanged, apart from the direct-dependency entries.
 
   Add these to `queries.ts`:
@@ -40,7 +40,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   Add `seo.test.ts`, which mocks `sanityFetch` to reject and resolve, and includes a stega fixture.
   _Covers:_ SEO-R6, R14 (registry), R15, R18 · _Verify:_ `npm run typegen && npm run typecheck && npm run test -- seo routes`
 
-- [ ] **T3 — Seed content and README** _(lightweight model)_
+- [x] **T3 — Seed content and README** _(lightweight model)_
   Create `sanity/seed/seo.json`:
   - six `faq` documents with the Figma questions and answers that start with "Placeholder:";
   - the new `siteSettings` values. The home title and business description are the placeholders from spec Q9 and Q10. The seed also sets Portland, OR, and the areas served.

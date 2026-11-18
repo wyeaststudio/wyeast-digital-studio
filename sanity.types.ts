@@ -50,6 +50,92 @@ export type SiteLink = {
   href?: string;
 };
 
+export type FaqReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "faq";
+};
+
+export type FaqSection = {
+  _type: "faqSection";
+  eyebrow?: string;
+  heading?: string;
+  intro?: string;
+  faqs?: Array<
+    {
+      _key: string;
+    } & FaqReference
+  >;
+};
+
+export type FaqAnswer = Array<{
+  children?: Array<{
+    marks?: Array<string>;
+    text?: string;
+    _type: "span";
+    _key: string;
+  }>;
+  style?: "normal";
+  listItem?: "bullet" | "number";
+  markDefs?: Array<{
+    href?: string;
+    _type: "link";
+    _key: string;
+  }>;
+  level?: number;
+  _type: "block";
+  _key: string;
+}>;
+
+export type SanityImageAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+};
+
+export type Seo = {
+  _type: "seo";
+  title?: string;
+  description?: string;
+  ogImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  noindex?: boolean;
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x?: number;
+  y?: number;
+  height?: number;
+  width?: number;
+};
+
+export type Faq = {
+  _id: string;
+  _type: "faq";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  question?: string;
+  answer?: FaqAnswer;
+};
+
 export type Page = {
   _id: string;
   _type: "page";
@@ -93,6 +179,20 @@ export type SiteSettings = {
       _key: string;
     } & SocialLink
   >;
+  homeTitle?: string;
+  defaultDescription?: string;
+  defaultOgImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  businessDescription?: string;
+  addressLocality?: string;
+  addressRegion?: string;
+  areaServed?: Array<string>;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -131,22 +231,6 @@ export type SanityImageMetadata = {
   thumbHash?: string;
   hasAlpha?: boolean;
   isOpaque?: boolean;
-};
-
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
 };
 
 export type SanityFileAsset = {
@@ -219,6 +303,14 @@ export type AllSanitySchemaTypes =
   | NavItem
   | LabelledLink
   | SiteLink
+  | FaqReference
+  | FaqSection
+  | FaqAnswer
+  | SanityImageAssetReference
+  | Seo
+  | SanityImageCrop
+  | SanityImageHotspot
+  | Faq
   | Page
   | Navigation
   | SiteSettings
@@ -226,8 +318,6 @@ export type AllSanitySchemaTypes =
   | SanityImagePalette
   | SanityImageDimensions
   | SanityImageMetadata
-  | SanityImageHotspot
-  | SanityImageCrop
   | SanityFileAsset
   | SanityAssetSourceData
   | SanityImageAsset
@@ -288,11 +378,76 @@ export type SHELL_QUERY_RESULT = {
   } | null;
 };
 
+// Source: src/sanity/queries.ts
+// Variable: SITE_SEO_QUERY
+// Query: *[_type == "siteSettings" && _id == "siteSettings"][0]{  _updatedAt,  siteName,  email,  phone,  homeTitle,  defaultDescription,  businessDescription,  addressLocality,  addressRegion,  areaServed,  serviceArea,  "defaultOgImage": defaultOgImage{ asset, hotspot, crop, alt },  socialLinks[]{ platform, url }}
+export type SITE_SEO_QUERY_RESULT = {
+  _updatedAt: string;
+  siteName: string | null;
+  email: string | null;
+  phone: string | null;
+  homeTitle: string | null;
+  defaultDescription: string | null;
+  businessDescription: string | null;
+  addressLocality: string | null;
+  addressRegion: string | null;
+  areaServed: Array<string> | null;
+  serviceArea: string | null;
+  defaultOgImage: {
+    asset: SanityImageAssetReference | null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+    alt: string | null;
+  } | null;
+  socialLinks: Array<{
+    platform:
+      | "bluesky"
+      | "facebook"
+      | "github"
+      | "instagram"
+      | "linkedin"
+      | "x"
+      | "youtube"
+      | null;
+    url: string | null;
+  }> | null;
+} | null;
+
+// Source: src/sanity/queries.ts
+// Variable: ROUTABLE_DOCS_QUERY
+// Query: *[_type in $types && defined(slug.current) && seo.noindex != true]{  _type,  "slug": slug.current,  _updatedAt,  "title": coalesce(seo.title, title),  "description": seo.description}
+export type ROUTABLE_DOCS_QUERY_RESULT = Array<never>;
+
+// Source: src/sanity/queries.ts
+// Variable: OG_DOC_QUERY
+// Query: *[_type == $type && slug.current == $slug && seo.noindex != true][0]{  "title": coalesce(seo.title, title)}
+export type OG_DOC_QUERY_RESULT =
+  | {
+      title: null;
+    }
+  | {
+      title: string | null;
+    }
+  | null;
+
+// Source: src/sanity/queries.ts
+// Variable: HOME_FAQS_QUERY
+// Query: *[_type == "faq" && defined(question)] | order(_createdAt asc, _id asc)[0...12]{ _id, question, answer }
+export type HOME_FAQS_QUERY_RESULT = Array<{
+  _id: string;
+  question: string;
+  answer: FaqAnswer | null;
+}>;
+
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '*[_type == "page" && defined(title)]{ _id, title }': PAGES_QUERY_RESULT;
     '{\n  "settings": *[_type == "siteSettings" && _id == "siteSettings"][0]{\n    siteName,\n    email,\n    phone,\n    serviceArea,\n    socialLinks[]{ _key, platform, url }\n  },\n  "navigation": *[_type == "navigation" && _id == "navigation"][0]{\n    headerLinks[]{ _key, label, "href": link.href, children[]{ _key, label, "href": link.href } },\n    headerCta{ label, "href": link.href },\n    footerLinks[]{ _key, label, "href": link.href }\n  }\n}': SHELL_QUERY_RESULT;
+    '*[_type == "siteSettings" && _id == "siteSettings"][0]{\n  _updatedAt,\n  siteName,\n  email,\n  phone,\n  homeTitle,\n  defaultDescription,\n  businessDescription,\n  addressLocality,\n  addressRegion,\n  areaServed,\n  serviceArea,\n  "defaultOgImage": defaultOgImage{ asset, hotspot, crop, alt },\n  socialLinks[]{ platform, url }\n}': SITE_SEO_QUERY_RESULT;
+    '*[_type in $types && defined(slug.current) && seo.noindex != true]{\n  _type,\n  "slug": slug.current,\n  _updatedAt,\n  "title": coalesce(seo.title, title),\n  "description": seo.description\n}': ROUTABLE_DOCS_QUERY_RESULT;
+    '*[_type == $type && slug.current == $slug && seo.noindex != true][0]{\n  "title": coalesce(seo.title, title)\n}': OG_DOC_QUERY_RESULT;
+    '*[_type == "faq" && defined(question)] | order(_createdAt asc, _id asc)[0...12]{ _id, question, answer }': HOME_FAQS_QUERY_RESULT;
   }
 }

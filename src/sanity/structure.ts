@@ -1,5 +1,8 @@
 import type { StructureResolver } from 'sanity/structure';
+import { HelpCircleIcon } from '@sanity/icons/HelpCircle';
 import { singletonTypes, SINGLETON_TYPES } from './schemas/singletons';
+
+const FAQ_TYPE = 'faq';
 
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -13,5 +16,9 @@ export const structure: StructureResolver = (S) =>
           .child(S.document().schemaType(type.name).documentId(type.name).title(type.title ?? type.name)),
       ),
       S.divider(),
-      ...S.documentTypeListItems().filter((item) => !SINGLETON_TYPES.has(item.getId() ?? '')),
+      S.documentTypeListItem(FAQ_TYPE).title('FAQs').icon(HelpCircleIcon),
+      ...S.documentTypeListItems().filter((item) => {
+        const id = item.getId() ?? '';
+        return !SINGLETON_TYPES.has(id) && id !== FAQ_TYPE;
+      }),
     ]);
