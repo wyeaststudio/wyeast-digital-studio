@@ -1,14 +1,16 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getHomePage, getPage, getPageSlugs } from '@/sanity/loaders/pages';
-import { getSiteSeo } from '@/sanity/loaders/seo';
-import { SITE_DEFAULTS } from '@/lib/seo/site';
+import { getRoutableDocs, getSiteSeo } from '@/sanity/loaders/seo';
+import { absoluteUrl, SITE_DEFAULTS } from '@/lib/seo/site';
 import { pageBuilderFixtures } from '@/test-utils/page-builder';
 import HomePage, { generateMetadata as homeMetadata } from './page';
 import Page, { generateMetadata as pageMetadata, generateStaticParams } from './[slug]/page';
+import sitemap from '../sitemap';
+import { GET as llmsTxt } from '../llms.txt/route';
 
 vi.mock('@/sanity/loaders/pages', () => ({ getHomePage: vi.fn(), getPage: vi.fn(), getPageSlugs: vi.fn() }));
-vi.mock('@/sanity/loaders/seo', () => ({ getSiteSeo: vi.fn() }));
+vi.mock('@/sanity/loaders/seo', () => ({ getSiteSeo: vi.fn(), getRoutableDocs: vi.fn() }));
 vi.mock('next/navigation', () => ({ notFound: () => { throw new Error('NEXT_NOT_FOUND'); } }));
 
 let fixtures: Awaited<ReturnType<typeof pageBuilderFixtures>>;
@@ -20,6 +22,7 @@ beforeEach(() => {
   vi.mocked(getHomePage).mockResolvedValue(fixtures.home);
   vi.mocked(getPage).mockResolvedValue(fixtures.demo);
   vi.mocked(getSiteSeo).mockResolvedValue(null);
+  vi.mocked(getRoutableDocs).mockResolvedValue([]);
 });
 
 describe('builder routes [PB-R2, R3, R4, R5, R6, R18]', () => {
@@ -50,6 +53,25 @@ describe('builder routes [PB-R2, R3, R4, R5, R6, R18]', () => {
     expect(metadata.title).toMatchObject({ absolute: expect.stringContaining('Page builder demo') });
     expect(metadata.alternates?.canonical).toMatch(/\/page-builder-demo$/);
     expect(metadata.robots).toMatchObject({ index: false });
+  });
+
+  it('hides and restores Home in both crawler outputs without removing other pages [PB-R5, PB-R6]', async () => {
+    vi.mocked(getRoutableDocs).mockResolvedValue([{
+      _type: 'page', slug: 'about', title: 'About', description: null, _updatedAt: '2026-11-18T00:00:00Z',
+    }]);
+    for (const noindex of [false, true, false]) {
+      vi.mocked(getHomePage).mockResolvedValue({ ...fixtures.home, seo: { _type: 'seo', noindex } });
+      const urls = (await sitemap()).map((entry) => entry.url);
+      expect(getHomePage).toHaveBeenLastCalledWith({ publishedOnly: true });
+      const response = await llmsTxt();
+      const text = await response.text();
+      expect(getHomePage).toHaveBeenLastCalledWith({ publishedOnly: true });
+      expect(urls.includes(absoluteUrl('/'))).toBe(!noindex);
+      expect(text.includes(`- [Home](${absoluteUrl('/')})`)).toBe(!noindex);
+      expect(urls).toContain(absoluteUrl('/about'));
+      expect(text).toContain(`- [About](${absoluteUrl('/about')})`);
+      expect(response.headers.get('Content-Type')).toBe('text/plain; charset=utf-8');
+    }
   });
 
   it('provides a fallback Home h1 when the singleton is missing', async () => {

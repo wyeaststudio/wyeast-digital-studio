@@ -9,7 +9,7 @@ export function RichTextSection({ section, headingId, ...props }: BlockProps<'ri
       anchor={section.anchor} surface={section.surface} innerClassName="max-w-prose space-y-8"
     >
       {section.heading && <h2 id={headingId} className="text-3xl leading-9 lg:text-4xl lg:leading-10">{section.heading}</h2>}
-      <RichText variant="prose" value={section.body} className="text-base leading-7" />
+      <RichText variant="prose" value={section.body} headingLevel={section.heading ? 3 : 2} className="text-base leading-7" />
     </Section>
   );
 }

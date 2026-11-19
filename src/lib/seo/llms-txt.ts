@@ -10,16 +10,18 @@ export function buildLlmsTxt({
   site,
   docs,
   routes = ROUTES,
+  homeNoindex = false,
 }: {
   site: ResolvedSite;
   docs: RoutableDoc[];
   routes?: RouteRegistry;
+  homeNoindex?: boolean;
 }): string {
   const area = site.serviceArea ?? site.areaServed.join(', ');
   const contact = [site.email, site.phone].filter((value): value is string => Boolean(value));
   const details = [`Service area: ${area}.`, contact.length > 0 ? `Contact: ${contact.join(', ')}.` : null];
 
-  const pages = [`- [Home](${absoluteUrl('/')}): ${site.description}`];
+  const pages = homeNoindex ? [] : [`- [Home](${absoluteUrl('/')}): ${site.description}`];
   for (const doc of docs) {
     const slug = stegaClean(doc.slug);
     if (!slug) continue;

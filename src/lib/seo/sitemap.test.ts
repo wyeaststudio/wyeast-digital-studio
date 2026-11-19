@@ -23,7 +23,7 @@ describe('buildSitemap [SEO-R14]', () => {
     const sitemap = buildSitemap(
       [doc({ slug: 'web-design' }), doc({ slug: 'seo', _updatedAt: '2026-11-05T00:00:00Z' })],
       '2026-11-10T00:00:00Z',
-      routes,
+      { routes },
     );
 
     expect(sitemap).toEqual([
@@ -35,17 +35,17 @@ describe('buildSitemap [SEO-R14]', () => {
   });
 
   it('skips documents whose type is not registered', () => {
-    const sitemap = buildSitemap([doc({ slug: 'hello' })], null, {});
+    const sitemap = buildSitemap([doc({ slug: 'hello' })], null, { routes: {} });
 
     expect(sitemap.map((entry) => entry.url)).toEqual([absoluteUrl('/')]);
   });
 
   it('skips missing slugs from nullable TypeGen results [PB-R5]', () => {
-    expect(buildSitemap([doc({ slug: null })], null, routes).map((entry) => entry.url)).toEqual([absoluteUrl('/')]);
+    expect(buildSitemap([doc({ slug: null })], null, { routes }).map((entry) => entry.url)).toEqual([absoluteUrl('/')]);
   });
 
   it('dedupes entries that resolve to the same URL', () => {
-    const sitemap = buildSitemap([doc({}), doc({})], null, routes);
+    const sitemap = buildSitemap([doc({}), doc({})], null, { routes });
 
     expect(sitemap).toHaveLength(2);
   });

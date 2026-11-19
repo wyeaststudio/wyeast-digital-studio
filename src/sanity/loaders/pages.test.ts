@@ -2,11 +2,11 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import { evaluate, parse } from 'groq-js';
 import type { HOME_PAGE_QUERY_RESULT, PAGE_QUERY_RESULT } from '../../../sanity.types';
 import { withStega } from '@/test-utils/stega';
-import { sanityFetch } from '../fetch';
+import { sanityFetch, sanityFetchPublished } from '../fetch';
 import { HOME_PAGE_QUERY, PAGE_QUERY, PAGE_SLUGS_QUERY } from '../queries';
 import { getHomePage, getPage, getPageSlugs } from './pages';
 
-vi.mock('../fetch', () => ({ sanityFetch: vi.fn() }));
+vi.mock('../fetch', () => ({ sanityFetch: vi.fn(), sanityFetchPublished: vi.fn() }));
 const mockFetch = vi.mocked(sanityFetch);
 
 describe('page loaders [PB-R4, PB-R6, PB-R7]', () => {
@@ -33,6 +33,18 @@ describe('page loaders [PB-R4, PB-R6, PB-R7]', () => {
       params: { slug: 'about' },
       tags: ['page', 'page:about', 'faq', 'testimonial'],
     });
+  });
+
+  it('uses published Home visibility and cache tags for crawlers, not the draft-aware fetch [PB-R5, PB-R6]', async () => {
+    const publishedHome = { _id: 'homePage', seo: { _type: 'seo', noindex: true } };
+    mockFetch.mockResolvedValue({ ...publishedHome, seo: { _type: 'seo', noindex: false } });
+    vi.mocked(sanityFetchPublished).mockResolvedValueOnce(publishedHome);
+    await expect(getHomePage({ publishedOnly: true })).resolves.toEqual(publishedHome);
+    expect(sanityFetchPublished).toHaveBeenCalledWith({
+      query: HOME_PAGE_QUERY,
+      tags: ['homePage', 'faq', 'testimonial'],
+    });
+    expect(mockFetch).not.toHaveBeenCalled();
   });
 
   it('loads build-time slugs with the collection tag', async () => {

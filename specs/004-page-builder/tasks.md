@@ -135,6 +135,12 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   - The first full run exposed background 404s from automatic prefetch to future seeded CMS destinations, failing Home Best Practices at 96. The owner approved disabling speculative prefetch in shared `SiteLink`, preserving client navigation on click and external links. A new browser case verifies initial/hover requests and subsequent navigation; the full gate then passes without suppressing errors or weakening Home's audit. Identical duplicate generated `.next/types/* 2.ts` cache files also briefly blocked typecheck; they were compared byte-for-byte and preserved outside the build inputs, with no tracked configuration workaround.
   - Phases A–D are implemented and automatically verified. Formal UX review, manual keyboard/VoiceOver/Studio checks, authenticated Presentation navigation/click-to-edit/reordering (owner-deferred), and owner feature sign-off remain outstanding; the feature is not marked Done.
 
+## PR #4 review follow-up
+
+- [x] **Home crawler visibility [PB-R5, PB-R6].** Both crawler routes use published Home SEO and its `homePage` cache dependency. Regression coverage verifies hide/restore transitions, preservation of other entries, and published-only fetching even when draft visibility differs.
+- [x] **Contextual rich-text headings [PB-R9, PB-R19].** Owner approved render-time normalization and the spec/plan clarification on 2026-11-18. Authored styles and FAQ behavior are preserved; tests verify leading `h3`/`h4`, repeated leading siblings, and subsequent nesting with and without a section heading, alongside seeded page outlines.
+- Verification (2026-11-18): `PORT=3100 npm run check` passes lint, typecheck, 358 unit tests across 43 files, production build, and 249 browser tests (27 existing explicit skips), including axe on both routes in both themes. Mobile/desktop Lighthouse remains 100/100/100/100 on Home and 100/100/100/69 on the intentionally noindex demo, with only the approved crawlability/category warnings; CLS is 0 in all 12 runs. No live CMS documents were mutated.
+
 ## UX review
 
 - [ ] AI review agent: `npm run build && npm run start`, then `npm run ux:screens 004-page-builder / /page-builder-demo`. Compare to the spec checklist and the Figma Home frames, and write the results to `review/findings.md`.

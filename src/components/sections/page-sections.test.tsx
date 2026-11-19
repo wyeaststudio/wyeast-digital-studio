@@ -71,6 +71,27 @@ describe('PageSections [PB-R7, PB-R8, PB-R9, PB-R18, PB-R22, PB-R23]', () => {
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
   });
 
+  it.each([
+    { heading: null, styles: ['h3', 'h4', 'h3'] as const, expected: [1, 2, 3, 2] },
+    { heading: null, styles: ['h4', 'h4', 'h3', 'h4'] as const, expected: [1, 2, 2, 2, 3] },
+    { heading: 'Details', styles: ['h3', 'h4', 'h3'] as const, expected: [1, 2, 3, 4, 3] },
+    { heading: 'Details', styles: ['h4', 'h4', 'h3', 'h4'] as const, expected: [1, 2, 3, 3, 3, 4] },
+  ])('normalizes editor-created prose $styles with section heading $heading [PB-R9, PB-R19]', ({ heading, styles, expected }) => {
+    const section = fixtures.demo.sections!.find((item) => item._type === 'richTextSection');
+    if (!section) throw new Error('Expected seeded rich text');
+    const { container } = renderPage([{
+      ...section,
+      heading,
+      body: styles.map((style, index) => ({
+        _type: 'block', _key: String(index), style, markDefs: [],
+        children: [{ _type: 'span', _key: 'text', text: `Body heading ${index}`, marks: [] }],
+      })),
+    }]);
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    expect([...container.querySelectorAll('h1,h2,h3,h4')].map((node) => Number(node.tagName.slice(1)))).toEqual(expected);
+    expect(screen.getByText('Body heading 0')).toHaveClass(styles[0] === 'h4' ? 'text-xl' : 'text-2xl');
+  });
+
   it('handles empty content with the page title', () => {
     renderPage(null);
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Demo page');

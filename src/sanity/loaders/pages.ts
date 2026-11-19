@@ -1,10 +1,11 @@
 import type { HOME_PAGE_QUERY_RESULT, PAGE_QUERY_RESULT, PAGE_SLUGS_QUERY_RESULT } from '../../../sanity.types';
-import { sanityFetch } from '../fetch';
+import { sanityFetch, sanityFetchPublished } from '../fetch';
 import { HOME_PAGE_QUERY, PAGE_QUERY, PAGE_SLUGS_QUERY } from '../queries';
 
-export async function getHomePage(): Promise<HOME_PAGE_QUERY_RESULT> {
+export async function getHomePage({ publishedOnly = false }: { publishedOnly?: boolean } = {}): Promise<HOME_PAGE_QUERY_RESULT> {
   try {
-    return await sanityFetch({ query: HOME_PAGE_QUERY, tags: ['homePage', 'faq', 'testimonial'] });
+    const fetch = publishedOnly ? sanityFetchPublished : sanityFetch;
+    return await fetch({ query: HOME_PAGE_QUERY, tags: ['homePage', 'faq', 'testimonial'] });
   } catch (error) {
     console.error('Failed to load the home page from Sanity', error);
     return null;

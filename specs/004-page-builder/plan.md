@@ -7,11 +7,13 @@
 1. **Content model.** Replace the placeholder `page` type with a real `page` document, and add a `homePage` singleton and a `testimonial` document. Eight block object types share two common fields (`anchor`, `surface`) through a helper. A shared `pageSections` array type lists the blocks, so `page` and `homePage` use the same builder and validation (hero first and only once, unique anchors).
 2. **One projection, one query per route.** A `SECTIONS_PROJECTION` constant expands references (FAQs, testimonials) and image metadata once. `PAGE_QUERY`, `HOME_PAGE_QUERY`, and `PAGE_SLUGS_QUERY` interpolate it, so TypeGen produces one discriminated-union type for all sections (TypeGen evaluates interpolated constants; confirmed in 003 T2).
 3. **Presentational blocks, one renderer.** Each block is a server component in `src/components/sections/` that takes the TypeGen-derived props. `PageSections` maps `_type` to component, skips unknown or incomplete sections (PB-R8), wraps each in `Section` (landmark, surface classes, anchor id, Visual Editing data attribute), and decides the `h1` fallback (PB-R9).
-4. **Routes.** `(web)/page.tsx` renders `homePage`; a new `(web)/[slug]/page.tsx` renders `page` documents with `generateStaticParams`, `generateMetadata` (003 `buildMetadata`), and `FAQPage` JSON-LD. The route registry gains `page: '/'`, so the sitemap, `llms.txt`, and social cards work without further changes.
+4. **Routes.** `(web)/page.tsx` renders `homePage`; a new `(web)/[slug]/page.tsx` renders `page` documents with `generateStaticParams`, `generateMetadata` (003 `buildMetadata`), and `FAQPage` JSON-LD. The route registry gains `page: '/'` for the sitemap, `llms.txt`, and social cards. Crawler outputs also read published Home SEO to respect its visibility.
 5. **Visual Editing.** Presentation gets `resolve.mainDocuments` and `resolve.locations`. String fields are click-to-edit through stega; each section element carries a `data-sanity` attribute for its array item, so the overlays can reorder sections. No client component is needed: the existing `<VisualEditing />` refreshes the page after each patch.
 6. **Seed and docs.** Seed the Home page (Figma copy, placeholder hero image), a noindex demo page with every block, and one example testimonial. Amend the constitution (§4, version 2.0.0) and update the roadmap (005).
 
 ### Docs consulted
+
+Owner-approved PR review clarification (2026-11-18): prose retains the authored `h3`/`h4` styles and their visual classes, but renders contextual semantic levels. Without a section heading, authored `h3` maps to `h2` and following `h4` to `h3`; with a section heading they remain `h3`/`h4`. Leading `h4` headings render at the body's starting level until an authored `h3` establishes a parent, so consecutive leading headings stay siblings. FAQ remains paragraph-only. No schema or stored content changes are required.
 
 Owner-approved adjustments (2026-11-18, Phase D):
 
@@ -154,11 +156,13 @@ Implementation note (T3): direct conditional projections generate matching eight
 
 | Loader | Query | Cache tags | On error |
 | --- | --- | --- | --- |
-| `getHomePage()` | `HOME_PAGE_QUERY` | `homePage`, `faq`, `testimonial` | `null` and log |
+| `getHomePage({ publishedOnly? })` | `HOME_PAGE_QUERY` | `homePage`, `faq`, `testimonial` | `null` and log |
 | `getPage(slug)` | `PAGE_QUERY` | `page`, `page:{slug}`, `faq`, `testimonial` | `null` and log |
 | `getPageSlugs()` | `PAGE_SLUGS_QUERY` | `page` | `[]` and log |
 
 Loaders keep stega (blocks need it for click-to-edit). Metadata and JSON-LD go through the 003 builders, which already clean stega. `ROUTES` gains `page: '/'`, so `getRoutableDocs()` and `OG_DOC_QUERY` include pages automatically.
+
+The sitemap and `llms.txt` also read `getHomePage({ publishedOnly: true })` and omit Home when its published SEO sets `noindex`. This reuses the Home query's published cache entry and `homePage` dependency, so publishing visibility changes refreshes both crawler outputs; drafts do not alter Home's crawler visibility.
 
 ## Routes and components
 
@@ -172,7 +176,7 @@ Loaders keep stega (blocks need it for click-to-edit). Metadata and JSON-LD go t
 | `src/components/sections/hero-section.tsx` | Server | `next/image` with `fill`, `preload`, `fetchPriority="high"`, `sizes="100vw"`, the `sanityImageLoader` (hotspot crop, `auto=format`), and the LQIP as `blurDataURL`; a gradient scrim from `background`; optional `BrandLockup`; CTAs with `buttonVariants`. |
 | `src/components/sections/trust-bar-section.tsx`, `feature-grid-section.tsx`, `cta-banner-section.tsx`, `process-steps-section.tsx`, `rich-text-section.tsx`, `testimonials-section.tsx` | Server | One block each; `faq-section.tsx` (003) gains the surface and anchor props through `Section`. |
 | `src/components/sections/icons.tsx`, `src/sanity/schemas/icon-names.ts` | Server / shared | Curated icons. |
-| `src/components/rich-text/rich-text.tsx` | Server | Gains an optional `headings` mode for `h3`/`h4` (the FAQ keeps its limited set). |
+| `src/components/rich-text/rich-text.tsx` | Server | Gains a `prose` variant for authored `h3`/`h4` styles with contextual semantic levels; the FAQ keeps its limited set. |
 | `src/lib/sanity-image.ts` | Shared | `sanityImageLoader` and `urlForImage` (uses `@sanity/image-url`; shared with `og.ts`). |
 | `src/lib/seo/json-ld.ts` | Shared | `faqPage` gains a helper that collects FAQ items from all FAQ sections on a page. |
 | `sanity.config.ts` | Studio | `presentationTool({ resolve: { mainDocuments, locations } })` for `homePage` → `/` and `page` → `/{slug}`. |
