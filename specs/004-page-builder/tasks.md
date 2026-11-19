@@ -44,7 +44,7 @@ Run the tasks in order. Each is small and independently verifiable, and each lis
   - the `page-builder-demo` page (`seo.noindex: true`) with all eight blocks on varied surfaces, two anchors, and a rich text section with `h3`, lists, and a link;
   - one `testimonial` ("Placeholder:" copy, `permission: true`).
 
-  Apply with `npx sanity documents create sanity/seed/pages.json --missing`, then run the image script. Add the steps to the README's Sanity setup section, and note the placeholder hero image and testimonial are replaced in 011.
+  Apply with `npx sanity documents create sanity/seed/pages.json --missing`, then run the image script. Add the steps to the README's Sanity setup section, and note that 005 owns final Home copy/photo (with approval deferred to pre-launch readiness) while the demo testimonial remains a 011 placeholder.
   _Covers:_ PB-R22, R23 · _Verify:_ `npx sanity documents query '*[_id in ["homePage"] || _type == "page"]{_id, "n": count(sections)}'` lists the home and demo pages with their section counts
   - Task log (2026-11-18): seeded the Figma Home copy and six sections, the noindex eight-block demo (two anchors and varied surfaces), and a clearly marked example testimonial. The decorative brand-gradient JPEG is 2400×1350 and 32,349 bytes. README documents safe setup, future service links, and replacement of placeholders in 011.
   - Live verification: `--missing` created the three documents; the image script set both hero assets. Its second run performed no upload or mutation. Published Home and demo section counts are six and eight, demo noindex is true, and all three exported documents validate with zero errors and warnings.

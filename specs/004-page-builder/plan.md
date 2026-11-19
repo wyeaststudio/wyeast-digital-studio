@@ -120,7 +120,7 @@ Implementation note (Phase A): Sanity field-level validation replaces the named 
 ### Seed data
 
 `sanity/seed/pages.json`:
-- `homePage` with the Figma Home sections and copy: hero ("Where Vision Meets the Summit", body, "Book Appointment" → `/contact`, lockup on), trust bar (three items), feature grid (six service cards; links to the planned `/services/…` paths), CTA banner, process steps (four steps), and the 003 FAQ section referencing the six seeded FAQs;
+- `homePage` with the 005 interim Home content: hero with the booking-placeholder CTA and lockup, trust bar (three items), six unlinked capability cards, CTA banner, four process steps, the 003 FAQ section referencing the six seeded FAQs, and a copy-only booking placeholder after the FAQ. Final copy/photo approval and replacement are deferred to 011; the booking placeholder is replaced by 009's section when available;
 - a `page` `page-builder-demo` (`seo.noindex: true`) with all eight blocks on varied surfaces and anchors;
 - one `testimonial` with "Placeholder:" copy and `permission: true`, used only on the demo page;
 - a placeholder hero image: a 2400×1350 JPEG soft gradient in the brand palette (no photo), committed at `sanity/seed/hero-placeholder.jpg`. A small script (`npx sanity exec scripts/seed-hero-image.ts --with-user-token`) uploads it once and sets it on the home hero. The README documents replacing it with the licensed photo.

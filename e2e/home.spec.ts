@@ -18,9 +18,9 @@ test.describe('Home [FOUND-R18]', () => {
     test(`hovered primary button keeps accessible contrast (${colorScheme}) [FOUND-R1]`, async ({ page }) => {
       await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });
       await page.goto('/');
-      const button = page.getByRole('main').getByRole('link', { name: 'Book Appointment', exact: true });
-      await button.hover();
-      await expectNoA11yViolations(page, { include: 'main section:first-child a[href="/contact"]', rules: ['color-contrast', 'color-contrast-enhanced'] });
+      const heroLink = page.locator('main > section').first().getByRole('link', { name: 'Booking details coming soon', exact: true });
+      await heroLink.hover();
+      await expectNoA11yViolations(page, { include: 'main section:first-child a[href="/#booking"]', rules: ['color-contrast', 'color-contrast-enhanced'] });
     });
   }
 

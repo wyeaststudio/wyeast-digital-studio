@@ -2,14 +2,18 @@
   {
     "_id": "homePage",
     "_type": "homePage",
+    "seo": {
+      "_type": "seo",
+      "description": "Bespoke websites for small businesses in Portland and the Pacific Northwest. Built with accessible design, fast performance, and clear paths to get in touch."
+    },
     "sections": [
       {
         "_key": "hero",
         "_type": "heroSection",
-        "heading": "Where Vision Meets the Summit",
-        "body": "Digital experiences crafted with precision, elevated by design. We build high-performance products tailored to your loftiest goals.",
+        "heading": "Thoughtful websites. Built to help your business grow.",
+        "body": "Bespoke websites for small businesses in Portland and the Pacific Northwest. Clear design, accessible experiences, and a fast foundation that helps people find you.",
         "showLockup": true,
-        "primaryCta": { "_type": "labelledLink", "label": "Book Appointment", "link": { "_type": "siteLink", "href": "/contact" } },
+        "primaryCta": { "_type": "labelledLink", "label": "Booking details coming soon", "link": { "_type": "siteLink", "href": "/#booking" } },
         "image": { "_type": "image", "alt": "", "decorative": true }
       },
       {
@@ -17,53 +21,47 @@
         "_type": "trustBarSection",
         "surface": "primary",
         "items": [
-          { "_key": "performance", "_type": "trustItem", "icon": "shield-check", "text": "90+ Guaranteed Google Lighthouse Score" },
-          { "_key": "accessibility", "_type": "trustItem", "icon": "accessibility", "text": "100% WCAG AA Accessibility Compliance" },
-          { "_key": "lightweight", "_type": "trustItem", "icon": "zap", "text": "Zero Page-Builder Bloat" }
+          { "_key": "accessibility", "_type": "trustItem", "icon": "accessibility", "text": "Accessibility considered early" },
+          { "_key": "performance", "_type": "trustItem", "icon": "zap", "text": "Performance built into the process" },
+          { "_key": "business", "_type": "trustItem", "icon": "shield-check", "text": "Clear paths to get in touch" }
         ]
       },
       {
         "_key": "features",
         "_type": "featureGridSection",
         "surface": "background",
-        "heading": "Precision Engineering, Elevated Design",
-        "intro": "We construct lightweight, high-performance, and deeply optimized digital products tailored to survive the ever-shifting landscape of the modern web.",
+        "heading": "A better website starts with a strong foundation.",
+        "intro": "Give your customers a clear path from finding your business to getting in touch. We bring design, accessibility, performance, and discoverability together.",
         "cards": [
           {
             "_key": "accessibility", "_type": "featureCard", "icon": "accessibility", "badge": "A11Y",
-            "title": "Accessibility (a11y)",
-            "description": "Inclusive design from the first line of code. We deliver 100% WCAG AA compliance to ensure every user enjoys a seamless experience.",
-            "link": { "_type": "labelledLink", "label": "Learn about this capability", "link": { "_type": "siteLink", "href": "/services/accessibility" } }
+            "title": "Accessible websites",
+            "description": "Help more people use your website. We build with clear structure, keyboard access, and WCAG accessibility standards in mind."
           },
           {
             "_key": "performance", "_type": "featureCard", "icon": "zap", "badge": "FAST",
-            "title": "High Performance",
-            "description": "Ultra-fast loading speeds built on clean architecture. We guarantee 90+ Google Lighthouse scores with zero page-builder bloat.",
-            "link": { "_type": "labelledLink", "label": "Learn about this capability", "link": { "_type": "siteLink", "href": "/services/high-performance" } }
+            "title": "Fast-loading websites",
+            "description": "Keep the path to your business quick and straightforward, with focused pages and carefully sized images."
           },
           {
             "_key": "aeo", "_type": "featureCard", "icon": "message-square", "badge": "AEO",
-            "title": "Answer Engine Optimization",
-            "description": "Prepare your brand for the zero-click search era. We structure your raw data so conversational AI agents and LLMs cite you directly.",
-            "link": { "_type": "labelledLink", "label": "Learn about this capability", "link": { "_type": "siteLink", "href": "/services/answer-engine-optimization" } }
+            "title": "Clear answers for search tools",
+            "description": "Make common questions easy to answer, with useful content and structured information that search and answer tools can understand."
           },
           {
             "_key": "geo", "_type": "featureCard", "icon": "cpu", "badge": "GEO",
-            "title": "Generative Engine Optimization",
-            "description": "Ensure your product is recommended by generative search tools like Perplexity. We optimize authority vectors and semantic relevance.",
-            "link": { "_type": "labelledLink", "label": "Learn about this capability", "link": { "_type": "siteLink", "href": "/services/generative-engine-optimization" } }
+            "title": "Content AI search can understand",
+            "description": "Give AI-powered search tools clear, consistent information about what you do and who you help."
           },
           {
             "_key": "seo", "_type": "featureCard", "icon": "search", "badge": "SEO",
-            "title": "Search Engine Optimization",
-            "description": "High-rank organic discoverability driven by modern schema structures, semantic search patterns, and optimized Core Web Vitals.",
-            "link": { "_type": "labelledLink", "label": "Learn about this capability", "link": { "_type": "siteLink", "href": "/services/search-engine-optimization" } }
+            "title": "Search-friendly foundations",
+            "description": "Help search engines understand your pages through meaningful content, clear page titles, and sound technical foundations."
           },
           {
             "_key": "local", "_type": "featureCard", "icon": "map-pin", "badge": "LOCAL",
-            "title": "Local Business Websites",
-            "description": "High-converting, accessible local footprints tailored to geographical search maps, structured review models, and localized intent.",
-            "link": { "_type": "labelledLink", "label": "Learn about this capability", "link": { "_type": "siteLink", "href": "/services/local-business-websites" } }
+            "title": "Websites for local businesses",
+            "description": "Show nearby customers what you offer, where you work, and how to reach you."
           }
         ]
       },
@@ -72,20 +70,20 @@
         "_type": "ctaBannerSection",
         "surface": "primary",
         "heading": "Have a project in mind?",
-        "body": "Let's build an accessible, lightning-fast digital experience that drives growth. Book a call to discuss your vision.",
-        "cta": { "_type": "labelledLink", "label": "Schedule Consultation", "link": { "_type": "siteLink", "href": "/contact" } }
+        "body": "Tell us what you want your website to do. Let's talk about your goals and the next step for your business.",
+        "cta": { "_type": "labelledLink", "label": "Booking details coming soon", "link": { "_type": "siteLink", "href": "/#booking" } }
       },
       {
         "_key": "process",
         "_type": "processStepsSection",
         "surface": "background",
-        "heading": "Our Process",
-        "intro": "A structured, disciplined approach to engineering high-performance digital products that load instantly and conform to strict accessibility standards.",
+        "heading": "From first conversation to launch.",
+        "intro": "A clear process keeps the work focused and helps you know what comes next.",
         "steps": [
-          { "_key": "audit", "_type": "processStep", "icon": "target", "title": "Audit & Strategy", "description": "We inspect your current lighthouse scores, SEO authority vectors, and WCAG accessibility blindspots to outline a clear plan." },
-          { "_key": "design", "_type": "processStep", "icon": "shapes", "title": "Design & Engineering", "description": "Crafting clean semantics, lightweight frameworks, and accessible structures with zero page-builder bloat." },
-          { "_key": "tuning", "_type": "processStep", "icon": "bar-chart", "title": "Performance Tuning", "description": "Meticulous optimization of assets, network payloads, and hydration paths to guarantee a 90+ Lighthouse Score." },
-          { "_key": "launch", "_type": "processStep", "icon": "rocket", "title": "Launch", "description": "Seamless deployment paired with structured microdata to ensure search engines and generative AI agents cite you directly." }
+          { "_key": "discover", "_type": "processStep", "icon": "target", "title": "Discover and plan", "description": "Talk through your goals, your customers, and what your website needs to do. Agree on the scope before we build." },
+          { "_key": "design", "_type": "processStep", "icon": "shapes", "title": "Design and build", "description": "Shape a website around your brand, with clear content and accessibility considered throughout." },
+          { "_key": "test", "_type": "processStep", "icon": "bar-chart", "title": "Test and refine", "description": "Check the details across screen sizes, keyboards, and assistive technology, then refine performance and usability." },
+          { "_key": "launch", "_type": "processStep", "icon": "rocket", "title": "Launch and hand over", "description": "Bring the site online with guidance for managing content and a clear agreement on any ongoing support." }
         ]
       },
       {
@@ -94,7 +92,7 @@
         "surface": "primary",
         "eyebrow": "FAQ",
         "heading": "Frequently Asked Questions",
-        "intro": "Answering common queries about our engineering standards, launch timelines, custom technology stack, and ongoing partnerships.",
+        "intro": "Clear answers about the work, the process, and what to expect.",
         "faqs": [
           { "_key": "timeline", "_type": "reference", "_ref": "faq-01-timeline" },
           { "_key": "pricing", "_type": "reference", "_ref": "faq-02-pricing" },
@@ -102,6 +100,29 @@
           { "_key": "accessibility", "_type": "reference", "_ref": "faq-04-accessibility" },
           { "_key": "seo-ai", "_type": "reference", "_ref": "faq-05-seo-ai" },
           { "_key": "maintenance", "_type": "reference", "_ref": "faq-06-maintenance" }
+        ]
+      },
+      {
+        "_key": "booking-placeholder",
+        "_type": "richTextSection",
+        "anchor": "booking",
+        "surface": "background",
+        "heading": "Booking is coming soon",
+        "body": [
+          {
+            "_key": "booking-intro",
+            "_type": "block",
+            "style": "normal",
+            "markDefs": [],
+            "children": [
+              {
+                "_key": "booking-copy",
+                "_type": "span",
+                "marks": [],
+                "text": "We're preparing our scheduling details. Please check back soon for booking information."
+              }
+            ]
+          }
         ]
       }
     ]

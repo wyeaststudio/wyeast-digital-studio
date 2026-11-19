@@ -34,10 +34,13 @@ describe('PageSections [PB-R7, PB-R8, PB-R9, PB-R18, PB-R22, PB-R23]', () => {
     expect(html).not.toContain('<script');
   });
 
-  it('renders the six Home blocks with the hero h1 and question order matching JSON-LD', () => {
+  it('renders all seven Home sections, the booking placeholder, and FAQ order matching JSON-LD [HOME-R1, HOME-R4, HOME-R6]', () => {
     const { container } = renderPage(fixtures.home.sections);
-    expect(container.querySelectorAll('section')).toHaveLength(6);
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Where Vision Meets the Summit');
+    expect(container.querySelectorAll('section')).toHaveLength(7);
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Thoughtful websites. Built to help your business grow.');
+    expect(screen.getByRole('heading', { name: 'Booking is coming soon' })).toBeInTheDocument();
+    expect(screen.getByText("We're preparing our scheduling details. Please check back soon for booking information.")).toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: 'Booking details coming soon' })).toHaveLength(2);
     expect([...container.querySelectorAll('summary')].map((node) => node.textContent)).toEqual(
       faqPageForSections(fixtures.home.sections)?.mainEntity.map((question) => question.name),
     );

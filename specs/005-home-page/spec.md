@@ -1,26 +1,27 @@
 # 005 -- Home page: Spec
 
-**Status:** Draft (2026-11-18) | **Owner:** Wy'east Digital Studio | **Figma:** [Mobile light](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=10-10), [Mobile dark](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=10-11), [Desktop light](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=10-13), [Desktop dark](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=10-12)
+**Status:** Approved (2026-11-19) | **Owner:** Wy'east Digital Studio | **Figma:** [Mobile light](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=10-10), [Mobile dark](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=10-11), [Desktop light](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=10-13), [Desktop dark](https://www.figma.com/design/uLqdLLfDDSL83X11ea41Wt/Wy-east-Digital-Studio?node-id=10-12)
 
 ## Summary
 
-Turn the seeded Home page into the studio's finished introduction and lead-generation page: clear, owner-approved copy, an owner-supplied licensed hero photo, and the real booking section from 009. Small-business visitors in Portland and the Pacific Northwest should understand what the studio offers, why accessibility and performance matter, and how to start a conversation.
+Turn the seeded Home page into the studio's introduction and lead-generation page using realistic interim copy, the existing gradient, and a copy-only booking placeholder while implementation proceeds. Before launch, replace them with owner-approved copy, an owner-supplied licensed hero photo, and the real booking section from 009. Small-business visitors in Portland and the Pacific Northwest should understand what the studio offers, why accessibility and performance matter, and how to start a conversation.
 
 004 supplies the Home singleton, reusable sections, routing, metadata, FAQ structured data, and Visual Editing. 005 uses that foundation rather than building another Home template. It serves constitution section 1: inquiries and booked calls, demonstrated craft, and discoverability.
 
-This is a specification draft, not implementation authorization. The owner has requested proposed plain-language copy, but has not approved the wording below.
+The owner approved this specification, plan, and task list on 2026-11-19. Realistic placeholder copy and the gradient are approved for interim use; final copy, business claims, and image treatment remain a pre-launch approval gate.
 
 ## Dependencies and delivery gate
 
-- **004 Page builder:** Phases A-D and the end-to-end/performance gate are complete. Obtain its required UX sign-off unless the owner explicitly approves a deferral; authenticated Presentation checks were owner-deferred, and formal feature UX review remains pending.
-- **009 Contact:** deliver the reusable booking section, its real Google Workspace scheduling configuration, accessible fallback, privacy behavior, and lazy-loading/CSP integration.
-- **Owner inputs:** a licensed hero photo and approval of final copy, claims, image treatment, metadata, and CTA destinations.
-- **Owner decision (2026-11-18): all 005 implementation waits for 009.** Do not deliver a content-only first stage or recreate booking inside 005. Specification review may proceed now.
-- Spec approval precedes the technical plan; plan approval precedes tasks; approved tasks precede any production code or CMS mutation.
+- **004 Page builder:** Phases A-D and the end-to-end/performance gate are complete. The owner has deferred all feature UX testing, including 004's remaining UX sign-off, until pre-launch readiness.
+- **009 Contact:** deliver the reusable booking section, its real Google Workspace scheduling configuration, accessible fallback, privacy behavior, and lazy-loading/CSP integration. Until then, 005 may use a copy-only `richTextSection` at `#booking`; it provides no contact form, scheduler, or availability.
+- **Owner inputs:** final copy, business claims, a licensed hero photo, image treatment, metadata, and CTA destinations are approved before launch readiness, not before implementation.
+- **Owner decision (2026-11-18):** 005 originally waited for 009 and would not recreate booking inside 005.
+- **Owner decision (2026-11-19):** realistic placeholder copy and the gradient may be used until pre-launch readiness; defer all UX testing and final copy/photo approval until then.
+- **Owner decision (2026-11-19):** proceed with 005 before 009 by adding a temporary copy-only booking placeholder using the existing rich-text block. The real 009 booking implementation replaces it when ready; do not build contact or scheduling functionality in 005. Approved tasks precede production code or CMS mutation.
 
 ### Relationship to 011
 
-The roadmap assigns final Home copy and its licensed photo to 005, while older 004 notes defer these replacements to 011. This draft proposes making 005 responsible for Home-visible copy, referenced Home FAQ answers, the Home title/description, and the licensed Home photo. 011 would verify them at launch and retain responsibility for global business details, other pages' placeholders, and the example demo testimonial. Approving this scope must also reconcile those older notes; this draft does not silently amend approved 004 scope.
+005 owns Home-visible copy, referenced FAQ answers, the Home title/description, and the licensed Home photo. Realistic placeholders and the gradient may remain during implementation. The owner approval of final copy and image treatment, replacement of the gradient, and all UX testing are deferred to the 011 pre-launch readiness stage. 011 retains responsibility for global business details, other pages' placeholders, the example demo testimonial, and the final site-wide audit.
 
 ## Users and scenarios
 
@@ -34,21 +35,21 @@ The roadmap assigns final Home copy and its licensed photo to 005, while older 0
 
 | ID | Requirement | Acceptance criteria |
 | --- | --- | --- |
-| HOME-R1 | THE SYSTEM SHALL compose `/` from the existing Home singleton and reusable page-builder sections, in this order: hero, trust bar, feature grid, CTA banner, process steps, FAQ, and the 009 booking section. | - Playwright: the seven sections appear in order with exactly one h1.<br>- Review: there is no separate hard-coded Home template or duplicate booking implementation. |
-| HOME-R2 | THE SYSTEM SHALL show owner-approved, plain-language Home copy in the studio's approachable Pacific Northwest voice. Claims SHALL reflect the actual service and SHALL NOT promise universal compliance, guaranteed search placement, or guaranteed AI citations. | - Owner signs off a final copy inventory before publication.<br>- Review: no `Placeholder:` copy remains in Home's visible content, Home-specific metadata, or its FAQPage data; no sample testimonial appears on Home.<br>- Unconfirmed timelines, prices, care plans, and service guarantees are removed or explicitly approved. |
-| HOME-R3 | THE SYSTEM SHALL use an owner-supplied photo licensed for the site's use in the hero, replacing the gradient without using the watermarked Figma stock preview. The image SHALL have an approved hotspot/crop and either descriptive alt text or an explicit decorative designation. | - Owner confirms the photo's permitted use and any attribution obligations; source and attribution requirements are documented without storing purchase credentials.<br>- Studio and rendered HTML use the approved asset, not the gradient or stock preview.<br>- Mobile/desktop and light/dark review confirms the subject is not obscured or misleadingly cropped, text contrast is at least 4.5:1 (7:1 target), and required image attribution is present. |
-| HOME-R4 | WHEN a visitor activates the Home hero or CTA-banner booking link, THE SYSTEM SHALL take them to the real 009 booking section at `/#booking`, with an accessible way to continue if the embed cannot be used. | - Playwright: each booking CTA has a clear accessible name, resolves to the unique booking anchor, and brings it into view without content being hidden behind the header.<br>- Keyboard/manual: booking and its 009 fallback are operable without a pointer.<br>- No booking control links to a missing route or a mock calendar. |
-| HOME-R5 | THE SYSTEM SHALL present the six seeded capabilities with concise explanations: accessibility, performance, answer-engine optimization, generative-engine optimization, search-engine optimization, and local-business websites. WHERE a card has a link, its destination SHALL exist and its accessible name SHALL include the capability title. | - Review: owner approves the six cards and their final destinations.<br>- Playwright: each rendered internal card link returns 200, has a meaningful name, and has a target at least 44 px tall.<br>- If a destination from 006 or 010 is not ready, the approved content omits that optional link rather than shipping a broken link; omissions are recorded in the content sign-off. |
-| HOME-R6 | THE SYSTEM SHALL show the four-step process and six referenced FAQs with approved descriptions and answers that accurately describe the studio's work. The FAQPage data SHALL match the displayed FAQ content. | - Owner verifies process, commercial statements, and FAQ answers.<br>- Playwright: FAQ interaction remains keyboard-operable and exactly one FAQPage contains the visible questions in order.<br>- Review: updates to a shared FAQ are checked on other pages that reference it, including the demo. |
-| HOME-R7 | THE SYSTEM SHALL reuse 009's real booking section, including its loading, unavailable/error, fallback, and privacy behavior, rather than copying Figma's illustrative dates, time zone, or available times. | - Integration review identifies the 009 block/configuration used by Home.<br>- Playwright/manual: initial, loaded, and unavailable states follow 009's approved criteria and provide no invented availability or success confirmation.<br>- Network/performance checks confirm scheduling resources load only under 009's approved lazy-load behavior. |
-| HOME-R8 | THE SYSTEM SHALL use the approved Home title from Site settings and the approved Home description/social-image settings through the existing SEO system, preserving canonical URLs, deployment indexing rules, and visible-content-only structured data. | - Playwright: Home has the approved title/description, canonical root URL, complete Open Graph/Twitter tags, and matching FAQPage.<br>- Existing SEO regression tests still pass, including preview noindex and the noindex demo's exclusion from crawler files.<br>- Home SEO copy contains no placeholder text; global business-description replacement remains a separately tracked 011 responsibility. |
+| HOME-R1 | THE SYSTEM SHALL compose `/` from the existing Home singleton and reusable page-builder sections, in this order: hero, trust bar, feature grid, CTA banner, process steps, FAQ, and a final booking section. Until 009 is ready, the final section SHALL be a copy-only placeholder using the existing rich-text block; it SHALL be replaced by 009's section when available. | - Playwright: the seven sections appear in order with exactly one h1.<br>- Before 009: the last section is the copy-only placeholder with the unique `booking` anchor; after 009: it is the real 009 section.<br>- Review: there is no separate hard-coded Home template or duplicate booking implementation. |
+| HOME-R2 | WHEN the Home page is prepared for production launch, THE SYSTEM SHALL show owner-approved, plain-language copy in the studio's approachable Pacific Northwest voice. Claims SHALL reflect the actual service and SHALL NOT promise universal compliance, guaranteed search placement, or guaranteed AI citations. | - Owner signs off the final copy inventory before production launch.<br>- Pre-launch review: no `Placeholder:` copy remains in Home's visible content, Home-specific metadata, or its FAQPage data; no sample testimonial appears on Home.<br>- Unconfirmed timelines, prices, care plans, and service guarantees are removed or explicitly approved. |
+| HOME-R3 | WHEN the Home page is prepared for production launch, THE SYSTEM SHALL use an owner-supplied photo licensed for the site's use in the hero, replacing the gradient without using the watermarked Figma stock preview. The image SHALL have an approved hotspot/crop and either descriptive alt text or an explicit decorative designation. | - Owner confirms the photo's permitted use and any attribution obligations; source and attribution requirements are documented without storing purchase credentials.<br>- Before launch, Studio and rendered HTML use the approved asset, not the gradient or stock preview.<br>- Pre-launch mobile/desktop and light/dark review confirms the subject is not obscured or misleadingly cropped, text contrast is at least 4.5:1 (7:1 target), and required image attribution is present. |
+| HOME-R4 | WHEN a visitor activates the Home hero or CTA-banner booking link, THE SYSTEM SHALL take them to the unique `/#booking` section. Before 009 is ready, that section SHALL clearly say scheduling is coming soon; after 009 is ready, it SHALL provide the real booking experience and accessible fallback. | - Each CTA has a clear accessible name and resolves to the unique anchor without being hidden behind the header.<br>- Before 009: the placeholder makes no claim that a visitor can book or contact the studio through it.<br>- After 009: keyboard/manual checks confirm booking and its fallback are operable without a pointer; no control points to a mock calendar. |
+| HOME-R5 | THE SYSTEM SHALL present the six seeded capabilities with concise explanations: accessibility, performance, answer-engine optimization, generative-engine optimization, search-engine optimization, and local-business websites. WHERE a card has a link, its destination SHALL exist and its accessible name SHALL include the capability title. | - Before launch: owner approves the six cards and their final destinations.<br>- Playwright: each rendered internal card link returns 200, has a meaningful name, and has a target at least 44 px tall.<br>- If a destination from 006 or 010 is not ready, the approved content omits that optional link rather than shipping a broken link; omissions are recorded in the content sign-off. |
+| HOME-R6 | THE SYSTEM SHALL show the four-step process and six referenced FAQs with approved descriptions and answers that accurately describe the studio's work. The FAQPage data SHALL match the displayed FAQ content. | - Before launch, owner verifies process, commercial statements, and FAQ answers.<br>- Playwright: FAQ interaction remains keyboard-operable and exactly one FAQPage contains the visible questions in order.<br>- Pre-launch review: updates to a shared FAQ are checked on other pages that reference it, including the demo. |
+| HOME-R7 | WHEN 009 is available, THE SYSTEM SHALL reuse its real booking section, including its loading, unavailable/error, fallback, and privacy behavior, rather than copying Figma's illustrative dates, time zone, or available times. Until then, Home SHALL render only the copy-only placeholder. | - Before 009: no booking scripts, mock calendar, invented availability, or contact form is added by 005.<br>- After 009: integration review identifies the 009 block/configuration; initial, loaded, and unavailable states follow its approved criteria; scheduling resources load only under its approved lazy-load behavior. |
+| HOME-R8 | THE SYSTEM SHALL use the approved Home title from Site settings and the approved Home description/social-image settings through the existing SEO system, preserving canonical URLs, deployment indexing rules, and visible-content-only structured data. | - Pre-launch Playwright: Home has the approved title/description, canonical root URL, complete Open Graph/Twitter tags, and matching FAQPage.<br>- Existing SEO regression tests still pass, including preview noindex and the noindex demo's exclusion from crawler files.<br>- Before launch, Home SEO copy contains no placeholder text; global business-description replacement remains a separately tracked 011 responsibility. |
 | HOME-R9 | WHEN an editor previews or publishes Home copy, its photo, or a referenced FAQ, THE SYSTEM SHALL preserve the existing builder editing and publish-refresh behavior. | - Authenticated Presentation: Home opens at `/`; changed text and hotspot/crop appear in draft preview; click-to-edit and section reordering work.<br>- Manual publish check: approved changes reach the public page through existing cache invalidation without a redeploy.<br>- Public responses do not include draft-only Visual Editing tools. |
-| HOME-R10 | THE SYSTEM SHALL preserve accessibility and performance with the actual final copy, licensed photo, and integrated booking section, not just placeholder fixtures. | - Full Definition of Done passes: lint, types, relevant Vitest/Playwright tests, axe with zero violations in both themes, build, and Lighthouse 100 in all four categories on mobile/desktop.<br>- Lab checks on `/`: LCP at most 2.5 s (target 2.0 s), CLS at most 0.1, and no hero/booking-induced layout shift beyond that budget.<br>- Manual keyboard, VoiceOver, 400% zoom, 320 px reflow, and reduced-motion checks pass; production INP remains subject to field measurement after sufficient traffic. |
-| HOME-R11 | WHEN final content is applied to Sanity or setup fixtures are refreshed, THE SYSTEM SHALL preserve unrelated editor content and settings. Existing seed commands SHALL remain non-destructive and final reusable content SHALL be reproducible for a fresh dataset. | - The approved plan identifies precisely which Home fields, FAQ documents, Site settings fields, and assets may change.<br>- Verification on an isolated fixture/dataset confirms rerunning setup does not overwrite existing edits or duplicate assets/sections.<br>- Final content is previewed and approved before live publication; no full-document replacement of shared Site settings or FAQs is used. |
+| HOME-R10 | THE SYSTEM SHALL preserve accessibility and performance with the actual final copy, licensed photo, and integrated booking section, not just placeholder fixtures. | - Before launch readiness, full Definition of Done passes: lint, types, relevant Vitest/Playwright tests, axe with zero violations in both themes, build, and Lighthouse 100 in all four categories on mobile/desktop.<br>- Pre-launch lab checks on `/`: LCP at most 2.5 s (target 2.0 s), CLS at most 0.1, and no hero/booking-induced layout shift beyond that budget.<br>- Pre-launch manual keyboard, VoiceOver, 400% zoom, 320 px reflow, and reduced-motion checks pass; production INP remains subject to field measurement after sufficient traffic. |
+| HOME-R11 | WHEN final content is applied to Sanity or setup fixtures are refreshed, THE SYSTEM SHALL preserve unrelated editor content and settings. Existing seed commands SHALL remain non-destructive and final reusable content SHALL be reproducible for a fresh dataset. | - The approved plan identifies precisely which Home fields, FAQ documents, Site settings fields, and assets may change.<br>- Verification on an isolated fixture/dataset confirms rerunning setup does not overwrite existing edits or duplicate assets/sections.<br>- Final content is previewed and approved before production launch; no full-document replacement of shared Site settings or FAQs is used. |
 
-## Proposed Home copy -- not yet approved
+## Interim Home copy -- approved for placeholders, pending pre-launch final approval
 
-These are editorial proposals for owner review, not confirmed service terms. They replace jargon and absolute outcome claims while retaining the existing six-capability/four-step structure. Final wording may change after the owner confirms the business facts and 009's booking flow.
+This realistic, plain-language copy is approved for interim use, not as confirmed service terms. It replaces jargon and absolute outcome claims while retaining the existing six-capability/four-step structure. Final wording may change after the owner confirms the business facts and 009's booking flow during pre-launch readiness.
 
 ### Hero and trust bar
 
@@ -56,7 +57,7 @@ These are editorial proposals for owner review, not confirmed service terms. The
 | --- | --- |
 | Hero heading | Thoughtful websites. Built to help your business grow. |
 | Hero body | Bespoke websites for small businesses in Portland and the Pacific Northwest. Clear design, accessible experiences, and a fast foundation that helps people find you. |
-| Hero primary CTA | Book a discovery call |
+| Hero primary CTA | "Booking details coming soon" until 009 is ready; the final booking CTA is confirmed with 009 |
 | Trust statement 1 | Accessibility from the start |
 | Trust statement 2 | Fast, focused websites |
 | Trust statement 3 | Built around your business |
@@ -84,7 +85,7 @@ The third, fourth, and fifth cards correspond to AEO, GEO, and SEO respectively.
 
 - **Heading:** Have a project in mind?
 - **Body:** Tell us what you want your website to do. Let's talk about your goals and the next step for your business.
-- **Button:** Book a discovery call
+- **Button:** "Booking details coming soon" until 009 is ready; use a final booking label only with 009's real section
 
 ### Process
 
@@ -118,8 +119,9 @@ The owner must confirm these operating practices; no answer is published on the 
 
 - **Proposed Home title:** Accessible Web Design in Portland | Wy'east Digital Studio
 - **Proposed Home description:** Bespoke websites for small businesses in Portland and the Pacific Northwest. Built with accessible design, fast performance, and clear paths to get in touch.
-- **Proposed booking heading:** Let's talk about your website.
-- **Proposed booking introduction:** Share what you have in mind and choose a time for a discovery call.
+- **Interim booking placeholder:** "Booking is coming soon." / "We're preparing our scheduling details. Please check back soon for booking information." This is copy only; it does not offer a contact method or claim that scheduling is available.
+- **Proposed 009 booking heading:** Let's talk about your website.
+- **Proposed 009 booking introduction:** Share what you have in mind and choose a time for a discovery call. Use only with the real 009 section after it is ready.
 
 Booking duration, price, availability, time zone display, scheduling URL, response promises, privacy text, and fallback wording come from the approved 009 specification and owner configuration, not from this draft or Figma's example widget.
 
@@ -134,7 +136,7 @@ Reuse the existing editor-owned content:
 - **CTA banner:** heading, body, and booking link.
 - **Process section:** heading, intro, and four steps.
 - **FAQ section:** the existing six reusable FAQ documents; do not duplicate them as inline Home-only answers.
-- **Booking section:** the reusable block and fields supplied by 009, with the unique `booking` anchor.
+- **Booking section:** until 009 is ready, use the existing `richTextSection` with the unique `booking` anchor and copy only. Replace that block with the reusable booking section supplied by 009; do not add a new schema type for the temporary copy.
 - **Site settings:** Home title; change only explicitly approved Home-related values. Global business and contact details are not rewritten as a side effect.
 
 The plan must use the generated content types and identify any schema gap before implementation. This spec does not pre-approve a new runtime dependency, client wrapper, or alternative booking provider.
@@ -149,6 +151,8 @@ The plan must use the generated content types and identify any schema gap before
 - Do not add analytics, tracking, cookies, or lead capture beyond 009's approved behavior.
 
 ## UX review checklist
+
+**Owner decision (2026-11-19): defer every item below until immediately before launch readiness in 011.** These checks are a launch gate, not a prerequisite for implementing 005. Automated functional regression tests may run during implementation; final axe/Lighthouse, manual accessibility/usability, visual comparison, and owner sign-off happen with the approved copy and photo.
 
 - [ ] Compare the final photo/copy/layout at 375, 768, 1280, and 1920 px in light and dark modes against the Figma Home frames
 - [ ] Owner approves the copy inventory, commercial statements, metadata, licensed photo, crop, alt/decorative treatment, and all CTA/card destinations
@@ -167,7 +171,7 @@ The plan must use the generated content types and identify any schema gap before
 
 ## Out of scope
 
-- Starting implementation before 009 is complete
+- Implementing contact, scheduling, or booking functionality before 009 is complete
 - Rebuilding the page builder, shell, metadata engine, FAQ renderer, or booking infrastructure
 - A custom calendar, hard-coded appointment slots, a second inquiry form, or a new scheduling provider
 - Creating the service-detail pages in 006 or the accessibility/audit page in 010
@@ -177,12 +181,12 @@ The plan must use the generated content types and identify any schema gap before
 
 ## Open questions and owner decisions
 
-- [x] **Q-A -- Delivery:** wait for 009 before any 005 implementation; do not split out an earlier content-only delivery. (Owner, 2026-11-18)
-- [x] **Q-B -- Editorial direction:** propose plain-language Home revisions, including Home FAQs and metadata, for owner approval. The proposal above is not yet approved. (Owner, 2026-11-18)
-- [x] **Q-C -- Image source:** the owner will supply a licensed photo later; no asset is currently selected. (Owner, 2026-11-18)
-- [ ] **Q-D -- Scope reconciliation:** approve 005 ownership of final Home copy, referenced FAQ answers, Home title/description, and photo; update older 004/README references that defer these to 011 when this spec is approved.
-- [ ] **Q-E -- Final copy and business facts:** approve or revise the proposed wording and confirm scope/pricing process, technology, accessibility practice, handover, and support statements. Select the final six question wordings.
-- [ ] **Q-F -- Booking contract:** after 009 is specified, confirm `/#booking`, CTA labels, booking introduction, fallback behavior, and whether the global header CTA also needs to point at Home booking. Align with 009 before plan approval.
-- [ ] **Q-G -- Capability destinations:** confirm final 006/010 routes and which optional card links must be omitted if those destinations are not ready.
-- [ ] **Q-H -- Photo and social image:** supply the licensed source, confirm attribution and alt/decorative status, and decide whether Home retains its generated social card or uses an approved uploaded social image.
-- [ ] **Q-I -- Spec approval:** approve the reconciled scope, final content direction, and resolved decisions before the technical plan is written.
+- [x] **Q-A -- Delivery:** 005 may proceed before 009 with a copy-only placeholder section; the real booking functionality remains owned by 009 and replaces the placeholder when ready. (Owner, 2026-11-19; supersedes 2026-11-18)
+- [x] **Q-B -- Editorial direction:** use realistic, plain-language placeholders during implementation; final wording and business claims require owner approval before launch. (Owner, 2026-11-19)
+- [x] **Q-C -- Image source:** retain the gradient until a licensed photo is supplied and approved before launch; do not use the watermarked Figma preview. (Owner, 2026-11-19)
+- [x] **Q-D -- Scope reconciliation:** 005 owns Home copy, referenced FAQ answers, Home title/description, and hero photo; final approval and UX testing are deferred to 011. (Owner, 2026-11-19)
+- [x] **Q-E -- Final copy and business facts:** use the approved realistic draft as interim content; approve final wording, claims, and FAQ questions/answers before launch readiness. (Owner, 2026-11-19)
+- [x] **Q-F -- Booking contract:** Home hero and CTA-banner CTAs use `/#booking`. Until 009, the anchor contains copy only and no booking/contact control. The real section, fallback, loading, privacy, and third-party behavior come from 009. The existing global header CTA is unchanged by 005. (Owner, 2026-11-19)
+- [x] **Q-G -- Capability destinations:** link only to approved, existing routes; omit optional links to 006/010 until those routes exist. (Owner, 2026-11-19)
+- [x] **Q-H -- Photo and social image:** defer licensed source, attribution, alt/decorative status, crop, and final social-image decision until pre-launch readiness; retain the gradient in the interim. (Owner, 2026-11-19)
+- [x] **Q-I -- Spec approval:** owner approved the spec, plan, and tasks for implementation subject to the 009 dependency; final copy, image, and UX approval remain pre-launch gates. (Owner, 2026-11-19)
