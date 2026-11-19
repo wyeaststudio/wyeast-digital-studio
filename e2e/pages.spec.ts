@@ -139,14 +139,14 @@ test('CMS links avoid speculative route requests and still navigate on click [PB
     if (url.searchParams.has('_rsc') && url.pathname !== '/') speculative.push(url.pathname);
   });
   await page.goto('/', { waitUntil: 'networkidle' });
-  await page.getByRole('main').getByRole('link', { name: 'Book Appointment', exact: true }).hover();
+  await page.getByRole('main').getByRole('link', { name: 'Booking details coming soon', exact: true }).hover();
   await page.waitForLoadState('networkidle');
   expect(speculative).toEqual([]);
 
   await page.goto('/page-builder-demo');
   await page.getByRole('link', { name: 'Visit the home page', exact: true }).click();
   await expect(page).toHaveURL('/');
-  await expect(page.getByRole('heading', { level: 1, name: 'Where Vision Meets the Summit' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Thoughtful websites. Built to help your business grow.' })).toBeVisible();
 });
 
 test('unknown slug returns the site 404 and noindex [PB-R3]', async ({ page }) => {

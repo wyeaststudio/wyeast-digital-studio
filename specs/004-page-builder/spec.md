@@ -113,7 +113,7 @@ The plan defines the schema. Editors need:
 
 ## Roadmap impact
 
-- **005 Home page** becomes final home content and copy on the page builder (the singleton and seeded sections arrive in 004), plus the booking section once 009 is ready.
+- **005 Home page** supplies realistic interim Home content on the page builder; final copy/photo approval and replacement are deferred to 011, and the copy-only booking placeholder is replaced by 009's real section when available.
 - **006, 007, 008, and 010** build their overview pages with the page builder and add blocks only when a design needs one.
 
 ## Open questions
