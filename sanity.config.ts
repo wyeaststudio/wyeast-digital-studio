@@ -1,5 +1,5 @@
 import { defineConfig } from 'sanity';
-import { presentationTool } from 'sanity/presentation';
+import { defineDocuments, defineLocations, presentationTool } from 'sanity/presentation';
 import { structureTool } from 'sanity/structure';
 import { schemaTypes } from './src/sanity/schemas';
 import { SINGLETON_TYPES } from './src/sanity/schemas/singletons';
@@ -19,6 +19,21 @@ export default defineConfig({
   plugins: [
     structureTool({ structure }),
     presentationTool({
+      resolve: {
+        mainDocuments: defineDocuments([
+          { route: '/', filter: '_type == "homePage" && _id == "homePage"' },
+          { route: '/:slug', filter: '_type == "page" && slug.current == $slug' },
+        ]),
+        locations: {
+          homePage: defineLocations({ locations: [{ title: 'Home page', href: '/' }] }),
+          page: defineLocations({
+            select: { title: 'title', slug: 'slug.current' },
+            resolve: (doc) => ({
+              locations: doc?.slug ? [{ title: doc.title || 'Untitled page', href: `/${doc.slug}` }] : [],
+            }),
+          }),
+        },
+      },
       previewUrl: {
         previewMode: {
           enable: '/api/draft-mode/enable',

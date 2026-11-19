@@ -3,11 +3,11 @@ import type { RoutableDoc } from '@/sanity/loaders/seo';
 import { absoluteUrl } from './site';
 import { pathFor, ROUTES, type RouteRegistry } from './routes';
 
-/** Home page first, then every routable document with a registered path. URLs are unique. */
+/** Indexable Home first, then every routable document with a registered path. URLs are unique. */
 export function buildSitemap(
   docs: RoutableDoc[],
   settingsUpdatedAt: string | null,
-  routes: RouteRegistry = ROUTES,
+  { routes = ROUTES, homeNoindex = false }: { routes?: RouteRegistry; homeNoindex?: boolean } = {},
 ): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
   const seen = new Set<string>();
@@ -17,12 +17,14 @@ export function buildSitemap(
     entries.push(entry);
   };
 
-  add({
-    url: absoluteUrl('/'),
-    lastModified: settingsUpdatedAt ?? undefined,
-    changeFrequency: 'monthly',
-    priority: 1,
-  });
+  if (!homeNoindex) {
+    add({
+      url: absoluteUrl('/'),
+      lastModified: settingsUpdatedAt ?? undefined,
+      changeFrequency: 'monthly',
+      priority: 1,
+    });
+  }
 
   for (const doc of docs) {
     const path = pathFor(doc._type, doc.slug, routes);

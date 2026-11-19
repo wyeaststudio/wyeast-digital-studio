@@ -34,4 +34,17 @@ test.describe('Draft mode [FOUND-R12, FOUND-R13]', () => {
     expect(exit.status()).toBe(307);
     expect(exit.headers().location).toBe(`${baseURL}/`);
   });
+
+  test('draft mode renders the demo page with section editing attributes [PB-R7]', async ({ request }) => {
+    const response = await request.get('/page-builder-demo', {
+      headers: { cookie: `__prerender_bypass=${previewModeId()}` },
+    });
+    expect(response.status()).toBe(200);
+    const html = await response.text();
+    expect(html).toContain('VisualEditing');
+    expect(html).toMatch(/<h1\b/);
+    expect(html).toContain('data-sanity="id=page-builder-demo');
+    expect(html).toContain('path=sections:hero');
+    expect(html).toContain('"@type":"FAQPage"');
+  });
 });

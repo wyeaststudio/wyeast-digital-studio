@@ -1,6 +1,8 @@
 import { toPlainText } from '@portabletext/react';
 import { stegaClean } from 'next-sanity';
 import type { HomeFaq } from '@/sanity/loaders/seo';
+import type { PageSection } from '@/components/sections/types';
+import { isRenderableSection, visibleFaqs } from '@/lib/page-sections';
 import { absoluteUrl, SITE_URL, type ResolvedSite } from './site';
 
 export const SCHEMA_CONTEXT = 'https://schema.org';
@@ -181,6 +183,12 @@ export function faqPage(faqs: HomeFaq[]): FaqPageNode | null {
       acceptedAnswer: { '@type': 'Answer', text },
     })),
   });
+}
+
+export function faqPageForSections(sections: readonly PageSection[] | null | undefined): FaqPageNode | null {
+  return faqPage((sections ?? []).flatMap((section) =>
+    section?._type === 'faqSection' && isRenderableSection(section) ? visibleFaqs(section.items) : [],
+  ));
 }
 
 /** JSON for an inline script. Escaping `<` keeps content from closing the script element (SEO-R12). */

@@ -1,10 +1,12 @@
-import { defineArrayMember, defineField, defineType } from 'sanity';
+import { defineArrayMember, defineField } from 'sanity';
 import { uniqueRefs } from '../../validation';
+import { defineBlock } from './define-block';
 
-export const faqSection = defineType({
+export const faqSection = defineBlock({
   name: 'faqSection',
   title: 'FAQ section',
-  type: 'object',
+  defaultSurface: 'primary',
+  surfaces: ['primary', 'background', 'card'],
   fields: [
     defineField({
       name: 'eyebrow',
@@ -35,10 +37,10 @@ export const faqSection = defineType({
     }),
   ],
   preview: {
-    select: { title: 'heading', subtitle: 'eyebrow' },
-    prepare: ({ title, subtitle }) => ({
+    select: { title: 'heading' },
+    prepare: ({ title }) => ({
       title: title ?? 'FAQ section',
-      subtitle,
+      subtitle: 'FAQ section',
     }),
   },
 });

@@ -74,6 +74,35 @@ describe('buildMetadata [SEO-R1, R2, R3, R4, R5, R6]', () => {
     expect(meta.robots).toMatchObject({ index: false, follow: true });
   });
 
+  it('uses the valid site card for noindex pages without uploads while retaining page-specific metadata [PB-R5]', () => {
+    const home = buildMetadata({ site, path: '/', indexable: true });
+    const meta = buildMetadata({
+      site, path: '/page-builder-demo', title: 'Page builder demo', seo: { noindex: true }, indexable: true,
+    });
+    expect(meta.openGraph?.images).toEqual(home.openGraph?.images);
+    expect(meta.twitter?.images).toEqual(home.twitter?.images);
+    expect(meta.openGraph?.title).toBe('Page builder demo');
+    expect(meta.alternates?.canonical).toBe(`${SITE_URL}/page-builder-demo`);
+  });
+
+  it.each(['page', 'site'] as const)('preserves the %s uploaded social image for noindex pages [PB-R5]', (source) => {
+    const upload = {
+      asset: { _type: 'reference' as const, _ref: 'image-abc123-1200x630-jpg' },
+      hotspot: null, crop: null, alt: 'Approved artwork',
+    };
+    const meta = buildMetadata({
+      site: source === 'site' ? resolveSite({ ...settings, defaultOgImage: upload }) : site,
+      path: '/page-builder-demo',
+      title: 'Page builder demo',
+      seo: { noindex: true, ...(source === 'page' ? { ogImage: upload } : {}) },
+      indexable: true,
+    });
+    expect(meta.openGraph?.images).toEqual([expect.objectContaining({
+      url: expect.stringContaining('cdn.sanity.io'),
+      alt: 'Approved artwork',
+    })]);
+  });
+
   it.each([
     ['preview', false],
     ['development', false],

@@ -1,0 +1,18 @@
+export const ICON_NAMES = [
+  'accessibility',
+  'activity',
+  'bar-chart',
+  'code',
+  'cpu',
+  'map-pin',
+  'message-square',
+  'rocket',
+  'search',
+  'shapes',
+  'target',
+  'zap',
+  'shield-check',
+  'gauge',
+  'sparkles',
+  'layout',
+] as const;

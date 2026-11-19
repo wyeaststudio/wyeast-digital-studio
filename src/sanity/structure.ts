@@ -17,8 +17,10 @@ export const structure: StructureResolver = (S) =>
       ),
       S.divider(),
       S.documentTypeListItem(FAQ_TYPE).title('FAQs').icon(HelpCircleIcon),
+      S.documentTypeListItem('page').title('Pages'),
+      S.documentTypeListItem('testimonial').title('Testimonials'),
       ...S.documentTypeListItems().filter((item) => {
         const id = item.getId() ?? '';
-        return !SINGLETON_TYPES.has(id) && id !== FAQ_TYPE;
+        return !SINGLETON_TYPES.has(id) && ![FAQ_TYPE, 'page', 'testimonial'].includes(id);
       }),
     ]);

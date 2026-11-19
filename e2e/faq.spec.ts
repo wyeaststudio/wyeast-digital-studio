@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { expectNoA11yViolations } from './helpers/axe';
 
-const SECTION = 'section[aria-labelledby="faq-heading"]';
+const SECTION = 'section[aria-labelledby="homePage-faq-heading"]';
 
-test.describe('Home FAQ section [SEO-R20, R22, R23]', () => {
+test.describe('Home builder FAQ section [PB-R18, SEO-R20, R22, R23]', () => {
   test('shows the heading and seeded questions, all collapsed', async ({ page }) => {
     await page.goto('/');
     const section = page.locator(SECTION);

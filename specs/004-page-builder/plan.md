@@ -7,11 +7,23 @@
 1. **Content model.** Replace the placeholder `page` type with a real `page` document, and add a `homePage` singleton and a `testimonial` document. Eight block object types share two common fields (`anchor`, `surface`) through a helper. A shared `pageSections` array type lists the blocks, so `page` and `homePage` use the same builder and validation (hero first and only once, unique anchors).
 2. **One projection, one query per route.** A `SECTIONS_PROJECTION` constant expands references (FAQs, testimonials) and image metadata once. `PAGE_QUERY`, `HOME_PAGE_QUERY`, and `PAGE_SLUGS_QUERY` interpolate it, so TypeGen produces one discriminated-union type for all sections (TypeGen evaluates interpolated constants; confirmed in 003 T2).
 3. **Presentational blocks, one renderer.** Each block is a server component in `src/components/sections/` that takes the TypeGen-derived props. `PageSections` maps `_type` to component, skips unknown or incomplete sections (PB-R8), wraps each in `Section` (landmark, surface classes, anchor id, Visual Editing data attribute), and decides the `h1` fallback (PB-R9).
-4. **Routes.** `(web)/page.tsx` renders `homePage`; a new `(web)/[slug]/page.tsx` renders `page` documents with `generateStaticParams`, `generateMetadata` (003 `buildMetadata`), and `FAQPage` JSON-LD. The route registry gains `page: '/'`, so the sitemap, `llms.txt`, and social cards work without further changes.
+4. **Routes.** `(web)/page.tsx` renders `homePage`; a new `(web)/[slug]/page.tsx` renders `page` documents with `generateStaticParams`, `generateMetadata` (003 `buildMetadata`), and `FAQPage` JSON-LD. The route registry gains `page: '/'` for the sitemap, `llms.txt`, and social cards. Crawler outputs also read published Home SEO to respect its visibility.
 5. **Visual Editing.** Presentation gets `resolve.mainDocuments` and `resolve.locations`. String fields are click-to-edit through stega; each section element carries a `data-sanity` attribute for its array item, so the overlays can reorder sections. No client component is needed: the existing `<VisualEditing />` refreshes the page after each patch.
 6. **Seed and docs.** Seed the Home page (Figma copy, placeholder hero image), a noindex demo page with every block, and one example testimonial. Amend the constitution (§4, version 2.0.0) and update the roadmap (005).
 
 ### Docs consulted
+
+Owner-approved PR review clarification (2026-11-18): prose retains the authored `h3`/`h4` styles and their visual classes, but renders contextual semantic levels. Without a section heading, authored `h3` maps to `h2` and following `h4` to `h3`; with a section heading they remain `h3`/`h4`. Leading `h4` headings render at the body's starting level until an authored `h3` establishes a parent, so consecutive leading headings stay siblings. FAQ remains paragraph-only. No schema or stored content changes are required.
+
+Owner-approved adjustments (2026-11-18, Phase D):
+
+- Preserve PB-R23 noindex. Mobile/desktop Lighthouse `assertMatrix` rules keep Home at four-category 100; the demo requires the other three categories at 100 plus every other applicable automated SEO audit passing. Only its necessarily failing `is-crawlable` audit and SEO category are warnings; no audit is skipped. Browser tests enforce noindex and sitemap/llms exclusion. Both routes explicitly assert LCP ≤ 2.5 s and CLS ≤ 0.1. This supersedes four-category-100 references for the demo and is recorded in constitution v3.0.0.
+- A new live-image check found that generated document cards intentionally reject noindex pages, leaving the demo's `og:image` at a 404 URL. Without a page/site image upload, `buildMetadata` now uses the valid site-wide card and matching image alt/version while preserving page-specific titles/canonical/noindex. Uploaded images and indexable-page cards are unchanged; published-only OG restrictions remain intact.
+- A cold Lighthouse run exposed speculative Next.js prefetches to future seeded `/contact` and `/about` routes, producing console 404s and failing Best Practices. The owner approved `prefetch={false}` in the shared CMS-driven `SiteLink`; client-side navigation still runs on click, and external link behavior is unchanged. This avoids background requests to unpublished destinations without fake pages, error suppression, or weakening the audit. Known Home logo links keep their existing behavior. A browser regression checks initial/hover requests and subsequent successful navigation.
+
+Owner-approved adjustment (2026-11-18, Phase B): use `getImageProps` from `next/image` with native server-rendered images instead of the `Image` component. A custom loader prop cannot cross its client boundary without client code, contrary to PB-R12. The hero explicitly preloads its responsive source set and uses an LQIP CSS background underneath the loaded image (not `placeholder="blur"`, which `getImageProps` cannot remove). Testimonials use the same server-only path. `sanityImageLoader` resizes pre-cropped URLs while preserving their hotspot rectangle and aspect ratio. This supersedes `Image` component references below; sections add no client image code.
+
+Phase B implementation: Home and Page components derive their data from the generated shared section union. A shared completeness guard handles unfinished drafts, and FAQ filtering is reused by rendering and JSON-LD. Hero source sets have mobile/desktop crops with matching media-specific preloads; a 90–95% token-background scrim keeps foreground text above 7:1 even over black or white images in either theme. CTA buttons use an opaque background and an inset current-color focus outline so every panel surface remains accessible. The strong scrim intentionally prioritizes the contrast requirement over Figma's lighter photo treatment; the licensed photo still needs the launch UX review.
 
 - Bundled Next.js 16 docs: `generate-static-params.md` (with Cache Components, an empty array is a build error, so the route returns a placeholder param when there are no pages and calls `notFound()` for it), `dynamic-routes.md`, `image.md` (`preload` replaces the deprecated `priority`; custom `loader`), `not-found.md`, and `generate-metadata.md`.
 - Sanity: `sanity/presentation` (`defineDocuments`, `defineLocations`), `createDataAttribute` from `next-sanity`, array validation, and `@sanity/image-url` (already a direct dependency from 003).
@@ -99,6 +111,8 @@ Queries also filter `permission == true` (PB-R21), so a testimonial can't render
 
 `faqSection` keeps its 003 name and fields; it gains the shared fields by being re-declared through `defineBlock` (no data migration: the fields are optional).
 
+Implementation note (Phase A): Sanity field-level validation replaces the named array type's validation. `page.sections` inherits the shared rules unchanged; `homePage.sections` repeats `pageSectionsRule` alongside its required/min/max rules. Compiled-schema regression tests verify both document types reject duplicate heroes, misplaced heroes, and duplicate anchors.
+
 ### Icons (`src/components/sections/icons.tsx`)
 
 `ICONS` maps a name to a `lucide-react` component: `accessibility`, `activity`, `bar-chart`, `code`, `cpu`, `map-pin`, `message-square`, `rocket`, `search`, `shapes`, `target`, `zap`, `shield-check`, `gauge`, `sparkles`, `layout`. The schema imports only the names (`ICON_NAMES`, from a tiny `icon-names.ts`) so the Studio bundle doesn't pull the components. `Icon` renders nothing for an unknown name and always sets `aria-hidden="true"`.
@@ -126,7 +140,7 @@ export const SECTIONS_PROJECTION = `
   _type == "processStepsSection" => { heading, intro, steps[]{ _key, icon, title, description } },
   _type == "faqSection" => { eyebrow, heading, intro, "items": faqs[]->{ ${FAQ_PROJECTION} } },
   _type == "richTextSection" => { heading, body },
-  _type == "testimonialsSection" => { heading, "items": items[]->[permission == true]{ _id, quote, name, role, company, photo{ asset, hotspot, crop, alt } } }
+  _type == "testimonialsSection" => { heading, "items": items[@->permission == true]->{ _id, quote, name, role, company, photo{ asset, hotspot, crop, alt } } }
 `;
 
 export const HOME_PAGE_QUERY = defineQuery(`*[_id == "homePage"][0]{ _id, _type, seo, sections[]{ ${SECTIONS_PROJECTION} } }`);
@@ -134,17 +148,21 @@ export const PAGE_QUERY = defineQuery(`*[_type == "page" && slug.current == $slu
 export const PAGE_SLUGS_QUERY = defineQuery(`*[_type == "page" && defined(slug.current)].slug.current`);
 ```
 
-If TypeGen can't narrow the conditional projections into a discriminated union, the fallback is one projection per block type joined with `select()`; T2 confirms which works and records it here.
+If TypeGen can't narrow the conditional projections into a discriminated union, the fallback is one projection per block type joined with `select()`.
+
+Implementation note (T3): direct conditional projections generate matching eight-member `_type`-discriminated section unions for Home and Page; no fallback is needed. Testimonials are filtered on reference targets before dereferencing, so denied, unconfirmed, and broken references are omitted; both queries have in-memory GROQ regression tests. The SEO loader now derives `RoutableDoc` from `ROUTABLE_DOCS_QUERY_RESULT`, and downstream path/title builders explicitly handle its nullable slug.
 
 ### Loaders (`src/sanity/loaders/pages.ts`)
 
 | Loader | Query | Cache tags | On error |
 | --- | --- | --- | --- |
-| `getHomePage()` | `HOME_PAGE_QUERY` | `homePage`, `faq`, `testimonial` | `null` and log |
+| `getHomePage({ publishedOnly? })` | `HOME_PAGE_QUERY` | `homePage`, `faq`, `testimonial` | `null` and log |
 | `getPage(slug)` | `PAGE_QUERY` | `page`, `page:{slug}`, `faq`, `testimonial` | `null` and log |
 | `getPageSlugs()` | `PAGE_SLUGS_QUERY` | `page` | `[]` and log |
 
 Loaders keep stega (blocks need it for click-to-edit). Metadata and JSON-LD go through the 003 builders, which already clean stega. `ROUTES` gains `page: '/'`, so `getRoutableDocs()` and `OG_DOC_QUERY` include pages automatically.
+
+The sitemap and `llms.txt` also read `getHomePage({ publishedOnly: true })` and omit Home when its published SEO sets `noindex`. This reuses the Home query's published cache entry and `homePage` dependency, so publishing visibility changes refreshes both crawler outputs; drafts do not alter Home's crawler visibility.
 
 ## Routes and components
 
@@ -158,7 +176,7 @@ Loaders keep stega (blocks need it for click-to-edit). Metadata and JSON-LD go t
 | `src/components/sections/hero-section.tsx` | Server | `next/image` with `fill`, `preload`, `fetchPriority="high"`, `sizes="100vw"`, the `sanityImageLoader` (hotspot crop, `auto=format`), and the LQIP as `blurDataURL`; a gradient scrim from `background`; optional `BrandLockup`; CTAs with `buttonVariants`. |
 | `src/components/sections/trust-bar-section.tsx`, `feature-grid-section.tsx`, `cta-banner-section.tsx`, `process-steps-section.tsx`, `rich-text-section.tsx`, `testimonials-section.tsx` | Server | One block each; `faq-section.tsx` (003) gains the surface and anchor props through `Section`. |
 | `src/components/sections/icons.tsx`, `src/sanity/schemas/icon-names.ts` | Server / shared | Curated icons. |
-| `src/components/rich-text/rich-text.tsx` | Server | Gains an optional `headings` mode for `h3`/`h4` (the FAQ keeps its limited set). |
+| `src/components/rich-text/rich-text.tsx` | Server | Gains a `prose` variant for authored `h3`/`h4` styles with contextual semantic levels; the FAQ keeps its limited set. |
 | `src/lib/sanity-image.ts` | Shared | `sanityImageLoader` and `urlForImage` (uses `@sanity/image-url`; shared with `og.ts`). |
 | `src/lib/seo/json-ld.ts` | Shared | `faqPage` gains a helper that collects FAQ items from all FAQ sections on a page. |
 | `sanity.config.ts` | Studio | `presentationTool({ resolve: { mainDocuments, locations } })` for `homePage` → `/` and `page` → `/{slug}`. |
@@ -189,7 +207,7 @@ None. `lucide-react`, `@portabletext/react`, `@sanity/image-url`, and `next-sani
 
 - **Fixed templates for core pages (the constitution's original model).** *Rejected by the owner (Q-A)*: the page builder gives editors more control, and the block library plus validation keep pages on-brand.
 - **One `[slug]` route with nested paths.** *Deferred*: one segment keeps routing, reserved slugs, and the registry simple; 006 adds `/services/{slug}` as its own type.
-- **TypeGen and conditional projections.** If the union type isn't narrowed, use `select()` per type or hand-narrow in the renderer with a type guard; T2 decides and records it.
+- **TypeGen and conditional projections.** Confirmed in T3: direct conditional projections produce the required discriminated union; `select()` is unnecessary.
 - **Empty `generateStaticParams` with Cache Components** is a build error; the placeholder param plus `notFound()` keeps fresh datasets building.
 - **Drag-to-reorder in Presentation.** Relies on Sanity overlays reading `data-sanity` array-item attributes and the existing refresh. If reordering is unreliable without optimistic state, the fallback is a small draft-mode-only client wrapper using `useOptimistic` from `next-sanity`, loaded the same way as `<VisualEditing />` so public pages stay JavaScript-free.
 - **Hero image size.** Sanity CDN resizing (`w`, `q`, `auto=format`) through a custom `next/image` loader avoids the Next image optimiser and its cost on Vercel. If LCP misses the budget, add `srcset` widths tuned to Figma breakpoints and a smaller `q`.

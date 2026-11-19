@@ -59,6 +59,8 @@ export type FaqReference = {
 
 export type FaqSection = {
   _type: "faqSection";
+  anchor?: string;
+  surface?: "primary" | "background" | "card";
   eyebrow?: string;
   heading?: string;
   intro?: string;
@@ -110,6 +112,192 @@ export type Seo = {
   noindex?: boolean;
 };
 
+export type TestimonialReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "testimonial";
+};
+
+export type TestimonialsSection = {
+  _type: "testimonialsSection";
+  anchor?: string;
+  surface?: "card" | "background" | "primary";
+  heading?: string;
+  items?: Array<
+    {
+      _key: string;
+    } & TestimonialReference
+  >;
+};
+
+export type RichTextSection = {
+  _type: "richTextSection";
+  anchor?: string;
+  surface?: "background" | "card";
+  heading?: string;
+  body?: RichTextBody;
+};
+
+export type RichTextBody = Array<{
+  children?: Array<{
+    marks?: Array<string>;
+    text?: string;
+    _type: "span";
+    _key: string;
+  }>;
+  style?: "normal" | "h3" | "h4";
+  listItem?: "bullet" | "number";
+  markDefs?: Array<{
+    href?: string;
+    _type: "link";
+    _key: string;
+  }>;
+  level?: number;
+  _type: "block";
+  _key: string;
+}>;
+
+export type ProcessStepsSection = {
+  _type: "processStepsSection";
+  anchor?: string;
+  surface?: "background" | "card" | "primary";
+  heading?: string;
+  intro?: string;
+  steps?: Array<{
+    icon?: IconName;
+    title?: string;
+    description?: string;
+    _type: "processStep";
+    _key: string;
+  }>;
+};
+
+export type CtaBannerSection = {
+  _type: "ctaBannerSection";
+  anchor?: string;
+  surface?: "primary" | "card" | "background";
+  heading?: string;
+  body?: string;
+  cta?: LabelledLink;
+};
+
+export type FeatureGridSection = {
+  _type: "featureGridSection";
+  anchor?: string;
+  surface?: "background" | "card" | "primary";
+  eyebrow?: string;
+  heading?: string;
+  intro?: string;
+  cards?: Array<{
+    icon?: IconName;
+    badge?: string;
+    title?: string;
+    description?: string;
+    link?: LabelledLink;
+    _type: "featureCard";
+    _key: string;
+  }>;
+};
+
+export type TrustBarSection = {
+  _type: "trustBarSection";
+  anchor?: string;
+  surface?: "primary" | "background" | "card";
+  items?: Array<{
+    icon?: IconName;
+    text?: string;
+    _type: "trustItem";
+    _key: string;
+  }>;
+};
+
+export type HeroSection = {
+  _type: "heroSection";
+  anchor?: string;
+  eyebrow?: string;
+  heading?: string;
+  body?: string;
+  primaryCta?: LabelledLink;
+  secondaryCta?: LabelledLink;
+  showLockup?: boolean;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    decorative?: boolean;
+    _type: "image";
+  };
+};
+
+export type PageSections = Array<
+  | ({
+      _key: string;
+    } & HeroSection)
+  | ({
+      _key: string;
+    } & TrustBarSection)
+  | ({
+      _key: string;
+    } & FeatureGridSection)
+  | ({
+      _key: string;
+    } & CtaBannerSection)
+  | ({
+      _key: string;
+    } & ProcessStepsSection)
+  | ({
+      _key: string;
+    } & FaqSection)
+  | ({
+      _key: string;
+    } & RichTextSection)
+  | ({
+      _key: string;
+    } & TestimonialsSection)
+>;
+
+export type IconName =
+  | "accessibility"
+  | "activity"
+  | "bar-chart"
+  | "code"
+  | "cpu"
+  | "map-pin"
+  | "message-square"
+  | "rocket"
+  | "search"
+  | "shapes"
+  | "target"
+  | "zap"
+  | "shield-check"
+  | "gauge"
+  | "sparkles"
+  | "layout";
+
+export type Testimonial = {
+  _id: string;
+  _type: "testimonial";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  quote?: string;
+  name?: string;
+  role?: string;
+  company?: string;
+  photo?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  permission?: boolean;
+};
+
 export type SanityImageCrop = {
   _type: "sanity.imageCrop";
   top?: number;
@@ -143,6 +331,25 @@ export type Page = {
   _updatedAt: string;
   _rev: string;
   title?: string;
+  slug?: Slug;
+  seo?: Seo;
+  sections?: PageSections;
+};
+
+export type Slug = {
+  _type: "slug";
+  current?: string;
+  source?: string;
+};
+
+export type HomePage = {
+  _id: string;
+  _type: "homePage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  sections?: PageSections;
+  seo?: Seo;
 };
 
 export type Navigation = {
@@ -292,12 +499,6 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type Slug = {
-  _type: "slug";
-  current?: string;
-  source?: string;
-};
-
 export type AllSanitySchemaTypes =
   | SocialLink
   | NavItem
@@ -308,10 +509,24 @@ export type AllSanitySchemaTypes =
   | FaqAnswer
   | SanityImageAssetReference
   | Seo
+  | TestimonialReference
+  | TestimonialsSection
+  | RichTextSection
+  | RichTextBody
+  | ProcessStepsSection
+  | CtaBannerSection
+  | FeatureGridSection
+  | TrustBarSection
+  | HeroSection
+  | PageSections
+  | IconName
+  | Testimonial
   | SanityImageCrop
   | SanityImageHotspot
   | Faq
   | Page
+  | Slug
+  | HomePage
   | Navigation
   | SiteSettings
   | SanityImagePaletteSwatch
@@ -321,16 +536,7 @@ export type AllSanitySchemaTypes =
   | SanityFileAsset
   | SanityAssetSourceData
   | SanityImageAsset
-  | Geopoint
-  | Slug;
-
-// Source: src/sanity/queries.ts
-// Variable: PAGES_QUERY
-// Query: *[_type == "page" && defined(title)]{ _id, title }
-export type PAGES_QUERY_RESULT = Array<{
-  _id: string;
-  title: string;
-}>;
+  | Geopoint;
 
 // Source: src/sanity/queries.ts
 // Variable: SHELL_QUERY
@@ -416,7 +622,13 @@ export type SITE_SEO_QUERY_RESULT = {
 // Source: src/sanity/queries.ts
 // Variable: ROUTABLE_DOCS_QUERY
 // Query: *[_type in $types && defined(slug.current) && seo.noindex != true]{  _type,  "slug": slug.current,  _updatedAt,  "title": coalesce(seo.title, title),  "description": seo.description}
-export type ROUTABLE_DOCS_QUERY_RESULT = Array<never>;
+export type ROUTABLE_DOCS_QUERY_RESULT = Array<{
+  _type: "page";
+  slug: string | null;
+  _updatedAt: string;
+  title: string | null;
+  description: string | null;
+}>;
 
 // Source: src/sanity/queries.ts
 // Variable: OG_DOC_QUERY
@@ -424,6 +636,9 @@ export type ROUTABLE_DOCS_QUERY_RESULT = Array<never>;
 export type OG_DOC_QUERY_RESULT =
   | {
       title: null;
+    }
+  | {
+      title: string | null;
     }
   | {
       title: string | null;
@@ -439,15 +654,298 @@ export type HOME_FAQS_QUERY_RESULT = Array<{
   answer: FaqAnswer | null;
 }>;
 
+// Source: src/sanity/queries.ts
+// Variable: HOME_PAGE_QUERY
+// Query: *[_type == "homePage" && _id == "homePage"][0]{ _id, _type, seo, sections[]{   _key, _type, anchor, surface,  _type == "heroSection" => {    eyebrow, heading, body, showLockup,    primaryCta{ label, "href": link.href },    secondaryCta{ label, "href": link.href },    image{ asset, hotspot, crop, alt, decorative, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions }  },  _type == "trustBarSection" => { items[]{ _key, icon, text } },  _type == "featureGridSection" => {    eyebrow, heading, intro,    cards[]{ _key, icon, badge, title, description, link{ label, "href": link.href } }  },  _type == "ctaBannerSection" => { heading, body, cta{ label, "href": link.href } },  _type == "processStepsSection" => { heading, intro, steps[]{ _key, icon, title, description } },  _type == "faqSection" => { eyebrow, heading, intro, "items": faqs[]->{ _id, question, answer } },  _type == "richTextSection" => { heading, body },  _type == "testimonialsSection" => {    heading,    "items": items[@->permission == true]->{      _id, quote, name, role, company, photo{ asset, hotspot, crop, alt }    }  } } }
+export type HOME_PAGE_QUERY_RESULT = {
+  _id: "homePage";
+  _type: "homePage";
+  seo: Seo | null;
+  sections: Array<
+    | {
+        _key: string;
+        _type: "ctaBannerSection";
+        anchor: string | null;
+        surface: "background" | "card" | "primary" | null;
+        heading: string | null;
+        body: string | null;
+        cta: {
+          label: string | null;
+          href: string | null;
+        } | null;
+      }
+    | {
+        _key: string;
+        _type: "faqSection";
+        anchor: string | null;
+        surface: "background" | "card" | "primary" | null;
+        eyebrow: string | null;
+        heading: string | null;
+        intro: string | null;
+        items: Array<{
+          _id: string;
+          question: string | null;
+          answer: FaqAnswer | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "featureGridSection";
+        anchor: string | null;
+        surface: "background" | "card" | "primary" | null;
+        eyebrow: string | null;
+        heading: string | null;
+        intro: string | null;
+        cards: Array<{
+          _key: string;
+          icon: IconName | null;
+          badge: string | null;
+          title: string | null;
+          description: string | null;
+          link: {
+            label: string | null;
+            href: string | null;
+          } | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "heroSection";
+        anchor: string | null;
+        surface: null;
+        eyebrow: string | null;
+        heading: string | null;
+        body: string | null;
+        showLockup: boolean | null;
+        primaryCta: {
+          label: string | null;
+          href: string | null;
+        } | null;
+        secondaryCta: {
+          label: string | null;
+          href: string | null;
+        } | null;
+        image: {
+          asset: SanityImageAssetReference | null;
+          hotspot: SanityImageHotspot | null;
+          crop: SanityImageCrop | null;
+          alt: string | null;
+          decorative: boolean | null;
+          lqip: string | null;
+          dimensions: SanityImageDimensions | null;
+        } | null;
+      }
+    | {
+        _key: string;
+        _type: "processStepsSection";
+        anchor: string | null;
+        surface: "background" | "card" | "primary" | null;
+        heading: string | null;
+        intro: string | null;
+        steps: Array<{
+          _key: string;
+          icon: IconName | null;
+          title: string | null;
+          description: string | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "richTextSection";
+        anchor: string | null;
+        surface: "background" | "card" | null;
+        heading: string | null;
+        body: RichTextBody | null;
+      }
+    | {
+        _key: string;
+        _type: "testimonialsSection";
+        anchor: string | null;
+        surface: "background" | "card" | "primary" | null;
+        heading: string | null;
+        items: Array<{
+          _id: string;
+          quote: string | null;
+          name: string | null;
+          role: string | null;
+          company: string | null;
+          photo: {
+            asset: SanityImageAssetReference | null;
+            hotspot: SanityImageHotspot | null;
+            crop: SanityImageCrop | null;
+            alt: string | null;
+          } | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "trustBarSection";
+        anchor: string | null;
+        surface: "background" | "card" | "primary" | null;
+        items: Array<{
+          _key: string;
+          icon: IconName | null;
+          text: string | null;
+        }> | null;
+      }
+  > | null;
+} | null;
+
+// Source: src/sanity/queries.ts
+// Variable: PAGE_QUERY
+// Query: *[_type == "page" && slug.current == $slug][0]{    _id, _type, title, "slug": slug.current, seo, sections[]{   _key, _type, anchor, surface,  _type == "heroSection" => {    eyebrow, heading, body, showLockup,    primaryCta{ label, "href": link.href },    secondaryCta{ label, "href": link.href },    image{ asset, hotspot, crop, alt, decorative, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions }  },  _type == "trustBarSection" => { items[]{ _key, icon, text } },  _type == "featureGridSection" => {    eyebrow, heading, intro,    cards[]{ _key, icon, badge, title, description, link{ label, "href": link.href } }  },  _type == "ctaBannerSection" => { heading, body, cta{ label, "href": link.href } },  _type == "processStepsSection" => { heading, intro, steps[]{ _key, icon, title, description } },  _type == "faqSection" => { eyebrow, heading, intro, "items": faqs[]->{ _id, question, answer } },  _type == "richTextSection" => { heading, body },  _type == "testimonialsSection" => {    heading,    "items": items[@->permission == true]->{      _id, quote, name, role, company, photo{ asset, hotspot, crop, alt }    }  } }  }
+export type PAGE_QUERY_RESULT = {
+  _id: string;
+  _type: "page";
+  title: string | null;
+  slug: string | null;
+  seo: Seo | null;
+  sections: Array<
+    | {
+        _key: string;
+        _type: "ctaBannerSection";
+        anchor: string | null;
+        surface: "background" | "card" | "primary" | null;
+        heading: string | null;
+        body: string | null;
+        cta: {
+          label: string | null;
+          href: string | null;
+        } | null;
+      }
+    | {
+        _key: string;
+        _type: "faqSection";
+        anchor: string | null;
+        surface: "background" | "card" | "primary" | null;
+        eyebrow: string | null;
+        heading: string | null;
+        intro: string | null;
+        items: Array<{
+          _id: string;
+          question: string | null;
+          answer: FaqAnswer | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "featureGridSection";
+        anchor: string | null;
+        surface: "background" | "card" | "primary" | null;
+        eyebrow: string | null;
+        heading: string | null;
+        intro: string | null;
+        cards: Array<{
+          _key: string;
+          icon: IconName | null;
+          badge: string | null;
+          title: string | null;
+          description: string | null;
+          link: {
+            label: string | null;
+            href: string | null;
+          } | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "heroSection";
+        anchor: string | null;
+        surface: null;
+        eyebrow: string | null;
+        heading: string | null;
+        body: string | null;
+        showLockup: boolean | null;
+        primaryCta: {
+          label: string | null;
+          href: string | null;
+        } | null;
+        secondaryCta: {
+          label: string | null;
+          href: string | null;
+        } | null;
+        image: {
+          asset: SanityImageAssetReference | null;
+          hotspot: SanityImageHotspot | null;
+          crop: SanityImageCrop | null;
+          alt: string | null;
+          decorative: boolean | null;
+          lqip: string | null;
+          dimensions: SanityImageDimensions | null;
+        } | null;
+      }
+    | {
+        _key: string;
+        _type: "processStepsSection";
+        anchor: string | null;
+        surface: "background" | "card" | "primary" | null;
+        heading: string | null;
+        intro: string | null;
+        steps: Array<{
+          _key: string;
+          icon: IconName | null;
+          title: string | null;
+          description: string | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "richTextSection";
+        anchor: string | null;
+        surface: "background" | "card" | null;
+        heading: string | null;
+        body: RichTextBody | null;
+      }
+    | {
+        _key: string;
+        _type: "testimonialsSection";
+        anchor: string | null;
+        surface: "background" | "card" | "primary" | null;
+        heading: string | null;
+        items: Array<{
+          _id: string;
+          quote: string | null;
+          name: string | null;
+          role: string | null;
+          company: string | null;
+          photo: {
+            asset: SanityImageAssetReference | null;
+            hotspot: SanityImageHotspot | null;
+            crop: SanityImageCrop | null;
+            alt: string | null;
+          } | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "trustBarSection";
+        anchor: string | null;
+        surface: "background" | "card" | "primary" | null;
+        items: Array<{
+          _key: string;
+          icon: IconName | null;
+          text: string | null;
+        }> | null;
+      }
+  > | null;
+} | null;
+
+// Source: src/sanity/queries.ts
+// Variable: PAGE_SLUGS_QUERY
+// Query: *[_type == "page" && defined(slug.current)].slug.current
+export type PAGE_SLUGS_QUERY_RESULT = Array<string | null>;
+
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '*[_type == "page" && defined(title)]{ _id, title }': PAGES_QUERY_RESULT;
     '{\n  "settings": *[_type == "siteSettings" && _id == "siteSettings"][0]{\n    siteName,\n    email,\n    phone,\n    serviceArea,\n    socialLinks[]{ _key, platform, url }\n  },\n  "navigation": *[_type == "navigation" && _id == "navigation"][0]{\n    headerLinks[]{ _key, label, "href": link.href, children[]{ _key, label, "href": link.href } },\n    headerCta{ label, "href": link.href },\n    footerLinks[]{ _key, label, "href": link.href }\n  }\n}': SHELL_QUERY_RESULT;
     '*[_type == "siteSettings" && _id == "siteSettings"][0]{\n  _updatedAt,\n  siteName,\n  email,\n  phone,\n  homeTitle,\n  defaultDescription,\n  businessDescription,\n  addressLocality,\n  addressRegion,\n  areaServed,\n  serviceArea,\n  "defaultOgImage": defaultOgImage{ asset, hotspot, crop, alt },\n  socialLinks[]{ platform, url }\n}': SITE_SEO_QUERY_RESULT;
     '*[_type in $types && defined(slug.current) && seo.noindex != true]{\n  _type,\n  "slug": slug.current,\n  _updatedAt,\n  "title": coalesce(seo.title, title),\n  "description": seo.description\n}': ROUTABLE_DOCS_QUERY_RESULT;
     '*[_type == $type && slug.current == $slug && seo.noindex != true][0]{\n  "title": coalesce(seo.title, title)\n}': OG_DOC_QUERY_RESULT;
     '*[_type == "faq" && defined(question)] | order(_createdAt asc, _id asc)[0...12]{ _id, question, answer }': HOME_FAQS_QUERY_RESULT;
+    '*[_type == "homePage" && _id == "homePage"][0]{ _id, _type, seo, sections[]{ \n  _key, _type, anchor, surface,\n  _type == "heroSection" => {\n    eyebrow, heading, body, showLockup,\n    primaryCta{ label, "href": link.href },\n    secondaryCta{ label, "href": link.href },\n    image{ asset, hotspot, crop, alt, decorative, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions }\n  },\n  _type == "trustBarSection" => { items[]{ _key, icon, text } },\n  _type == "featureGridSection" => {\n    eyebrow, heading, intro,\n    cards[]{ _key, icon, badge, title, description, link{ label, "href": link.href } }\n  },\n  _type == "ctaBannerSection" => { heading, body, cta{ label, "href": link.href } },\n  _type == "processStepsSection" => { heading, intro, steps[]{ _key, icon, title, description } },\n  _type == "faqSection" => { eyebrow, heading, intro, "items": faqs[]->{ _id, question, answer } },\n  _type == "richTextSection" => { heading, body },\n  _type == "testimonialsSection" => {\n    heading,\n    "items": items[@->permission == true]->{\n      _id, quote, name, role, company, photo{ asset, hotspot, crop, alt }\n    }\n  }\n } }': HOME_PAGE_QUERY_RESULT;
+    '*[_type == "page" && slug.current == $slug][0]{\n    _id, _type, title, "slug": slug.current, seo, sections[]{ \n  _key, _type, anchor, surface,\n  _type == "heroSection" => {\n    eyebrow, heading, body, showLockup,\n    primaryCta{ label, "href": link.href },\n    secondaryCta{ label, "href": link.href },\n    image{ asset, hotspot, crop, alt, decorative, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions }\n  },\n  _type == "trustBarSection" => { items[]{ _key, icon, text } },\n  _type == "featureGridSection" => {\n    eyebrow, heading, intro,\n    cards[]{ _key, icon, badge, title, description, link{ label, "href": link.href } }\n  },\n  _type == "ctaBannerSection" => { heading, body, cta{ label, "href": link.href } },\n  _type == "processStepsSection" => { heading, intro, steps[]{ _key, icon, title, description } },\n  _type == "faqSection" => { eyebrow, heading, intro, "items": faqs[]->{ _id, question, answer } },\n  _type == "richTextSection" => { heading, body },\n  _type == "testimonialsSection" => {\n    heading,\n    "items": items[@->permission == true]->{\n      _id, quote, name, role, company, photo{ asset, hotspot, crop, alt }\n    }\n  }\n }\n  }': PAGE_QUERY_RESULT;
+    '*[_type == "page" && defined(slug.current)].slug.current': PAGE_SLUGS_QUERY_RESULT;
   }
 }

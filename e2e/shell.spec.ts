@@ -94,7 +94,7 @@ test.describe('Header visibility [SHELL-R8, SHELL-R9]', () => {
     await makeScrollable(page);
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
 
-    const target = page.getByRole('link', { name: 'Open Sanity Studio' });
+    const target = page.getByRole('main').getByRole('link', { name: 'Book Appointment', exact: true });
     await target.focus();
 
     await expect.poll(() => headerIsVisible(page)).toBe(true);

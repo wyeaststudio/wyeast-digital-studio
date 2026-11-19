@@ -4,10 +4,10 @@ import type { RoutableDoc } from '@/sanity/loaders/seo';
 import { buildLlmsTxt } from './llms-txt';
 import { absoluteUrl, resolveSite } from './site';
 
-const routes = { service: '/services/' };
+const routes = { page: '/services/' };
 
 const doc = (overrides: Partial<RoutableDoc>): RoutableDoc => ({
-  _type: 'service',
+  _type: 'page',
   slug: 'web-design',
   _updatedAt: '2026-11-01T00:00:00Z',
   title: 'Web design',
@@ -30,13 +30,18 @@ describe('buildLlmsTxt [SEO-R17]', () => {
   it('lists registered documents with absolute URLs and descriptions', () => {
     const text = buildLlmsTxt({
       site: resolveSite(null),
-      docs: [doc({}), doc({ slug: 'seo', title: null, description: null }), doc({ _type: 'post', slug: 'hi' })],
+      docs: [doc({}), doc({ slug: 'seo', title: null, description: null }), doc({ slug: null })],
       routes,
     });
 
     expect(text).toContain(`- [Web design](${absoluteUrl('/services/web-design')}): Fast, accessible sites.`);
     expect(text).toContain(`- [seo](${absoluteUrl('/services/seo')})\n`);
-    expect(text).not.toContain('/post');
+    expect(text.match(/^- \[/gm)).toHaveLength(3);
+  });
+
+  it('omits documents whose type has no registered path', () => {
+    const text = buildLlmsTxt({ site: resolveSite(null), docs: [doc({})], routes: {} });
+    expect(text).not.toContain('web-design');
   });
 
   it('includes the service area and contact details when present', () => {

@@ -19,10 +19,12 @@ describe('SEO loaders [SEO-R6, R15, R18]', () => {
     expect(mockFetch).toHaveBeenCalledWith(expect.objectContaining({ tags: ['siteSettings'] }));
   });
 
-  it('getRoutableDocs skips the fetch while the route registry is empty', async () => {
-    mockFetch.mockClear();
-    await expect(getRoutableDocs()).resolves.toEqual([]);
-    expect(mockFetch).not.toHaveBeenCalled();
+  it('getRoutableDocs includes page documents with collection tags and cleans stega [PB-R5]', async () => {
+    mockFetch.mockResolvedValueOnce([{ _type: 'page', slug: 'about', title: withStega('About') }]);
+    await expect(getRoutableDocs()).resolves.toEqual([{ _type: 'page', slug: 'about', title: 'About' }]);
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.objectContaining({ params: { types: ['page'] }, tags: ['siteSettings', 'page'] }),
+    );
   });
 
   it('getSiteSeo can fetch published settings without the draft-aware loader [SEO-R9]', async () => {
@@ -61,6 +63,7 @@ describe('SEO loaders [SEO-R6, R15, R18]', () => {
     mockPublishedFetch.mockRejectedValue(new Error('network down'));
     await expect(getSiteSeo()).resolves.toBeNull();
     await expect(getSiteSeo({ publishedOnly: true })).resolves.toBeNull();
+    await expect(getRoutableDocs()).resolves.toEqual([]);
     await expect(getOgTitle('service', 'x')).resolves.toBeNull();
     await expect(getHomeFaqs()).resolves.toEqual([]);
     mockFetch.mockReset();

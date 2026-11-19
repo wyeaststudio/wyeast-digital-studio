@@ -3,7 +3,8 @@ import type { FaqAnswer } from '../../../sanity.types';
 import type { HomeFaq } from '@/sanity/loaders/seo';
 import { withStega } from '@/test-utils/stega';
 import { SITE_URL, absoluteUrl, resolveSite, type ResolvedSite } from './site';
-import { breadcrumbList, compact, faqPage, serializeJsonLd, siteGraph } from './json-ld';
+import type { BlockData, PageSection } from '@/components/sections/types';
+import { breadcrumbList, compact, faqPage, faqPageForSections, serializeJsonLd, siteGraph } from './json-ld';
 
 const site: ResolvedSite = {
   siteName: "Wy'east Digital Studio",
@@ -211,6 +212,34 @@ describe('faqPage [SEO-R11, R13]', () => {
           acceptedAnswer: { '@type': 'Answer', text: 'Design and a content model Hosting setup' },
         },
       ],
+    });
+  });
+
+  describe('faqPageForSections [PB-R18]', () => {
+    const section: BlockData<'faqSection'> = {
+      _type: 'faqSection', _key: 'faq', anchor: null, surface: null,
+      heading: 'Questions', eyebrow: null, intro: null, items: faqs,
+    };
+
+    it('collects FAQs from all visible FAQ blocks in their section order', () => {
+      const other: BlockData<'richTextSection'> = {
+        _type: 'richTextSection', _key: 'text', anchor: null, surface: null, heading: null, body: null,
+      };
+      const result = faqPageForSections([
+        { ...section, items: [faqs[1]] }, other,
+        { ...section, _key: 'second', items: [faqs[0], faqs[2], faqs[3]] },
+      ]);
+      expect(result?.mainEntity.map((entry) => entry.name)).toEqual(['What is included?', 'How long does a site take?']);
+    });
+
+    it('omits incomplete sections and broken references, just like the renderer', () => {
+      const broken: PageSection[] = [
+        { ...section, heading: null },
+        // @ts-expect-error Dereferenced CMS arrays can contain broken references at runtime.
+        { ...section, _key: 'broken', items: [null, faqs[2]] },
+      ];
+      expect(faqPageForSections(broken)).toBeNull();
+      expect(faqPageForSections(null)).toBeNull();
     });
   });
 
