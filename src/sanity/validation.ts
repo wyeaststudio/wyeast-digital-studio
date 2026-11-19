@@ -80,7 +80,7 @@ export function isValidAnchor(value: unknown): value is string {
 export function pageSectionsRule(value: unknown): true | string {
   if (!Array.isArray(value)) return true;
   const sections: unknown[] = value;
-  const anchors = new Set<string>();
+  const anchors = new Set<string>(['main-content']);
 
   for (const [index, section] of sections.entries()) {
     if (typeof section !== 'object' || section === null) continue;
