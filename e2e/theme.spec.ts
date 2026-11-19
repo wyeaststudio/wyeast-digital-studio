@@ -83,7 +83,7 @@ test.describe('Reduced motion [FOUND-R9]', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
     const duration = await page
-      .getByRole('main').getByRole('link', { name: 'Booking details coming soon', exact: true })
+      .locator('main > section').first().getByRole('link', { name: 'Booking details coming soon', exact: true })
       .evaluate((el) => parseFloat(getComputedStyle(el).transitionDuration));
     expect(duration).toBeLessThan(0.001);
   });

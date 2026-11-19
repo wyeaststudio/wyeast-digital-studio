@@ -35,13 +35,25 @@ for (const { path, id } of pages) {
       levels.slice(1).forEach((level, index) => expect(level).toBeLessThanOrEqual(levels[index] + 1));
     });
 
-    test('feature-card links include the card title and have 44px targets [PB-R15]', async ({ page }) => {
+    test('feature-card links match the fixture and linked cards have 44px targets [PB-R15]', async ({ page }) => {
       await page.goto(path);
       const cards = page.locator(`section[aria-labelledby="${id}-features-heading"] article`);
       expect(await cards.count()).toBeGreaterThan(0);
-      for (const card of await cards.all()) {
-        const title = await card.getByRole('heading', { level: 3 }).innerText();
+      const seed = seeds.find((document) => document._id === id);
+      const featureSection = seed?.sections?.find((section) => section._type === 'featureGridSection');
+      const expectedCards = featureSection && 'cards' in featureSection ? featureSection.cards : undefined;
+      if (!expectedCards?.length) throw new Error(`Missing feature-card fixtures for ${id}`);
+      expect(await cards.count()).toBe(expectedCards.length);
+
+      for (const [index, card] of (await cards.all()).entries()) {
+        const fixtureCard = expectedCards[index];
+        if (!fixtureCard) throw new Error(`Missing feature-card fixture at index ${index} for ${id}`);
+        const hasLink = 'link' in fixtureCard && Boolean(fixtureCard.link);
         const link = card.getByRole('link');
+        await expect(link).toHaveCount(hasLink ? 1 : 0);
+        if (!hasLink) continue;
+
+        const title = await card.getByRole('heading', { level: 3 }).innerText();
         await expect(link).toHaveAccessibleName(new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
         const box = await link.boundingBox();
         expect(box?.width).toBeGreaterThanOrEqual(44);
@@ -139,7 +151,7 @@ test('CMS links avoid speculative route requests and still navigate on click [PB
     if (url.searchParams.has('_rsc') && url.pathname !== '/') speculative.push(url.pathname);
   });
   await page.goto('/', { waitUntil: 'networkidle' });
-  await page.getByRole('main').getByRole('link', { name: 'Booking details coming soon', exact: true }).hover();
+  await page.locator('main > section').first().getByRole('link', { name: 'Booking details coming soon', exact: true }).hover();
   await page.waitForLoadState('networkidle');
   expect(speculative).toEqual([]);
 
