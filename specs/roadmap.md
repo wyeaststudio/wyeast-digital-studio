@@ -11,7 +11,7 @@ Features are built in this order. Each one goes through the spec → plan → ta
 | 003 | **SEO, GEO, and AEO system**: SEO object, metadata from Sanity, JSON-LD builders, sitemap from content, `llms.txt`, and FAQ block | 001 | Implemented; UX review pending |
 | 004 | **Page builder**: section block library (hero, trust bar, feature grid, CTA banner, process steps, FAQ, rich text, testimonials), the `page` type, and the Home page singleton | 002, 003 | Phases A–D implemented; automated gate passed; UX review and owner sign-off pending (authenticated Presentation checks owner-deferred, 2026-11-18) |
 | 005 | **Home page**: realistic interim copy on the page builder, final copy/photo approval before launch readiness, and the booking section from 009 (copy-only placeholder until then) | 004; 009 for real booking integration | Interim implementation ready to proceed to 006; real booking remains deferred to 009, and final copy/photo approval plus UX testing remain 011 launch gates (owner, 2026-11-19) |
-| 006 | **Services**: overview and service detail pages | 004 | Not started |
+| 006 | **Services**: overview and service detail pages | 004 | Spec, plan, and tasks approved; implementation not started. Final copy approval and UX testing are deferred to 011 per owner direction |
 | 007 | **Process page** (no Figma design yet) | 004 | Not started |
 | 008 | **About page** | 004 | Not started |
 | 009 | **Contact**: inquiry form with email notification, Google Workspace booking embed, spam protection, and privacy notice | 002, 003 | Not started |
